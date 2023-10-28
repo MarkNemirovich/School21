@@ -6,30 +6,36 @@ double bernoulli(double x);
 double hyperbole(double x);
 
 int main() {
-    double a = -M_PI;
-    double x, step = M_PI / 20.5;
-    int i = 0;
-    double agn, ber, hyp;
-    for (; i < 42; i++) {
-        x = a + i * step;
-        agn = agnesi(x);
-        ber = bernoulli(x);
-        hyp = hyperbole(x);
-        printf("%lf | ", x);
-        if (agn != INFINITY)
-            printf("%lf | ", agn);
-        else
-            printf("- | ");
-        if (ber != INFINITY)
-            printf("%lf | ", ber);
-        else
-            printf("- | ");
-        if (hyp != INFINITY)
-            printf("%lf | ", hyp);
-        else
-            printf("- | ");
-        printf("\n");
-    }
+    FILE *fp = fopen("door_data.txt", "w");
+    if (fp) {
+        double a = -M_PI;
+        double x, step = M_PI / 20.5;
+        int i = 0;
+        double agn, ber, hyp;
+        for (; i < 42; i++) {
+            x = a + i * step;
+            agn = agnesi(x);
+            ber = bernoulli(x);
+            hyp = hyperbole(x);
+            fprintf(fp, "%lf | ", x);
+            if (agn != INFINITY)
+                fprintf(fp, "%lf | ", agn);
+            else
+                fprintf(fp, "- | ");
+            if (ber != INFINITY)
+                fprintf(fp, "%lf | ", ber);
+            else
+                fprintf(fp, "- | ");
+            if (hyp != INFINITY)
+                fprintf(fp, "%lf | ", hyp);
+            else
+                fprintf(fp, "- | ");
+            fprintf(fp, "\n");
+        }
+        fclose(fp);
+    } else
+        printf("n/a");
+        
     return 0;
 }
 
