@@ -4,16 +4,15 @@
 #include <stdio.h>
 
 #define LEFT_BOUND 0
-#define RIGHT_BOUND 24
+#define RIGHT_BOUND 79
 #define UP_BOUND 0
-#define DOWN_BOUND 79
+#define DOWN_BOUND 25
 
 int updateBallPos(int ballPos, int ballVelocity);
 int newRocketPos(int rocket, int direction);
 char bounce(int ballX, int ballY, int leftY, int rightY);
 void draw(int leftPos, int rightPos, int ballX, int ballY);
 int main() {
-    /* Intializes random number generator */
     int scoreL = 0;
     int scoreR = 0;
     int ballVX = 1, ballVY = 1;
@@ -26,7 +25,6 @@ int main() {
             scanf("%c", &key);
             if (key == '\n') continue;
             b = bounce(ballX + ballVX, ballY + ballVY, leftY, rightY);
-            printf("%c\n", b);
             switch (b) {
                 case 'f':
                     scoreR++;
@@ -80,23 +78,19 @@ int main() {
 int updateBallPos(int ballPos, int ballVelocity) { return ballPos + ballVelocity; }
 
 int newRocketPos(int rocket, int direction) {
-    if (rocket + direction >= 0 && rocket + direction < 80) rocket += direction;
+    if (rocket + direction > UP_BOUND && rocket + direction < DOWN_BOUND) rocket += direction;
     return rocket;
 }
 
 char bounce(int ballX, int ballY, int leftY, int rightY) {
-    printf("%d\t", ballX);
-    printf("%d\t", ballY);
-    printf("%d\t", leftY);
-    printf("%d\t", rightY);
     if (ballX == LEFT_BOUND) {
-        if ((ballY <= leftY + 2) && (ballY >= leftY - 2))
+        if ((ballY <= leftY + 1) && (ballY >= leftY - 1))
             return 'l';
         else
             return 'f';
     }
     if (ballX == RIGHT_BOUND) {
-        if ((ballY <= rightY + 2) && (ballY >= rightY - 2))
+        if ((ballY <= rightY + 1) && (ballY >= rightY - 1))
             return 'r';
         else
             return 's';
@@ -106,18 +100,18 @@ char bounce(int ballX, int ballY, int leftY, int rightY) {
     return 'e';
 }
 void draw(int leftY, int rightY, int ballX, int ballY) {
-    for (int j = 0; j < 24; j++) printf("_");
+    for (int j = LEFT_BOUND; j <= RIGHT_BOUND; j++) printf("_");
     printf("\n");
-    for (int i = 0; i < 80; i++) {
-        for (int j = 0; j < 25; j++) {
-            if (j == 0) {
+    for (int i = UP_BOUND; i <= DOWN_BOUND; i++) {
+        for (int j = LEFT_BOUND; j <= RIGHT_BOUND; j++) {
+            if (j == LEFT_BOUND) {
                 if (i >= leftY - 1 && i <= leftY + 1)
                     printf("]");
                 else
                     printf("|");
                 continue;
             }
-            if (j == 24) {
+            if (j == RIGHT_BOUND) {
                 if (i >= rightY - 1 && i <= rightY + 1)
                     printf("[");
                 else
@@ -127,7 +121,7 @@ void draw(int leftY, int rightY, int ballX, int ballY) {
             if (j == ballX && i == ballY) {
                 printf("*");
             } else {
-                if (i == 79) {
+                if (i == DOWN_BOUND) {
                     printf("_");
                 } else
                     printf(" ");
