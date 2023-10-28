@@ -1,0 +1,3 @@
+vi door_1.conf 
+:w
+:q
