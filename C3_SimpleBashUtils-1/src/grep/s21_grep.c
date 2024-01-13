@@ -9,8 +9,8 @@ int main(int argc, char** argv) {
   int files_amount = 0;
   int file_templates_amount = 0;
   if (argc >= 3 &&
-      parseFlags(argv, &flags, argc, templates, &templates_amount, files,
-                 &files_amount, file_templates, &file_templates_amount) != 1) {
+      parse_flags(argc, argv, &flags, templates, &templates_amount, files,
+                  &files_amount, file_templates, &file_templates_amount) != 1) {
     merge_templates(templates, &templates_amount, file_templates,
                     &file_templates_amount);
     grep(templates, templates_amount, files, files_amount, &flags);
@@ -18,17 +18,17 @@ int main(int argc, char** argv) {
   return 0;
 }
 
-int parse_flags(char** argv, flags* flags, int argc, char (*templates)[BUFFER],
+int parse_flags(int argc, char** argv, flags* flags, char (*templates)[BUFFER],
                 int* templates_amount, char (*files)[BUFFER], int* files_amount,
                 char (*file_templates)[BUFFER], int* file_templates_amount) {
-  const char* flags = "eivclnhsfo";
+  const char* flags_arr = "eivclnhsfo";
   int error = 0;
   int template_file = 0;
   for (int j = 1; j < argc; j++) {
     int check_f = 0;
     if (argv[j][0] == '-') {
       for (size_t i = 1; i < strlen(argv[j]) && check_f == 0; i++) {
-        if (strchr(flags, (int)argv[j][i]) == NULL && check_f == 0) {
+        if (strchr(flags_arr, (int)argv[j][i]) == NULL && check_f == 0) {
           error = 1;
           break;
         }
@@ -129,7 +129,9 @@ void merge_templates(char (*templates)[BUFFER], int* templates_amount,
       }
       fclose(fp);
     } else {
-      // printf("grep: %s: No such file or directory\n", argv[1]);
+      char* error_message = "grep: ";
+      strcat(error_message, file_templates[i]);
+      perror(error_message);
     }
   }
 }
@@ -166,9 +168,10 @@ void grep(char (*templates)[BUFFER], int templates_amount,
       if (flags->l == 1 && line_matches > 0) printf("%s\n", files[i]);
       print_matches(flags, files, files_amount, line_matches, i);
       fclose(fp);
-    } else {
-      if (flags->s != 1)
-        fprintf(stderr, "grep: %s: No such file or directory\n", files[i]);
+    } else if (flags->s != 1) {
+      char* error_message = "grep: ";
+      strcat(error_message, files[i]);
+      perror(error_message);
     }
   }
 }
@@ -220,10 +223,10 @@ void print_f_flag(flags* flags, char (*files)[BUFFER], int files_amount,
 }
 
 void print_matches(flags* flags, char (*files)[BUFFER], int files_amount,
-                  int line_matches, int i) {
+                   int line_matches, int i) {
   if (flags->c == 1 && flags->l != 1) {
     if (flags->h != 1 && flags->l != 1 && files_amount > 1)
       printf("%s:", files[i]);
-    printf("%d\n", line_matches); 
+    printf("%d\n", line_matches);
   }
 }

@@ -1,13 +1,12 @@
 #!/bin/bash
-TEMPLATE_FILE="./TEST_FILES/example.txt"
-TEMPLATE_FILE1="./TEST_FILES/test_grep/test_0_grep.txt"
-TEMPLATE_FILE2="./TEST_FILES/test_grep/test_1_grep.txt"
-TEMPLATE_FILE4="./TEST_FILES/test_grep/test_2_grep.txt"
-TEMPLATE_FILE5="./TEST_FILES/test_grep/test_4_grep.txt"
-TEMPLATE_FILE6="./TEST_FILES/test_grep/test_5_grep.txt"
-TEMPLATE_FILE7="./TEST_FILES/test_grep/test_6_grep.txt"
-TEMPLATE_FILE8="./TEST_FILES/test_grep/test_ptrn_grep.txt"
-TEMPLATE_FILE9="./TEST_FILES/test_grep/test_3_grep.txt"
+TEMPLATE_FILE="./example.txt"
+TEMPLATE_FILE1="./test_0_grep.txt"
+TEMPLATE_FILE2="./test_1_grep.txt"
+TEMPLATE_FILE4="./test_2_grep.txt"
+TEMPLATE_FILE9="./test_3_grep.txt"
+TEMPLATE_FILE5="./test_4_grep.txt"
+TEMPLATE_FILE6="./test_5_grep.txt"
+TEMPLATE_FILE8="./test_ptrn_grep.txt"
 
 SUCCESS=0
 FAIL=0
@@ -49,10 +48,10 @@ testing()
     if [ "$DIFF_RES" == "Files test_s21_grep.log and test_sys_grep.log are identical" ]
     then
       (( SUCCESS++ ))
-      echo -e "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[32msuccess\033[0m grep $t"
+      printf -e "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[32msuccess\033[0m grep $t\n"
     else
       (( FAIL++ ))
-      echo -e "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[31mfail\033[0m grep $t"
+      printf -e "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[31mfail\033[0m grep $t\n"
     fi
     rm test_s21_grep.log test_sys_grep.log
 }
@@ -110,6 +109,6 @@ do
     done
 done
 
-echo -e "\033[31mFAIL: $FAIL\033[0m"
-echo -e "\033[32mSUCCESS: $SUCCESS\033[0m"
-echo "ALL: $COUNTER"
+printf -e "\033[31mFAIL: $FAIL\033[0m\n"
+printf -e "\033[32mSUCCESS: $SUCCESS\033[0m\n"
+printf "ALL: $COUNTER"

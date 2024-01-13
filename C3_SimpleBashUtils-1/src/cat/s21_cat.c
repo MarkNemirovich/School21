@@ -17,14 +17,14 @@ int main(int argc, char** argv) {
 
 int parse_flags(int argc, char** argv, flags* flags) {
   int symbol;
-  const char* shortFlagsNames = "beEnsTtv";
-  static struct option nameConvertOption[] = {
+  const char* short_flags_names = "beEnsTtv";
+  static struct option name_convert_option[] = {
       {"number-nonblank", 0, 0, 'b'},
       {"number", 0, 0, 'n'},
       {"squeeze-blank", 0, 0, 's'},
       {0, 0, 0, 0},
   };
-  while ((symbol = getopt_long(argc, argv, shortFlagsNames, nameConvertOption,
+  while ((symbol = getopt_long(argc, argv, short_flags_names, name_convert_option,
                                NULL)) != -1) {
     switch (symbol) {
       case 'b':
@@ -66,18 +66,18 @@ int read_file(char** argv, flags* flags) {
   int error = 0;
   FILE* fp = fopen(argv[optind], "r");
   if (fp != NULL) {
-    int lineCount = 1, endCount = 0, previousSymbol = '\n';
+    int line_count = 1, end_count = 0, previous_symbol = '\n';
     while (!feof(fp)) {
       int c = fgetc(fp);
       if (c != EOF) {
-        if (flags->s && c == '\n' && previousSymbol == '\n') {
-          endCount++;
+        if (flags->s && c == '\n' && previous_symbol == '\n') {
+          end_count++;
         } else {
-          endCount = 0;
+          end_count = 0;
         }
-        if (endCount > 1) continue;
-        if (previousSymbol == '\n' && ((flags->b && c != '\n') || flags->n))
-          printf("%6d\t", lineCount++);
+        if (end_count > 1) continue;
+        if (previous_symbol == '\n' && ((flags->b && c != '\n') || flags->n))
+          printf("%6d\t", line_count++);
         if (flags->t && c == '\t') {
           printf("^");
           c = 'I';
@@ -93,7 +93,7 @@ int read_file(char** argv, flags* flags) {
           }
         }
         printf("%c", c);
-        previousSymbol = c;
+        previous_symbol = c;
       }
     }
     fclose(fp);
