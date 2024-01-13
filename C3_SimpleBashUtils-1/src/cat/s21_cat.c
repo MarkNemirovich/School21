@@ -2,19 +2,23 @@
 
 int main(int argc, char** argv) {
   flags flags = {0};
-  parseFlags(argc, argv, &flags);
+  parse_flags(argc, argv, &flags);
+  char error_message[100] = "cat: ";
   while (optind < argc) {  // optind is an argv elements' index
-    readFile(argv, &flags);
+    if (read_file(argv, &flags) == 1) {
+      strcat(error_message, argv[optind]);
+      perror(error_message);
+      optind = argc;
+    }
     optind++;
   }
   return 0;
 }
 
-int parseFlags(int argc, char** argv, flags* flags) {
+int parse_flags(int argc, char** argv, flags* flags) {
   int symbol;
   const char* shortFlagsNames = "beEnsTtv";
   static struct option nameConvertOption[] = {
-      // converter long GNU flags to the short
       {"number-nonblank", 0, 0, 'b'},
       {"number", 0, 0, 'n'},
       {"squeeze-blank", 0, 0, 's'},
@@ -58,40 +62,43 @@ int parseFlags(int argc, char** argv, flags* flags) {
   return 0;
 }
 
-void readFile(char** argv, flags* flags) {
+int read_file(char** argv, flags* flags) {
+  int error = 0;
   FILE* fp = fopen(argv[optind], "r");
   if (fp != NULL) {
     int lineCount = 1, endCount = 0, previousSymbol = '\n';
     while (!feof(fp)) {
       int c = fgetc(fp);
-      if (c == EOF) break;
-      if (flags->s && c == '\n' && previousSymbol == '\n') {
-        endCount++;
-        if (endCount > 1) continue;
-      } else {
-        endCount = 0;
-      }
-      if (previousSymbol == '\n' && ((flags->b && c != '\n') || flags->n))
-        printf("%6d\t", lineCount++);
-      if (flags->t && c == '\t') {
-        printf("^");
-        c = 'I';
-      }
-      if (flags->e && c == '\n') printf("$");
-      if (flags->v &&
-          ((c >= 0 && c < 9) || (c > 10 && c < 32) || (c > 126 && c <= 160))) {
-        printf("^");
-        if (c > 126) {
-          c -= 64;
+      if (c != EOF) {
+        if (flags->s && c == '\n' && previousSymbol == '\n') {
+          endCount++;
         } else {
-          c += 64;
+          endCount = 0;
         }
+        if (endCount > 1) continue;
+        if (previousSymbol == '\n' && ((flags->b && c != '\n') || flags->n))
+          printf("%6d\t", lineCount++);
+        if (flags->t && c == '\t') {
+          printf("^");
+          c = 'I';
+        }
+        if (flags->e && c == '\n') printf("$");
+        if (flags->v && ((c >= 0 && c < 9) || (c > 10 && c < 32) ||
+                         (c > 126 && c <= 160))) {
+          printf("^");
+          if (c > 126) {
+            c -= 64;
+          } else {
+            c += 64;
+          }
+        }
+        printf("%c", c);
+        previousSymbol = c;
       }
-      printf("%c", c);
-      previousSymbol = c;
     }
     fclose(fp);
   } else {
-    // printf("cat: %s: No such file or directory\n", argv[1]);
+    error = 1;
   }
+  return error;
 }

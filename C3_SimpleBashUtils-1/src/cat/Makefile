@@ -1,4 +1,4 @@
-CC = gcc -Wall -Werror -Wextra -std=c11 #-D_GNU_SOURCE
+CC = gcc -Wall -Werror -Wextra -std=c11
 
 all: s21_cat
 
