@@ -2,11 +2,11 @@
 TEMPLATE_FILE="./example.txt"
 TEMPLATE_FILE1="./test_0_grep.txt"
 TEMPLATE_FILE2="./test_1_grep.txt"
-TEMPLATE_FILE4="./test_2_grep.txt"
-TEMPLATE_FILE9="./test_3_grep.txt"
+TEMPLATE_FILE3="./test_2_grep.txt"
+TEMPLATE_FILE4="./test_3_grep.txt"
 TEMPLATE_FILE5="./test_4_grep.txt"
 TEMPLATE_FILE6="./test_5_grep.txt"
-TEMPLATE_FILE8="./test_ptrn_grep.txt"
+TEMPLATE_FILE7="./test_ptrn_grep.txt"
 
 SUCCESS=0
 FAIL=0
@@ -19,22 +19,22 @@ declare -a tests=(
 "for s21_grep.c VAR"
 "VAR for ^int s21_grep.c s21_grep.h Makefile"
 "VAR for ^int s21_grep.c"
-"VAR ^print s21_grep.c ${TEMPLATE_FILE8}"
-"-e while void s21_grep.c Makefile ${TEMPLATE_FILE8}"
+"VAR ^print s21_grep.c ${TEMPLATE_FILE7}"
+"-e while void s21_grep.c Makefile ${TEMPLATE_FILE7}"
 )
 
 declare -a extra=(
 "-e '[0-9]' ${TEMPLATE_FILE}"
-"-n for ${TEMPLATE_FILE2} ${TEMPLATE_FILE4}"
+"-n for ${TEMPLATE_FILE2} ${TEMPLATE_FILE3}"
 "-n for ${TEMPLATE_FILE1}"
 "-e ^int ${TEMPLATE_FILE2}"
-"-l for ${TEMPLATE_FILE2} ${TEMPLATE_FILE4}"
+"-l for ${TEMPLATE_FILE2} ${TEMPLATE_FILE3}"
 "-o int ${TEMPLATE_FILE4}"
-"-e out ${TEMPLATE_FILE6}"
-"-e ing ${TEMPLATE_FILE7}"
+"-e out ${TEMPLATE_FILE5}"
+"-e ing ${TEMPLATE_FILE6}"
 "-c . ${TEMPLATE_FILE2}"
-"-l for no_file.txt ${TEMPLATE_FILE4}"
-"-f ${TEMPLATE_FILE9} ${TEMPLATE_FILE6}"
+"-l for no_file.txt ${TEMPLATE_FILE3}"
+"-f ${TEMPLATE_FILE4} ${TEMPLATE_FILE5}"
 )
 
 
@@ -48,10 +48,10 @@ testing()
     if [ "$DIFF_RES" == "Files test_s21_grep.log and test_sys_grep.log are identical" ]
     then
       (( SUCCESS++ ))
-      printf -e "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[32msuccess\033[0m grep $t\n"
+      echo -e "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[32msuccess\033[0m grep $t"
     else
       (( FAIL++ ))
-      printf -e "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[31mfail\033[0m grep $t\n"
+      echo -e "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[31mfail\033[0m grep $t"
     fi
     rm test_s21_grep.log test_sys_grep.log
 }
@@ -109,6 +109,6 @@ do
     done
 done
 
-printf -e "\033[31mFAIL: $FAIL\033[0m\n"
-printf -e "\033[32mSUCCESS: $SUCCESS\033[0m\n"
-printf "ALL: $COUNTER"
+echo -e "\033[31mFAIL: $FAIL\033[0m"
+echo -e "\033[32mSUCCESS: $SUCCESS\033[0m"
+echo "ALL: $COUNTER"

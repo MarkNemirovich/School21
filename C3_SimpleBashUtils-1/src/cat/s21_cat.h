@@ -6,11 +6,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct flag {
-  int b, e, v, n, s, t;
-} flags;
+#define BUFFER 256
 
-int parse_flags(int argc, char** argv, flags* flags);
+typedef struct {
+  int b, e, v, n, s, t;
+} Flags;
+
+flags parse_flags(int argc, char** argv);
 int read_file(char** argv, flags* flags);
+int v_transform(int ch);
 
 #endif
