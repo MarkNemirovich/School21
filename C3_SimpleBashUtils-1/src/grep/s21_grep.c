@@ -1,40 +1,25 @@
 #include "s21_grep.h"
 
 int main(int argc, char** argv) {
-  Flags flags = parse_flags(argc, argv);
-  grep(argc, argv, flags);
-}
-
-void* my_malloc(size_t size) {
-  void* temp;
-  temp = malloc(size);
-  if (!temp) exit(errno);
-  return temp;
-}
-
-void* my_realloc(void* block, size_t size) {
-  void* temp;
-  temp = realloc(block, size);
-  if (!temp) exit(errno);
-  return temp;
+  int errcode = NO_MATCHES_FOUND;
+  if (argc > 2) {
+    Flags flags = parse_flags(argc, argv);
+    if ((flags.regex_flag || flags.regex_file) & (argc < 4)) {
+      errcode = ERROR;
+    } else {
+      grep(argc, argv, flags);
+    }
+  }
+  return errcode;
 }
 
 Flags parse_flags(int argc, char** argv) {
   int symbol;
   Flags flags = {0};
   const char* short_flags_names = "eivclnhsfo";
-  flags.pattern = my_malloc(3);
-  flags.pattern[0] = '[';
-  flags.pattern[1] = '\0';
-  size_t pattern_size = 1;
-  size_t temp_size = 0;
   while ((symbol = getopt(argc, argv, short_flags_names)) != -1) {
     switch (symbol) {
       case 'e':
-        temp_size = strlen(optarg);
-        flags.pattern = my_realloc(flags.pattern, pattern_size + temp_size + 2);
-        flags.pattern[pattern_size] = '(';
-        memcpy(flags.pattern + pattern_size, optarg, temp_size + 1);
         flags.regex_flag |= REG_EXTENDED;
         break;
       case 'i':  // done
@@ -43,7 +28,7 @@ Flags parse_flags(int argc, char** argv) {
       case 'v':  // done
         flags.invert = 1;
         break;
-      case 'c':  // done (doesn't work)
+      case 'c':  // done
         flags.count = 1;
         break;
       case 'l':  // done
@@ -96,16 +81,16 @@ void grep(int argc, char** argv, Flags flags) {
   for (char** filename = pattern + 1; filename != end; filename++) {
     if (**filename == '-') continue;
     FILE* file = fopen(*filename, "rb");
-    if (errno) {
+    if (file == NULL) {
       char error_message[LITTLE_SIZE] = "grep: ";
       strcat(error_message, *filename);
       if (!flags.suppress) perror(error_message);
-      exit(1);
+      continue;
     }
     if (flags.files_match)
       grep_file_name(file, flags, preg, *filename);
     else if (flags.count)
-      grep_count(file, *filename, flags, preg, file_count);
+      grep_count(file, *filename, flags, preg);
     else if (flags.invert)
       grep_file_inverted(file, flags, preg, *filename);
     else
@@ -134,7 +119,7 @@ void grep_file(FILE* file, Flags flags, regex_t* preg, char* filename) {
     count++;
     if (!regexec(preg, line, 1, &match, 0)) {
       if (flags.overlap)
-        grep_file_overlaped(line, flags, preg, filename);
+        grep_file_overlaped(line, flags, preg, filename, count);
       else {
         if (!flags.headers_suppress) printf("%s:", filename);
         if (flags.number_line) printf("%i:", count);
@@ -170,34 +155,32 @@ void grep_file_inverted(FILE* file, Flags flags, regex_t* preg,
   (void)flags;
 }
 
-void grep_file_overlaped(char* line, Flags flags, regex_t* preg,
-                         char* filename) {
+void grep_file_overlaped(char* line, Flags flags, regex_t* preg, char* filename,
+                         int line_count) {
   regmatch_t match;
-  int count = 0;
   if (!regexec(preg, line, 1, &match, 0)) {
     char* remaining = line;
     while (!regexec(preg, remaining, 1, &match, 0)) {
       if (!flags.headers_suppress) printf("%s:", filename);
-      if (flags.number_line) printf("%i:", count);
+      if (flags.number_line) printf("%i:", line_count);
       printf("%.*s\n", match.rm_eo - match.rm_so, remaining + match.rm_so);
       remaining = remaining + match.rm_eo;
     }
   }
 }
 
-void grep_count(FILE* file, char const* filename, Flags flags, regex_t* preg,
-                int file_count) {
+void grep_count(FILE* file, char const* filename, Flags flags, regex_t* preg) {
   char* line = 0;
   size_t length = 0;
   regmatch_t match;
   int count = 0;
   while (getline(&line, &length, file) > 0) {
     if (regexec(preg, line, 1, &match, 0) == flags.invert) {
-      if (strcmp(line, "\n") != 0) count++;
+      if (strcmp(line, "\n") != 0 || flags.invert) count++;
     }
   }
   free(line);
-  if (file_count > 1) printf("%s:", filename);
+  if (!flags.headers_suppress) printf("%s:", filename);
   printf("%i\n", count);
   (void)flags;
   (void)filename;
