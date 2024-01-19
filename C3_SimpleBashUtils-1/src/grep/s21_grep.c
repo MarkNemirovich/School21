@@ -55,10 +55,11 @@ void free_files(char** files, int file_count, Flags flags) {
 void parse_flags(int argc, char** argv, Flags* flags) {
   int symbol;
   flags->pattern = NULL;
+  flags->pattern_size = 0;
   const char* short_flags_names = "eivclnhsfo";
   while ((symbol = getopt(argc, argv, short_flags_names)) != -1) {
     switch (symbol) {
-      case 'e':
+      case 'e':  // done
         if (flags->pattern == NULL)
           flags->pattern = get_inline_pattern(argc, argv);
         flags->incorrect_place = 0;
@@ -84,7 +85,9 @@ void parse_flags(int argc, char** argv, Flags* flags) {
       case 'h':  // done
         flags->headers_suppress = 1;
         break;
-      case 'f':
+      case 'f':  // done
+        get_inline_pattern_from_file(argv[optind], flags);
+        flags->incorrect_place = 0;
         break;
       case 'o':  // done
         flags->overlap = 1;
@@ -129,6 +132,41 @@ char* get_inline_pattern(int argc, char** argv) {
     if (strcmp(arg, "-e") == 0) flag = 1;
   }
   return line;
+}
+
+void get_inline_pattern_from_file(const char* filename, Flags* flags) {
+  FILE* file = fopen(filename, "r");
+  if (file == NULL) {
+    perror("Error opening file");
+    exit(EXIT_FAILURE);
+  }
+  char* line = NULL;
+  size_t line_size = 0;
+  while (getline(&line, &line_size, file) != -1) {
+    if (strcmp(line, "\n") == 0) continue;
+    line_size = strlen(line);
+    if (flags->pattern != NULL) {
+      // Увеличиваем на 2 для добавления "\\|"
+      flags->pattern = (char*)realloc(flags->pattern, flags->pattern_size + 2);
+      strcat(flags->pattern + flags->pattern_size, "\\|");
+      flags->pattern_size += 2;
+    }
+    if (line_size > 0 && line[line_size - 1] == '\n') {
+      line[line_size - 1] = '\0';  // Убираем символ новой строки
+      line_size--;
+    }
+    // Перераспределение памяти для увеличения размера строки
+    flags->pattern =
+        (char*)realloc(flags->pattern, flags->pattern_size + line_size + 1);
+    if (flags->pattern == NULL) {
+      perror("Memory reallocation failed");
+      exit(EXIT_FAILURE);
+    }
+    strcat(flags->pattern + flags->pattern_size, line);
+    flags->pattern_size += line_size;
+  }
+  fclose(file);
+  free(line);
 }
 
 void grep(int argc, char** argv, char** file_names, int file_count,

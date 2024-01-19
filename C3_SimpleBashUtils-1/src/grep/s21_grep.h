@@ -15,11 +15,13 @@ typedef struct {
   int regex_flag, invert, count, files_match, number_line, headers_suppress,
       suppress, file_pattern, overlap, regex_file, incorrect_place;
   char* pattern;
+  size_t pattern_size;
 } Flags;
 
 char** get_file_names(int argc, char** argv, int* file_count, Flags* flags);
 void parse_flags(int argc, char** argv, Flags* flags);
 char* get_inline_pattern(int argc, char** argv);
+void get_inline_pattern_from_file(const char* filename, Flags* flags);
 void grep(int argc, char** argv, char** file_names, int file_count,
           Flags flags);
 void grep_file_name(FILE* file, Flags flags, regex_t* preg, char* filename);

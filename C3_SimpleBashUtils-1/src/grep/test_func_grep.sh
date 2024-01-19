@@ -14,7 +14,7 @@ COUNTER=0
 DIFF_RES=""
 
 declare -a tests=(
-"s ${TEMPLATE_FILE1} VAR"
+"ss ${TEMPLATE_FILE1} VAR"
 "for s21_grep.c s21_grep.h Makefile VAR"
 "for s21_grep.c VAR"
 "VAR for ^int s21_grep.c s21_grep.h Makefile"
@@ -36,7 +36,7 @@ declare -a extra=(
 "-e ing ${TEMPLATE_FILE6}"
 "-c . ${TEMPLATE_FILE2}"
 "-l for no_file.txt ${TEMPLATE_FILE3}"
-"-f ${TEMPLATE_FILE4} ${TEMPLATE_FILE5}"
+"-f ${TEMPLATE_FILE7} ${TEMPLATE_FILE1}"
 )
 
 
@@ -50,7 +50,7 @@ testing()
     if [ "$DIFF_RES" == "Files test_s21_grep.log and test_sys_grep.log are identical" ]
     then
       (( SUCCESS++ ))
- #     echo -e "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[32msuccess\033[0m grep $t"
+      echo -e "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[32msuccess\033[0m grep $t"
     else
       (( FAIL++ ))
       echo -e "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[31mfail\033[0m grep $t"
