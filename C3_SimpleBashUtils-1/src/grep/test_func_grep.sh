@@ -25,6 +25,8 @@ declare -a tests=(
 
 declare -a extra=(
 "-e '[0-9]' ${TEMPLATE_FILE}"
+"-e while -e void s21_grep.c Makefile ${TEMPLATE_FILE7}"
+"-e while -e void -e ^int s21_grep.c"
 "-n for ${TEMPLATE_FILE2} ${TEMPLATE_FILE3}"
 "-n for ${TEMPLATE_FILE1}"
 "-e ^int ${TEMPLATE_FILE2}"
@@ -65,7 +67,7 @@ done
 
 # 1 параметр
 # c l n h o i s
-for var1 in v c l n h o i s e
+for var1 in v c l n h o i s
 do
     for i in "${tests[@]}"
     do
