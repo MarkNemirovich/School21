@@ -21,38 +21,38 @@ flags=(
 )
 
 tests=(
-"s test_files/test_0_grep.txt FLAGS"
+"s test_0_grep.txt FLAGS"
 "for s21_grep.c s21_grep.h Makefile FLAGS"
 "for s21_grep.c FLAGS"
 "-e for -e ^int s21_grep.c s21_grep.h Makefile FLAGS"
 "-e for -e ^int s21_grep.c FLAGS"
-"-e regex -e ^print s21_grep.c FLAGS -f test_files/test_ptrn_grep.txt"
-"-e while -e void s21_grep.c Makefile FLAGS -f test_files/test_ptrn_grep.txt"
-"-e intel -e int FLAGS test_files/test_7_grep.txt"
-"-e int -e intel FLAGS test_files/test_7_grep.txt"
+"-e regex -e ^print s21_grep.c FLAGS -f test_ptrn_grep.txt"
+"-e while -e void s21_grep.c Makefile FLAGS -f test_ptrn_grep.txt"
+"-e intel -e int FLAGS test_5_grep.txt"
+"-e int -e intel FLAGS test_5_grep.txt"
 )
 
 manual=(
-"-n for test_files/test_1_grep.txt test_files/test_2_grep.txt"
-"-n for test_files/test_1_grep.txt"
-"-n -e ^\} test_files/test_1_grep.txt"
-"-ce ^int test_files/test_1_grep.txt test_files/test_2_grep.txt"
-"-e ^int test_files/test_1_grep.txt"
-"-nivh = test_files/test_1_grep.txt test_files/test_2_grep.txt"
+"-n for test_1_grep.txt test_2_grep.txt"
+"-n for test_1_grep.txt"
+"-n -e ^\} test_1_grep.txt"
+"-ce ^int test_1_grep.txt test_2_grep.txt"
+"-e ^int test_1_grep.txt"
+"-nivh = test_1_grep.txt test_2_grep.txt"
 "-e"
-"-ie INT test_files/test_5_grep.txt"
-"-echar test_files/test_1_grep.txt test_files/test_2_grep.txt"
-"-ne = -e out test_files/test_5_grep.txt"
-"-iv int test_files/test_5_grep.txt"
-"-in int test_files/test_5_grep.txt"
-"-c -l aboba test_files/test_1_grep.txt test_files/test_5_grep.txt"
-"-l for test_files/test_1_grep.txt test_files/test_2_grep.txt"
-"-e = -e out test_files/test_5_grep.txt"
-"-e ing -e as -e the -e not -e is test_files/test_6_grep.txt"
-"-l for no_file.txt test_files/test_2_grep.txt"
+"-ie INT test_5_grep.txt"
+"-echar test_1_grep.txt test_2_grep.txt"
+"-ne = -e out test_5_grep.txt"
+"-iv int test_5_grep.txt"
+"-in int test_5_grep.txt"
+"-c -l aboba test_1_grep.txt test_5_grep.txt"
+"-l for test_1_grep.txt test_2_grep.txt"
+"-e = -e out test_5_grep.txt"
+"-e ing -e as -e the -e not -e is test_2_grep.txt"
+"-l for no_file.txt test_2_grep.txt"
 "-e int -si no_file.txt s21_grep.c no_file2.txt s21_grep.h"
 "-si s21_grep.c -f no_pattern.txt"
-"-f test_files/test_3_grep.txt test_files/test_5_grep.txt"
+"-f test_3_grep.txt test_5_grep.txt"
 )
 
 run_test() {
@@ -64,10 +64,10 @@ run_test() {
     if [ "$DIFF" == "Files "${s21_command[@]}".log and "${sys_command[@]}".log are identical" ]
     then
         let "SUCCESS++"
-        echo "$COUNTER - Success $param"
+        echo "$COUNTER - \033[32mSuccess\033[0m $param"
     else
         let "FAIL++"
-        echo "$COUNTER - Fail $param"
+        echo "$COUNTER - \033[31mFail\033[0m $param"
     fi
     rm -f "${s21_command[@]}".log "${sys_command[@]}".log
 }

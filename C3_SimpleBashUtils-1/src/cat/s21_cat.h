@@ -12,8 +12,8 @@ typedef struct {
   int b, e, v, n, s, t;
 } Flags;
 
-flags parse_flags(int argc, char** argv);
-int read_file(char** argv, flags* flags);
+Flags parse_flags(int argc, char** argv);
+int read_file(char** argv, Flags* flags);
 int v_transform(int ch);
 
 #endif

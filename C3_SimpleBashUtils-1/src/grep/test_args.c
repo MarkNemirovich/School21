@@ -17,6 +17,10 @@ char* get_inline_pattern_from_file(const char* filename) {
     if (str != NULL) {
       // Увеличиваем на 2 для добавления "\\|"
       str = (char*)realloc(str, str_size + 2);
+      if (str == NULL) {
+        perror("Memory reallocation failed");
+        exit(EXIT_FAILURE);
+      }
       strcat(str + str_size, "\\|");
       str_size += 2;
     }

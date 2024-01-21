@@ -109,6 +109,10 @@ char* get_inline_pattern(int argc, char** argv) {
       if (line_size > 0) {  // Увеличиваем на 2 для добавления "\|" Чтобы регекс
                             // компилировал по каждому из слов
         line = (char*)realloc(line, line_size + 2);
+        if (line == NULL) {
+          perror("Memory reallocation failed");
+          exit(EXIT_FAILURE);
+        }
         line_size += 2;
         strcat(line,
                "\\|");  // Добавляем "\|" между паттернами, если строка не пуста
@@ -277,7 +281,7 @@ void grep_file_overlaped(char* line, Flags flags, regex_t* preg, char* filename,
     while (!regexec(preg, remaining, 1, &match, 0)) {
       if (!flags.headers_suppress) printf("%s:", filename);
       if (flags.number_line) printf("%i:", line_count);
-      printf("%.*s\n", match.rm_eo - match.rm_so, remaining + match.rm_so);
+      printf("%lld %s\n", match.rm_eo - match.rm_so, remaining + match.rm_so);
       remaining = remaining + match.rm_eo;
     }
   }

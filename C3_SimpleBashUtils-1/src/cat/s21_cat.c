@@ -96,7 +96,8 @@ int read_file(char** argv, Flags* flags) {
 }
 
 int v_transform(int ch) {
-  if (ch == '\n' || ch == '\t') return ch;  // return is allowed in the pre-check
+  if (ch == '\n' || ch == '\t')
+    return ch;  // return is allowed in the pre-check
   if ((ch >= 0 && ch < 9) || (ch > 10 && ch < 32) || (ch > 126 && ch <= 160)) {
     printf("^");
     if (ch > 126) {
