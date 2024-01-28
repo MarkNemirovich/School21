@@ -21,14 +21,14 @@ flags=(
 )
 
 tests=(
-"s test_0_grep.txt FLAGS"
-"for s21_grep.c s21_grep.h Makefile FLAGS"
-"for s21_grep.c FLAGS"
-"-e for -e ^int s21_grep.c s21_grep.h Makefile FLAGS"
-"-e for -e ^int s21_grep.c FLAGS"
-"-e regex -e ^print s21_grep.c FLAGS -f test_ptrn_grep.txt"
-"-e while -e void s21_grep.c Makefile FLAGS -f test_ptrn_grep.txt"
-"-e intel -e int FLAGS test_5_grep.txt"
+"s FLAGS test_0_grep.txt"
+"for FLAGS s21_grep.c s21_grep.h Makefile"
+"for FLAGS s21_grep.c"
+"FLAGS -e for -e ^int s21_grep.c s21_grep.h Makefile"
+"-e for -e ^int FLAGS s21_grep.c"
+"-e regex -e ^print FLAGS -f test_ptrn_grep.txt s21_grep.c "
+"-e while -e void FLAGS -f test_ptrn_grep.txt s21_grep.c Makefile "
+"FLAGS -e intel -e int test_5_grep.txt"
 "-e int -e intel FLAGS test_5_grep.txt"
 )
 
@@ -41,7 +41,7 @@ manual=(
 "-nivh = test_1_grep.txt test_2_grep.txt"
 "-e"
 "-ie INT test_5_grep.txt"
-"-echar test_1_grep.txt test_2_grep.txt"
+"-e char test_1_grep.txt test_2_grep.txt"
 "-ne = -e out test_5_grep.txt"
 "-iv int test_5_grep.txt"
 "-in int test_5_grep.txt"
@@ -64,10 +64,10 @@ run_test() {
     if [ "$DIFF" == "Files "${s21_command[@]}".log and "${sys_command[@]}".log are identical" ]
     then
         let "SUCCESS++"
-        echo "$COUNTER - \033[32mSuccess\033[0m $param"
+        printf "$COUNTER - \033[32mSuccess\033[0m $param\n"
     else
         let "FAIL++"
-        echo "$COUNTER - \033[31mFail\033[0m $param"
+        printf "$COUNTER - \033[31mFail\033[0m $param\n"
     fi
     rm -f "${s21_command[@]}".log "${sys_command[@]}".log
 }

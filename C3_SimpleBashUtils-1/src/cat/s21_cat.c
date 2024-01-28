@@ -76,13 +76,29 @@ int read_file(char** argv, Flags* flags) {
           end_count = 0;
         }
         if (end_count > 1) continue;
-        if (previous_symbol == '\n' && ((flags->b && c != '\n') || flags->n))
-          printf("%6d\t", line_count++);
+        if (previous_symbol == '\n') {
+#ifdef MAC
+          if (flags->n)
+            printf("%6d\t", line_count++);
+          else if (flags->b && c != '\n')
+            printf("%6d\t", line_count++);
+          else if (flags->b)
+            printf("t");
+#else
+          if (previous_symbol == '\n' && ((flags->b && c != '\n') || flags->n))
+            printf("%6d\t", line_count++);
+#endif
+        }
         if (flags->t && c == '\t') {
           printf("^");
           c = 'I';
         }
-        if (flags->e && c == '\n') printf("$");
+        if (flags->e && c == '\n') {
+#ifdef MAC
+          printf("\t");
+#endif
+          printf("$");
+        }
         if (flags->v) c = v_transform(c);
         printf("%c", c);
         previous_symbol = c;

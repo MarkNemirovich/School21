@@ -1,9 +1,10 @@
 #include "s21_grep.h"
 
 int main(int argc, char** argv) {
+  int file_count = 0;
+  Flags flags = {0};
+  flags.pattern = NULL;
   if (argc > 2) {
-    int file_count = 0;
-    Flags flags = {0};
     char** file_names = get_file_names(argc, argv, &file_count, &flags);
     parse_flags(argc, argv, &flags);
     if ((flags.regex_flag || flags.regex_file) & (argc < 4)) {
@@ -11,164 +12,184 @@ int main(int argc, char** argv) {
     } else {
       grep(argc, argv, file_names, file_count, flags);
     }
-    if (flags.pattern != NULL) free(flags.pattern);
-    free_files(file_names, file_count, flags);
+    free(flags.pattern);
+    free_files(file_names, file_count);
   }
   return 0;
 }
 
 char** get_file_names(int argc, char** argv, int* file_count, Flags* flags) {
   char** files = NULL;
+  char* match_word = NULL;
+  char match_word_flag = 0;
   *file_count = 0;
   for (int i = 1; i < argc; i++) {
     const char* arg = argv[i];
     if (arg[0] == '-') {
-      i++;
+      if (arg[1] == 'f' || arg[1] == 'e') {
+        i++;
+        if (match_word != NULL) {
+          files = (char**)realloc(files, (*file_count + 1) * sizeof(char*));
+          if (files == NULL) {
+            perror("Memory reallocation failed");
+            free_files(files, *file_count);
+            return files;
+          }
+          files[*file_count] = (char*)malloc(strlen(match_word) + 1);
+          if (files[*file_count] == NULL) {
+            perror("Memory allocation failed");
+            free_files(files, *file_count);
+            return files;
+          }
+          strcpy(files[*file_count], match_word);
+          files[*file_count][strlen(match_word)] = '\0';
+          (*file_count)++;
+        } else
+          match_word_flag = 1;
+      }
       continue;
     }
-    if (i == 1) flags->incorrect_place = 1;
+    if (!match_word_flag) {
+      match_word = (char*)malloc(strlen(arg) + 1);
+      if (match_word == NULL) {
+        perror("Memory allocation failed");
+        free_files(files, *file_count);
+        return files;
+      }
+      strcpy(match_word, arg);
+      match_word[strlen(arg)] = '\0';
+      match_word_flag = 1;
+      continue;
+    }
     // Увеличиваем размер массива указателей на строки
     files = (char**)realloc(files, (*file_count + 1) * sizeof(char*));
     if (files == NULL) {
       perror("Memory reallocation failed");
-      exit(EXIT_FAILURE);
+      free_files(files, *file_count);
+      return files;
     }
     // Выделяем память и копируем строку
-    files[*file_count] = strdup(arg);
+    files[*file_count] = (char*)malloc(strlen(arg) + 1);
     if (files[*file_count] == NULL) {
       perror("Memory allocation failed");
-      exit(EXIT_FAILURE);
+      free_files(files, *file_count);
+      return files;
     }
+    strcpy(files[*file_count], arg);
+    files[*file_count][strlen(arg)] = '\0';
     (*file_count)++;
   }
   (void)flags;
+  files = (char**)realloc(files, (*file_count + 1) * sizeof(char*));
+  if (files == NULL) {
+    perror("Memory reallocation failed");
+    return files;
+  }
+  files[*file_count] = NULL;
+  free(match_word);
   return files;
 }
 
-void free_files(char** files, int file_count, Flags flags) {
-  for (int i = flags.incorrect_place; i < file_count; i++) {
+void free_files(char** files, int file_count) {
+  for (int i = 0; i < file_count; i++) {
     free(files[i]);
   }
   free(files);
 }
 
 void parse_flags(int argc, char** argv, Flags* flags) {
-  int symbol;
   flags->pattern = NULL;
   flags->pattern_size = 0;
-  const char* short_flags_names = "eivclnhsfo";
-  while ((symbol = getopt(argc, argv, short_flags_names)) != -1) {
-    switch (symbol) {
-      case 'e':  // done
-        if (flags->pattern == NULL)
-          flags->pattern = get_inline_pattern(argc, argv);
+  for (int i = 1; i < argc; i++) {
+    const char* arg = argv[i];
+    if (arg[0] == '-') {
+      if (strchr(arg, 'e') != NULL) {
+        i++;
+        get_inline_pattern(argv[i], flags);
         flags->incorrect_place = 0;
-        break;
-      case 'i':  // done
-        flags->regex_flag |= REG_ICASE;
-        break;
-      case 'v':  // done
+      }
+      if (strchr(arg, 'i') != NULL)
+        flags->regex_flag = REG_ICASE;
+      if (strchr(arg, 'v') != NULL)
         flags->invert = 1;
-        break;
-      case 'c':  // done
+      if (strchr(arg, 'c') != NULL)
         flags->count = 1;
-        break;
-      case 'l':  // done
+      if (strchr(arg, 'l') != NULL)
         flags->files_match = 1;
-        break;
-      case 'n':  // done
+      if (strchr(arg, 'n') != NULL)
         flags->number_line = 1;
-        break;
-      case 's':  // done
+      if (strchr(arg, 's') != NULL)
         flags->suppress = 1;
-        break;
-      case 'h':  // done
+      if (strchr(arg, 'h') != NULL)
         flags->headers_suppress = 1;
-        break;
-      case 'f':  // done
-        get_inline_pattern_from_file(argv[optind], flags);
+      if (strchr(arg, 'f') != NULL) {
+        i++;
+        get_inline_pattern_from_file(argv[i], flags);
         flags->incorrect_place = 0;
-        break;
-      case 'o':  // done
+      } 
+      if (strchr(arg, 'o') != NULL)
         flags->overlap = 1;
-        break;
-      default:
-        printf("incorrect flag \n");
-        break;
     }
   }
 }
 
-char* get_inline_pattern(int argc, char** argv) {
-  int flag = 0;
-  char* line = NULL;
-  size_t line_size = 0;
-  for (int i = 0; i < argc; i++) {
-    const char* arg = argv[i];
-    if (flag) {
-      if (line_size > 0) {  // Увеличиваем на 2 для добавления "\|" Чтобы регекс
-                            // компилировал по каждому из слов
-        line = (char*)realloc(line, line_size + 2);
-        if (line == NULL) {
-          perror("Memory reallocation failed");
-          exit(EXIT_FAILURE);
-        }
-        line_size += 2;
-        strcat(line,
-               "\\|");  // Добавляем "\|" между паттернами, если строка не пуста
-      }
-      size_t arg_len = strlen(arg);
-      // Перераспределение памяти для увеличения размера строки
-      line = (char*)realloc(
-          line,
-          line_size +
-              arg_len);  // Увеличиваем на 2 для добавления "\|" Чтобы регекс
-                         // компилировал и искал совпадения по каждому из слов
-      if (line == NULL) {
-        perror("Memory reallocation failed");
-        exit(EXIT_FAILURE);
-      }
-      strcat(line + line_size, arg);
-      line_size += arg_len;
-      flag = 0;
-      line[line_size] = '\0';
-    }
-    if (strcmp(arg, "-e") == 0) flag = 1;
+void get_inline_pattern(const char* expression, Flags* flags) {
+  char* str = NULL;
+  size_t line_size = strlen(expression);
+  size_t new_pattern_size =
+      flags->pattern_size + line_size + (flags->pattern_size > 0 ? 2 : 1);
+  str = realloc(flags->pattern, new_pattern_size);
+  if (str == NULL) {
+    perror("Memory reallocation failed");
+    free(str);
+    free(flags->pattern);
+    return;
   }
-  return line;
+  flags->pattern = str;
+  if (flags->pattern_size > 0) {
+    strcat(flags->pattern, "|");
+    strcat(flags->pattern, expression);
+  } else
+    strcpy(flags->pattern, expression);
+  flags->pattern_size = new_pattern_size;  // Update the pattern size
+  flags->pattern[flags->pattern_size - 1] = '\0';
 }
 
 void get_inline_pattern_from_file(const char* filename, Flags* flags) {
   FILE* file = fopen(filename, "r");
   if (file == NULL) {
-    perror("Error opening file");
-    exit(EXIT_FAILURE);
+    perror("Error opening file sas a pattern");
+    return;
   }
   char* line = NULL;
+  char* str = NULL;
   size_t line_size = 0;
   while (getline(&line, &line_size, file) != -1) {
-    if (strcmp(line, "\n") == 0) continue;
+    if (strcmp(line, "\n") == 1) line[0] = '.';
     line_size = strlen(line);
-    if (flags->pattern != NULL) {
-      // Увеличиваем на 2 для добавления "\\|"
-      flags->pattern = (char*)realloc(flags->pattern, flags->pattern_size + 2);
-      strcat(flags->pattern + flags->pattern_size, "\\|");
-      flags->pattern_size += 2;
+    if (line[line_size - 1] == '\n') {
+      line[line_size - 1] = '\0';
     }
-    if (line_size > 0 && line[line_size - 1] == '\n') {
-      line[line_size - 1] = '\0';  // Убираем символ новой строки
-      line_size--;
-    }
-    // Перераспределение памяти для увеличения размера строки
-    flags->pattern =
-        (char*)realloc(flags->pattern, flags->pattern_size + line_size + 1);
-    if (flags->pattern == NULL) {
+    size_t new_pattern_size =
+        flags->pattern_size + line_size + (flags->pattern_size > 0 ? 2 : 1);
+    str = realloc(flags->pattern, new_pattern_size);
+    if (str == NULL) {
       perror("Memory reallocation failed");
-      exit(EXIT_FAILURE);
+      free(line);
+      free(str);
+      free(flags->pattern);
+      fclose(file);
+      return;
     }
-    strcat(flags->pattern + flags->pattern_size, line);
-    flags->pattern_size += line_size;
+    flags->pattern = str;
+    if (flags->pattern_size > 0) {
+      strcat(flags->pattern, "|");
+      strcat(flags->pattern, line);
+    } else
+      strcpy(flags->pattern, line);
+    flags->pattern_size = new_pattern_size;  // Update the pattern size
   }
+  flags->pattern[flags->pattern_size - 1] = '\0';
   fclose(file);
   free(line);
 }
@@ -184,52 +205,59 @@ void grep(int argc, char** argv, char** file_names, int file_count,
       ;
     if (pattern == end) {
       if (!flags.suppress) perror("no pattern\n");
-      exit(1);
+      regfree(preg);  // Освобождаем ресурсы, выделенные regcomp
+      return;
     }
-    if (regcomp(preg, *pattern, flags.regex_flag)) {
+    if (regcomp(preg, *pattern, flags.regex_flag | REG_EXTENDED)) {
       if (!flags.suppress) perror("failed to compile regex\n");
-      exit(1);
+      regfree(preg);  // Освобождаем ресурсы, выделенные regcomp
+      return;
     }
   } else {
-    if (regcomp(preg, flags.pattern, flags.regex_flag)) {
+   // printf("%s", flags.pattern);
+    if (regcomp(preg, flags.pattern, flags.regex_flag | REG_EXTENDED)) {
       if (!flags.suppress) perror("failed to compile regex\n");
-      exit(1);
+      regfree(preg);  // Освобождаем ресурсы, выделенные regcomp
+      return;
     }
   }
-  if (file_count < (2 + flags.incorrect_place)) flags.headers_suppress = 1;
-  for (int i = flags.incorrect_place; i < file_count; i++) {
+  if (file_count < 2) flags.headers_suppress = 1;
+  for (int i = 0; i < file_count; i++) {
     FILE* file = fopen(file_names[i], "rb");
     if (file == NULL) {
-      char error_message[LITTLE_SIZE] = "grep: ";
+      char* error_message =
+          (char*)malloc(strlen("grep: ") + strlen(file_names[i]) + 1);
+      strcpy(error_message, "grep: ");
       strcat(error_message, file_names[i]);
       if (!flags.suppress) perror(error_message);
+      free(error_message);
       continue;
     }
-    if (flags.files_match)
-      grep_file_name(file, flags, preg, file_names[i]);
-    else if (flags.count)
-      grep_count(file, file_names[i], flags, preg);
-    else if (flags.invert)
+    if (flags.files_match) grep_file_name(file, flags, preg, file_names[i]);
+    if (flags.count) grep_count(file, file_names[i], flags, preg);
+    if (flags.invert)
       grep_file_inverted(file, flags, preg, file_names[i]);
     else
       grep_file(file, flags, preg, file_names[i]);
     fclose(file);
   }
+  regfree(preg);  // Освобождаем ресурсы, выделенные regcomp
 }
 
 void grep_file_name(FILE* file, Flags flags, regex_t* preg, char* filename) {
-  char* line = 0;
+  char* line = NULL;
   size_t length = 0;
   regmatch_t match;
   int count = 0;
   while (getline(&line, &length, file) > 0 && count == 0) {
     if (regexec(preg, line, 1, &match, 0) == flags.invert) count++;
   }
+  free(line);
   if (count > 0) printf("%s\n", filename);
 }
 
 void grep_file(FILE* file, Flags flags, regex_t* preg, char* filename) {
-  char* line = 0;
+  char* line = NULL;
   size_t length = 0;
   regmatch_t match;
   int count = 0;
@@ -252,7 +280,7 @@ void grep_file(FILE* file, Flags flags, regex_t* preg, char* filename) {
 
 void grep_file_inverted(FILE* file, Flags flags, regex_t* preg,
                         char* filename) {
-  char* line = 0;
+  char* line = NULL;
   size_t length = 0;
   regmatch_t match;
   int count = 0;
@@ -281,7 +309,13 @@ void grep_file_overlaped(char* line, Flags flags, regex_t* preg, char* filename,
     while (!regexec(preg, remaining, 1, &match, 0)) {
       if (!flags.headers_suppress) printf("%s:", filename);
       if (flags.number_line) printf("%i:", line_count);
-      printf("%lld %s\n", match.rm_eo - match.rm_so, remaining + match.rm_so);
+#ifdef MAC
+      for (char* p = remaining + match.rm_so; p < remaining + match.rm_eo; p++)
+        printf("%c", *p);
+      printf("\n");
+#else
+      printf("%.*s\n", match.rm_eo - match.rm_so, remaining + match.rm_so);
+#endif
       remaining = remaining + match.rm_eo;
     }
   }
