@@ -1,16 +1,9 @@
 CC = gcc -Wall -Werror -Wextra -fsanitize=address -std=c11
-MAC_OS = uname -av | grep -e mac -e Mac -e MAC -e Darwin -e darwin -e DARWIN -o
-EMPTY = ""
-ifeq ($(MAC_OS),$(EMPTY))
-    FLAG=
-else   
-    FLAG=-DMAC
-endif   
-
+MAC =
 all: s21_grep
-
+	
 s21_grep: s21_grep.c
-	$(CC) $(FLAG) s21_grep.c -o s21_grep
+	$(CC) $(MAC) s21_grep.c -o s21_grep
 	
 rebuild:
 	make clean

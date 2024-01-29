@@ -17,6 +17,7 @@ typedef struct {
 
 char** get_file_names(int argc, char** argv, int* file_count, Flags* flags);
 void parse_flags(int argc, char** argv, Flags* flags);
+void parse_flags_Mac(int argc, char** argv, Flags* flags);
 void get_inline_pattern(const char* expression, Flags* flags);
 void get_inline_pattern_from_file(const char* filename, Flags* flags);
 void grep(int argc, char** argv, char** file_names, int file_count,

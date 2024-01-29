@@ -6,7 +6,12 @@ int main(int argc, char** argv) {
   flags.pattern = NULL;
   if (argc > 2) {
     char** file_names = get_file_names(argc, argv, &file_count, &flags);
+#ifdef MAC
+    parse_flags_Mac(argc, argv, &flags);
+#else
     parse_flags(argc, argv, &flags);
+    if (flags.files_match) flags.headers_suppress = 0;
+#endif
     if ((flags.regex_flag || flags.regex_file) & (argc < 4)) {
       if (!flags.suppress) perror("incorrect pattern\n");
     } else {
@@ -98,6 +103,52 @@ void free_files(char** files, int file_count) {
 }
 
 void parse_flags(int argc, char** argv, Flags* flags) {
+  int symbol;
+  flags->pattern = NULL;
+  flags->pattern_size = 0;
+  const char* short_flags_names = "eivclnhsfo";
+  while ((symbol = getopt(argc, argv, short_flags_names)) != -1) {
+    switch (symbol) {
+      case 'e':  // done
+        get_inline_pattern(argv[optind], flags);
+        flags->incorrect_place = 0;
+        break;
+      case 'i':  // done
+        flags->regex_flag = REG_ICASE;
+        break;
+      case 'v':  // done
+        flags->invert = 1;
+        break;
+      case 'c':  // done
+        flags->count = 1;
+        break;
+      case 'l':  // done
+        flags->files_match = 1;
+        break;
+      case 'n':  // done
+        flags->number_line = 1;
+        break;
+      case 's':  // done
+        flags->suppress = 1;
+        break;
+      case 'h':  // done
+        flags->headers_suppress = 1;
+        break;
+      case 'f':  // done
+        get_inline_pattern_from_file(argv[optind], flags);
+        flags->incorrect_place = 0;
+        break;
+      case 'o':  // done
+        flags->overlap = 1;
+        break;
+      default:
+        printf("incorrect flag \n");
+        break;
+    }
+  }
+}
+
+void parse_flags_Mac(int argc, char** argv, Flags* flags) {
   flags->pattern = NULL;
   flags->pattern_size = 0;
   for (int i = 1; i < argc; i++) {
@@ -108,27 +159,19 @@ void parse_flags(int argc, char** argv, Flags* flags) {
         get_inline_pattern(argv[i], flags);
         flags->incorrect_place = 0;
       }
-      if (strchr(arg, 'i') != NULL)
-        flags->regex_flag = REG_ICASE;
-      if (strchr(arg, 'v') != NULL)
-        flags->invert = 1;
-      if (strchr(arg, 'c') != NULL)
-        flags->count = 1;
-      if (strchr(arg, 'l') != NULL)
-        flags->files_match = 1;
-      if (strchr(arg, 'n') != NULL)
-        flags->number_line = 1;
-      if (strchr(arg, 's') != NULL)
-        flags->suppress = 1;
-      if (strchr(arg, 'h') != NULL)
-        flags->headers_suppress = 1;
+      if (strchr(arg, 'i') != NULL) flags->regex_flag = REG_ICASE;
+      if (strchr(arg, 'v') != NULL) flags->invert = 1;
+      if (strchr(arg, 'c') != NULL) flags->count = 1;
+      if (strchr(arg, 'l') != NULL) flags->files_match = 1;
+      if (strchr(arg, 'n') != NULL) flags->number_line = 1;
+      if (strchr(arg, 's') != NULL) flags->suppress = 1;
+      if (strchr(arg, 'h') != NULL) flags->headers_suppress = 1;
       if (strchr(arg, 'f') != NULL) {
         i++;
         get_inline_pattern_from_file(argv[i], flags);
         flags->incorrect_place = 0;
-      } 
-      if (strchr(arg, 'o') != NULL)
-        flags->overlap = 1;
+      }
+      if (strchr(arg, 'o') != NULL) flags->overlap = 1;
     }
   }
 }
@@ -165,7 +208,7 @@ void get_inline_pattern_from_file(const char* filename, Flags* flags) {
   char* str = NULL;
   size_t line_size = 0;
   while (getline(&line, &line_size, file) != -1) {
-    if (strcmp(line, "\n") == 1) line[0] = '.';
+    if (strcmp(line, "\n") == 0) line[0] = '.';
     line_size = strlen(line);
     if (line[line_size - 1] == '\n') {
       line[line_size - 1] = '\0';
@@ -214,7 +257,7 @@ void grep(int argc, char** argv, char** file_names, int file_count,
       return;
     }
   } else {
-   // printf("%s", flags.pattern);
+    //  printf("%s\n", flags.pattern);
     if (regcomp(preg, flags.pattern, flags.regex_flag | REG_EXTENDED)) {
       if (!flags.suppress) perror("failed to compile regex\n");
       regfree(preg);  // Освобождаем ресурсы, выделенные regcomp
@@ -233,12 +276,25 @@ void grep(int argc, char** argv, char** file_names, int file_count,
       free(error_message);
       continue;
     }
-    if (flags.files_match) grep_file_name(file, flags, preg, file_names[i]);
+#ifdef MAC
     if (flags.count) grep_count(file, file_names[i], flags, preg);
-    if (flags.invert)
+    if (flags.files_match) grep_file_name(file, flags, preg, file_names[i]);
+    if (!flags.files_match) {
+      if (flags.invert)
+        grep_file_inverted(file, flags, preg, file_names[i]);
+      else
+        grep_file(file, flags, preg, file_names[i]);
+    }
+#else
+    if (flags.files_match)
+      grep_file_name(file, flags, preg, file_names[i]);
+    else if (flags.count)
+      grep_count(file, file_names[i], flags, preg);
+    else if (flags.invert)
       grep_file_inverted(file, flags, preg, file_names[i]);
     else
       grep_file(file, flags, preg, file_names[i]);
+#endif
     fclose(file);
   }
   regfree(preg);  // Освобождаем ресурсы, выделенные regcomp
@@ -269,7 +325,7 @@ void grep_file(FILE* file, Flags flags, regex_t* preg, char* filename) {
       else {
         if (!flags.headers_suppress) printf("%s:", filename);
         if (flags.number_line) printf("%i:", count);
-        printf("%s", line);
+        if (!flags.files_match) printf("%s", line);
         if (line[strlen(line) - 1] != '\n') printf("\n");
       }
     }
@@ -286,13 +342,19 @@ void grep_file_inverted(FILE* file, Flags flags, regex_t* preg,
   int count = 0;
   while (getline(&line, &length, file) > 0) {
     count++;
-    if (regexec(preg, line, 1, &match, 0)) {
-      if (flags.overlap)
-        ;
-      else {
+    if (!regexec(preg, line, 1, &match, 0)) {
+    } else {
+      if (flags.overlap) {
+#ifdef MAC
         if (!flags.headers_suppress) printf("%s:", filename);
         if (flags.number_line) printf("%i:", count);
-        printf("%s", line);
+        if (!flags.files_match) printf("%s", line);
+        if (line[strlen(line) - 1] != '\n') printf("\n");
+#endif
+      } else {
+        if (!flags.headers_suppress) printf("%s:", filename);
+        if (flags.number_line) printf("%i:", count);
+        if (!flags.files_match) printf("%s", line);
         if (line[strlen(line) - 1] != '\n') printf("\n");
       }
     }
@@ -311,10 +373,11 @@ void grep_file_overlaped(char* line, Flags flags, regex_t* preg, char* filename,
       if (flags.number_line) printf("%i:", line_count);
 #ifdef MAC
       for (char* p = remaining + match.rm_so; p < remaining + match.rm_eo; p++)
-        printf("%c", *p);
+        if (!flags.files_match) printf("%c", *p);
       printf("\n");
 #else
-      printf("%.*s\n", match.rm_eo - match.rm_so, remaining + match.rm_so);
+      if (!flags.files_match)
+        printf("%.*s\n", match.rm_eo - match.rm_so, remaining + match.rm_so);
 #endif
       remaining = remaining + match.rm_eo;
     }
@@ -332,8 +395,20 @@ void grep_count(FILE* file, char const* filename, Flags flags, regex_t* preg) {
     }
   }
   free(line);
+#ifdef MAC
   if (!flags.headers_suppress) printf("%s:", filename);
-  printf("%i\n", count);
+  if (flags.files_match) {
+    printf("%d\n", count > 0);
+    if (count > 0) printf("%s\n", filename);
+  }
+  else
+    printf("%i\n", count);
+#else
+  if ((flags.files_match && count > 0) || !flags.files_match) {
+    if (!flags.headers_suppress) printf("%s:", filename);
+    printf("%i\n", count);
+  }
+#endif
   (void)flags;
   (void)filename;
 }

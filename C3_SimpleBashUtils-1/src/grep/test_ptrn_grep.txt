@@ -1,4 +1,4 @@
-test
+FILE
 CLEAN
 clean
 ^#include
