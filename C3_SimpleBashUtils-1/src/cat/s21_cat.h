@@ -15,5 +15,7 @@ typedef struct {
 Flags parse_flags(int argc, char** argv);
 int read_file(char** argv, Flags* flags);
 int v_transform(int ch);
+void modify_symbol(int* c, int* previous_symbol, Flags* flags,
+                   int* line_count, int* end_count);
 
 #endif

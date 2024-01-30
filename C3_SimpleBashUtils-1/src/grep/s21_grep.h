@@ -15,6 +15,7 @@ typedef struct {
   size_t pattern_size;
 } Flags;
 
+int add_file(char*** files, int* file_count, const char* line);
 char** get_file_names(int argc, char** argv, int* file_count, Flags* flags);
 void parse_flags(int argc, char** argv, Flags* flags);
 void parse_flags_Mac(int argc, char** argv, Flags* flags);
@@ -30,5 +31,6 @@ void grep_file(FILE* file, Flags flags, regex_t* preg, char* filename);
 void grep_count(FILE* file, char const* filename, Flags flags, regex_t* preg);
 void free_files(char** lines, int line_count);
 void invert(char* line);
+void print_error(char* file_name);
 
 #endif
