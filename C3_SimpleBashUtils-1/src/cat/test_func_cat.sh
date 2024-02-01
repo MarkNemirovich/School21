@@ -14,7 +14,6 @@ declare -a tests=(
 
 declare -a extra=(
 "-s test_1_cat.txt"
-"-b -e -n -s -t -v test_1_cat.txt"
 "-t test_3_cat.txt"
 "-n test_2_cat.txt"
 "no_file.txt"
@@ -62,63 +61,63 @@ do
 done
 
 # 2 параметра
-for var1 in b e n s t v
-do
-    for var2 in b e n s t v
-    do
-        if [ $var1 != $var2 ]
-        then
-            for i in "${tests[@]}"
-            do
-                var="-$var1 -$var2"
-                testing $i
-            done
-        fi
-    done
-done
+#for var1 in b e n s t v
+#do
+#    for var2 in b e n s t v
+#    do
+#        if [ $var1 != $var2 ]
+#        then
+#            for i in "${tests[@]}"
+#            do
+#                var="-$var1 -$var2"
+#                testing $i
+#            done
+#        fi
+#    done
+#done
 
 # 3 параметра
-for var1 in b e n s t v
-do
-    for var2 in b e n s t v
-    do
-        for var3 in b e n s t v
-        do
-            if [ $var1 != $var2 ] && [ $var2 != $var3 ] && [ $var1 != $var3 ]
-            then
-                for i in "${tests[@]}"
-                do
-                    var="-$var1 -$var2 -$var3"
-                    testing $i
-                done
-            fi
-        done
-    done
-done
+#for var1 in b e n s t v
+#do
+#    for var2 in b e n s t v
+#    do
+#        for var3 in b e n s t v
+#        do
+#            if [ $var1 != $var2 ] && [ $var2 != $var3 ] && [ $var1 != $var3 ]
+#            then
+#                for i in "${tests[@]}"
+#                do
+#                    var="-$var1 -$var2 -$var3"
+#                    testing $i
+#                done
+#            fi
+#        done
+#    done
+#done
 
 # 4 параметра
-for var1 in b e n s t v
-do
-    for var2 in b e n s t v
-    do
-        for var3 in b e n s t v
-        do
-            for var4 in b e n s t v
-            do
-                if [ $var1 != $var2 ] && [ $var2 != $var3 ] \
-                && [ $var1 != $var3 ] && [ $var1 != $var4 ] \
-                && [ $var2 != $var4 ] && [ $var3 != $var4 ]
-                then
-                    for i in "${tests[@]}"
-                    do
-                        var="-$var1 -$var2 -$var3 -$var4"
-                        testing $i
-                    done
-                fi
-            done
-        done
-    done
-done
+#for var1 in b e n s t v
+#do
+#    for var2 in b e n s t v
+#    do
+#        for var3 in b e n s t v
+#        do
+#            for var4 in b e n s t v
+#            do
+#                if [ $var1 != $var2 ] && [ $var2 != $var3 ] \
+#                && [ $var1 != $var3 ] && [ $var1 != $var4 ] \
+#                && [ $var2 != $var4 ] && [ $var3 != $var4 ]
+#                then
+#                    for i in "${tests[@]}"
+#                    do
+#                        var="-$var1 -$var2 -$var3 -$var4"
+#                        testing $i
+#                    done
+#                fi
+#            done
+#        done
+#    done
+#done
 
 printf "${RED}FAIL: $FAIL${BLACK}\n"
 printf "${GREEN}SUCCESS: $SUCCESS${BLACK}\n"

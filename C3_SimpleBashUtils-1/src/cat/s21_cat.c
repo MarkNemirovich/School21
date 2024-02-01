@@ -79,7 +79,7 @@ void modify_symbol(int* c, int* previous_symbol, Flags* flags, int* line_count,
       else if (flags->b && flags->e)
         printf("      \t");
 #else
-      if (*previous_symbol == '\n' && ((flags->b && *c != '\n') || flags->n))
+      if ((flags->b && *c != '\n') || flags->n)
         printf("%6d\t", (*line_count)++);
 #endif
     }

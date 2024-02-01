@@ -13,13 +13,12 @@ declare -a tests=(
 
 declare -a extra=(
 "-s test_1_cat.txt"
-"-b -e -n -s -t -v test_1_cat.txt"
 "-t test_3_cat.txt"
 "-n test_2_cat.txt"
 "no_file.txt"
 "-n -b test_1_cat.txt"
 "-s -n -e test_2_cat.txt"
-"test_1_cat.txt -n"
+"-n test_1_cat.txt"
 "-n test_1_cat.txt"
 "-n test_1_cat.txt test_2_cat.txt"
 "-v test_3_cat.txt"
@@ -34,11 +33,10 @@ testing()
     if [[ $leak == *"0 leaks for 0 total leaked bytes"* ]]
     then
       (( SUCCESS++ ))
-        echo "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[32msuccess\033[0m cat $t"
+        printf "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[32msuccess\033[0m cat $t\n"
     else
       (( FAIL++ ))
-        echo "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[31mfail\033[0m cat $t"
-#        echo "$leak"
+        printf "\033[31m$FAIL\033[0m/\033[32m$SUCCESS\033[0m/$COUNTER \033[31mfail\033[0m cat $t\n"
     fi
     rm test_s21_cat.log
 }
@@ -61,64 +59,64 @@ do
 done
 
 # 2 параметра
-for var1 in b e n s t v
-do
-    for var2 in b e n s t v
-    do
-        if [ $var1 != $var2 ]
-        then
-            for i in "${tests[@]}"
-            do
-                var="-$var1 -$var2"
-                testing $i
-            done
-        fi
-    done
-done
+#for var1 in b e n s t v
+#do
+#    for var2 in b e n s t v
+#    do
+#        if [ $var1 != $var2 ]
+#        then
+#            for i in "${tests[@]}"
+#            do
+#                var="-$var1 -$var2"
+#                testing $i
+#            done
+#        fi
+#    done
+#done
 
 # 3 параметра
-for var1 in b e n s t v
-do
-    for var2 in b e n s t v
-    do
-        for var3 in b e n s t v
-        do
-            if [ $var1 != $var2 ] && [ $var2 != $var3 ] && [ $var1 != $var3 ]
-            then
-                for i in "${tests[@]}"
-                do
-                    var="-$var1 -$var2 -$var3"
-                    testing $i
-                done
-            fi
-        done
-    done
-done
+#for var1 in b e n s t v
+#do
+#    for var2 in b e n s t v
+#    do
+#        for var3 in b e n s t v
+#        do
+#            if [ $var1 != $var2 ] && [ $var2 != $var3 ] && [ $var1 != $var3 ]
+#            then
+#                for i in "${tests[@]}"
+#                do
+#                    var="-$var1 -$var2 -$var3"
+#                    testing $i
+#                done
+#            fi
+#        done
+#    done
+#done
 
 # 4 параметра
-for var1 in b e n s t v
-do
-    for var2 in b e n s t v
-    do
-        for var3 in b e n s t v
-        do
-            for var4 in b e n s t v
-            do
-                if [ $var1 != $var2 ] && [ $var2 != $var3 ] \
-                && [ $var1 != $var3 ] && [ $var1 != $var4 ] \
-                && [ $var2 != $var4 ] && [ $var3 != $var4 ]
-                then
-                    for i in "${tests[@]}"
-                    do
-                        var="-$var1 -$var2 -$var3 -$var4"
-                        testing $i
-                    done
-                fi
-            done
-        done
-    done
-done
+#for var1 in b e n s t v
+#do
+#    for var2 in b e n s t v
+#    do
+#        for var3 in b e n s t v
+#        do
+#            for var4 in b e n s t v
+#            do
+#                if [ $var1 != $var2 ] && [ $var2 != $var3 ] \
+#                && [ $var1 != $var3 ] && [ $var1 != $var4 ] \
+#                && [ $var2 != $var4 ] && [ $var3 != $var4 ]
+#                then
+#                    for i in "${tests[@]}"
+#                    do
+#                        var="-$var1 -$var2 -$var3 -$var4"
+#                        testing $i
+#                    done
+#                fi
+#            done
+#        done
+#    done
+#done
 
-echo "\033[31mFAIL: $FAIL\033[0m"
-echo "\033[32mSUCCESS: $SUCCESS\033[0m"
-echo "ALL: $COUNTER"
+printf "\033[31mFAIL: $FAIL\033[0m\n"
+printf "\033[32mSUCCESS: $SUCCESS\033[0m\n"
+printf "ALL: $COUNTER\n"

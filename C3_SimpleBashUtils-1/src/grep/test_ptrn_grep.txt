@@ -1,4 +1,4 @@
-FILE
+fun
 CLEAN
 clean
 ^#include

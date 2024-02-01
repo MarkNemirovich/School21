@@ -75,11 +75,13 @@ char** get_file_names(int argc, char** argv, int* file_count, Flags* flags) {
     }
   }
   (void)flags;
-  files = (char**)realloc(files, (*file_count + 1) * sizeof(char*));
-  if (files == NULL)
+  char** str = (char**)realloc(files, (*file_count + 1) * sizeof(char*));
+  if (str == NULL)
     error = 1;
-  else
+  else {
+    files = str;
     files[*file_count] = NULL;
+  }
   free(match_word);
   if (error) {
     free_files(files, *file_count);
@@ -357,14 +359,9 @@ void grep_file_overlaped(char* line, Flags flags, regex_t* preg, char* filename,
     while (!regexec(preg, remaining, 1, &match, 0)) {
       if (!flags.headers_suppress) printf("%s:", filename);
       if (flags.number_line) printf("%i:", line_count);
-#ifdef MAC
       for (char* p = remaining + match.rm_so; p < remaining + match.rm_eo; p++)
         if (!flags.files_match) printf("%c", *p);
       printf("\n");
-#else
-      if (!flags.files_match)
-        printf("%.*s\n", match.rm_eo - match.rm_so, remaining + match.rm_so);
-#endif
       remaining = remaining + match.rm_eo;
     }
   }

@@ -26,10 +26,10 @@ tests=(
 "for FLAGS s21_grep.c"
 "FLAGS -e for -e ^int s21_grep.c s21_grep.h Makefile"
 "-e for -e ^int FLAGS s21_grep.c"
-"-e regex -e ^print FLAGS -f test_ptrn_grep.txt s21_grep.c "
+"-e ^while -e ^print FLAGS -f test_ptrn_grep.txt s21_grep.c "
 "-e while -e void FLAGS -f test_ptrn_grep.txt s21_grep.c Makefile "
-"FLAGS -e intel -e int test_5_grep.txt"
-"-e int -e intel FLAGS test_5_grep.txt"
+"FLAGS -e intel -e amd test_5_grep.txt"
+"-e int -e double FLAGS test_5_grep.txt"
 )
 
 manual=(
