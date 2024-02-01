@@ -1,0 +1,3 @@
+some intellectual text
+
+// Функция ax + b

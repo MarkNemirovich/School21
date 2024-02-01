@@ -1,6 +1,7 @@
 CC = gcc 
-FLAGS = -Wall -Werror -Wextra -fsanitize=address -std=c11
-all: s21_cat
+FLAGS = -Wall -Werror -Wextra
+
+all: s21_cat 
 
 mac: clean
 	$(CC) $(FLAGS) -DMAC s21_cat.c -o s21_cat
@@ -21,6 +22,9 @@ clang:
 	clang-format -i --style=Google *.c *.h
 	clang-format -n --style=Google *.c *.h
 
+fsanitize:
+	$(CC) $(FLAGS) -fsanitize=address -std=c11 s21_cat.c -o s21_cat
+
 cppcheck:
 	cppcheck --enable=all --suppress=missingIncludeSystem *.c *.h
 
@@ -28,8 +32,7 @@ valgrind:
 	valgrind --tool=memcheck --leak-check=yes ./s21_cat leaks.txt
 
 test:
-	bash test_func_cat.sh
+	bash ../tests/test_func_cat.sh
 
 leaks:
-	bash test_leak_cat.sh
-	
+	bash ../tests/test_leak_cat.sh

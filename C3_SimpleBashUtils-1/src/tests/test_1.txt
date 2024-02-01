@@ -1,0 +1,26 @@
+#include "s21_grep.h"
+
+int main(int argc, char** argv) {
+  int file_count = 0;
+  Flags flags = {0};
+  flags.pattern = NULL;
+  if (argc > 2) {
+    char** file_names = get_file_names(argc, argv, &file_count, &flags);
+    if (file_names != NULL) {
+#ifdef MAC
+      parse_flags_Mac(argc, argv, &flags);
+#else
+      parse_flags(argc, argv, &flags);
+      if (flags.files_match) flags.headers_suppress = 0;
+#endif
+      if ((flags.regex_flag || flags.regex_file) & (argc < 4)) {
+        if (!flags.suppress) perror("incorrect pattern\n");
+      } else {
+        grep(argc, argv, file_names, file_count, flags);
+      }
+      free(flags.pattern);
+      free_files(file_names, file_count);
+    }
+  }
+  return 0;
+}
