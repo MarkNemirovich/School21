@@ -1,4 +1,17 @@
-#include "s21_sprintf.h"
+#include <stdio.h>
+#include <limits.h>
+#include <stdarg.h>
+#include "s21_string.h"
+#include <string.h>
+
+#define s21_NULL ((void *)0)
+#define S21_TEXTMAX 2048
+
+typedef long unsigned s21_size_t;
+
+typedef struct specificator {
+    int minus, plus, space;
+} specificator;
 
 s21_size_t
 get_num (char **format)
@@ -15,14 +28,22 @@ get_num (char **format)
 }
 
 void
-modificate_specificator (char **format, int *minus_flag, s21_size_t * padding,
+modificate_specificator (char **format, specificator *specificators, s21_size_t * padding,
 						 int *accuracy)
 {
   if (**format == '-')
 	{
-	  *minus_flag = 1;
+	  specificators->minus = 1;
 	  (*format)++;
 	}
+    else if (**format == '+') {
+	  specificators->plus = 1;
+	  (*format)++;
+      } 
+    else if (**format == ' ') {
+	  specificators->space = 1;
+	  (*format)++;
+      }
   if (**format >= '0' && **format <= '9')
 	{
 	  *padding = get_num (format);
@@ -47,24 +68,33 @@ add_spaces (char *str, int *i, s21_size_t padding)
 
 void
 print_number (char *str, int *i, int number, int length, int accuracy,
-			  int power)
+			  int power, specificator specificators)
 {
-  while (accuracy > length)
-	{
-	  str[*i] = '0';
-	  (*i)++;
-	  accuracy--;
-	}
   if (number < 0)
 	{
 	  str[*i] = '-';
 	  (*i)++;
 	  number *= -1;
 	}
+	else if (specificators.plus)
+	{
+	  str[*i] = '+';
+	  (*i)++;
+	}
+	else if (specificators.space)
+	{
+	  str[*i] = ' ';
+	  (*i)++;
+	}
+  while (accuracy > length)
+	{
+	  str[*i] = '0';
+	  (*i)++;
+	  accuracy--;
+	}
   int rest = number;
   for (; power > 1; power /= 10)
 	{
-	  printf ("pow = %i, %i\t %i\n", rest, power, rest / (power / 10));
 	  str[*i] = rest / (power / 10) + '0';
 	  (*i)++;
 	  rest = number % (power / 10);
@@ -72,10 +102,10 @@ print_number (char *str, int *i, int number, int length, int accuracy,
 }
 
 int
-c_specific (char *str, int *i, char symbol, int minus_flag,
+c_specific (char *str, int *i, char symbol, specificator specificators,
 			s21_size_t padding)
 {
-  if (minus_flag)
+  if (specificators.minus)
 	{
 	  str[*i] = symbol;
 	  (*i)++;
@@ -87,12 +117,12 @@ c_specific (char *str, int *i, char symbol, int minus_flag,
 	  str[*i] = symbol;
 	  (*i)++;
 	}
-  return padding - minus_flag - 1;
+  return padding - specificators.minus - 1;
 }
 
 
 int
-d_specific (char *str, int *i, int number, int minus_flag, s21_size_t padding,
+d_specific (char *str, int *i, int number, specificator specificators, s21_size_t padding,
 			int accuracy)
 {
   int length = 0, power = 1;
@@ -104,40 +134,32 @@ d_specific (char *str, int *i, int number, int minus_flag, s21_size_t padding,
 	{
 	  length = 1;
 	}
-  if (number < 0)
+  if (specificators.minus)
 	{
-	  length++;
-	}
-  if (minus_flag)
-	{
-	  print_number (str, i, number, length, accuracy, power);
+	  print_number (str, i, number, length, accuracy, power, specificators);
 	  if (length > accuracy)
-		add_spaces (str, i, padding - length);
+		add_spaces (str, i, padding - length - specificators.plus - specificators.space);
 	  else
-		add_spaces (str, i, padding - accuracy);
+		add_spaces (str, i, padding - accuracy - specificators.plus - specificators.space);
 	}
   else
 	{
 	  if (length > accuracy)
-		add_spaces (str, i, padding - length);
+		add_spaces (str, i, padding - length - specificators.plus - specificators.space);
 	  else
-		add_spaces (str, i, padding - accuracy);
-	  printf ("rest = %i\t \n", length);
-	  print_number (str, i, number, length, accuracy, power);
-	  printf ("rest = %i\t \n", length);
+		add_spaces (str, i, padding - accuracy - specificators.plus - specificators.space);
+	  print_number (str, i, number, length, accuracy, power, specificators);
 	}
-  printf ("rest = %i\t \n", length);
   if (accuracy > length)
 	length = accuracy;
   if (padding > length)
 	length = accuracy;
-  printf ("rest = %i\t \n", length);
-  return length - minus_flag;
+  return length - specificators.minus;
 }
 
 
 int
-f_specific (char *str, int *i, int number, int minus_flag, s21_size_t padding,
+f_specific (char *str, int *i, int number, specificator specificators, s21_size_t padding,
 			int accuracy)
 {
   int length = 0, power = 1;
@@ -149,13 +171,9 @@ f_specific (char *str, int *i, int number, int minus_flag, s21_size_t padding,
 	{
 	  length = 1;
 	}
-  if (number < 0)
+  if (specificators.minus)
 	{
-	  length++;
-	}
-  if (minus_flag)
-	{
-	  print_number (str, i, number, length, accuracy, power);
+	  print_number (str, i, number, length, accuracy, power, specificators);
 	  if (length > accuracy)
 		add_spaces (str, i, padding - length);
 	  else
@@ -167,38 +185,38 @@ f_specific (char *str, int *i, int number, int minus_flag, s21_size_t padding,
 		add_spaces (str, i, padding - length);
 	  else
 		add_spaces (str, i, padding - accuracy);
-	  printf ("rest = %i\t \n", length);
-	  print_number (str, i, number, length, accuracy, power);
-	  printf ("rest = %i\t \n", length);
+	  print_number (str, i, number, length, accuracy, power, specificators);
 	}
-  printf ("rest = %i\t \n", length);
   if (accuracy > length)
 	length = accuracy;
   if (padding > length)
 	length = accuracy;
-  printf ("rest = %i\t \n", length);
-  return length - minus_flag;
+  return length - specificators.minus;
 }
 
 int
 transform_specificator (char *str, int *i, va_list list, char **format,
-						int minus_flag, s21_size_t padding, int accuracy)
+						specificator specificators, s21_size_t padding, int accuracy)
 {
   int length_change = 0;
   switch (**format)
 	{
 	case 'c':
 	  length_change =
-		c_specific (str, i, va_arg (list, int), minus_flag, padding);
+		c_specific (str, i, va_arg (list, int), specificators, padding);
 	  (*format)++;
 	  break;
 	case 'd':
 	  length_change =
-		d_specific (str, i, va_arg (list, int), minus_flag, padding,
+		d_specific (str, i, va_arg (list, int), specificators, padding,
 					accuracy);
 	  (*format)++;
 	  break;
 	case 'f':
+	  length_change =
+		f_specific (str, i, va_arg (list, int), specificators, padding,
+					accuracy);
+	  (*format)++;
 	  break;
 	case 's':
 	  break;
@@ -215,21 +233,21 @@ s21_sprintf (char *str, const char *format, ...)
 {
   va_list list;
   va_start (list, format);
-  int size = (int) strlen (format);
+  int size = (int)strlen(format); // (int)s21_strlen(format);
   int i = 0;
-
+    specificator specificators = {0};
   while (*format != 0 && i < size)
 	{
 	  if (*format++ == '%')
 		{
-		  int minus_flag = 0;
+		  specificators = (specificator){0};
 		  s21_size_t padding = 0;
 		  int accuracy = 0;
-		  modificate_specificator ((char **) &format, &minus_flag, &padding,
+		  modificate_specificator ((char **) &format, &specificators, &padding,
 								   &accuracy);
 		  size +=
 			transform_specificator (str, &i, list, (char **) &format,
-									minus_flag, padding, accuracy);
+									specificators, padding, accuracy);
 		}
 	  else
 		{
@@ -246,8 +264,10 @@ main ()
 {
   char buffer[50];
 
-  s21_sprintf (buffer, "sum of %5d and 20 is 30", -123);
-
+  s21_sprintf (buffer, "sum of %5.3f and 20 is 30\n", 12);
+  printf ("%s", buffer);
+  
+  sprintf(buffer, "sum of %5.3f and 20 is 30\n", 12.2);
   printf ("%s", buffer);
   return 0;
 }
