@@ -1,10 +1,10 @@
-//#include <limits.h>
+// #include <limits.h>
+#include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "s21_string.h"
-#include <math.h>
 
 #define s21_NULL ((void *)0)
 #define S21_TEXTMAX 2048
@@ -49,40 +49,29 @@ void modificate_specificator(char **format, specificator *specificators,
 }
 
 void add_spaces(char *str, int *i, int padding) {
-  while (padding > 0) {
-    str[*i] = ' ';
-    (*i)++;
-    padding--;
+  for (; padding > 0; padding--) {
+    str[(*i)++] = ' ';
   }
 }
 
-void print_number(char *str, int *i, char *number, int length, specificator specificators) {  
+void print_number(char *str, int *i, char *number, int length,
+                  specificator specificators, int padding) {
   if (specificators.plus) {
-    str[*i] = '+';
-    (*i)++;
+    str[(*i)++] = '+';
   } else if (specificators.space) {
-    str[*i] = ' ';
-    (*i)++;
+    str[(*i)++] = ' ';
+  }
+  int shift = padding - length - specificators.plus - specificators.space;
+  if (length < padding && !specificators.minus) {
+    add_spaces(str, i, shift);
   }
   for (; length > 0; (*i)++, number++, length--) {
     str[*i] = *number;
   }
-}
-
-int c_specific(char *str, int *i, char symbol, specificator specificators,
-               int padding) {
-  if (specificators.minus) {
-    str[*i] = symbol;
-    (*i)++;
-    add_spaces(str, i, padding - 1);
-  } else {
-    add_spaces(str, i, padding - 1);
-    str[*i] = symbol;
-    (*i)++;
+  if (length < padding && specificators.minus) {
+    add_spaces(str, i, shift);
   }
-  return padding - specificators.minus - 1;
 }
-
 // Reverses a string 'str' of length 'len'
 void reverse(char *str, int len) {
   int temp;
@@ -94,69 +83,57 @@ void reverse(char *str, int len) {
 }
 
 // Converts a given integer x to string str[].
-// n is the number of digits required in the output.
-// If n is more than the number of digits in x,
-// then 0s are added at the beginning.
-int intToStr(int x, char *str, int n) {
+// n is the number of digits required in the output
+int intToStr(int number, char *str, int n) {
   int i = 0;
-  while (x) {
-    str[i++] = (x % 10) + '0';
-    x = x / 10;
+  while (number) {  // fill from end to start
+    str[i++] = (number % 10) + '0';
+    number = number / 10;
   }
-  // If number of digits required is more, then
-  // add 0s at the beginning
-  while (i < n) str[i++] = '0';
+  // If number of digits required is more, add 0
+  while (i < n) {
+    str[i++] = '0';
+  }
   reverse(str, i);
   str[i] = '\0';
   return i;
 }
 
 int s21_itoa(int n, char *res, int accuracy) {
-  // convert integer to string
   return intToStr(n, res, accuracy);
 }
 
 int s21_ftoa(float n, char *res, int accuracy) {
-  // Extract integer part
-  int ipart = (int)n;
-  // Extract floating part
-  float fpart = n - (float)ipart;
-  // convert integer part to string
+  int ipart = (int)n;              // Extract integer part
+  float fpart = n - (float)ipart;  // Extract floating part
   int i = intToStr(ipart, res, 0);
-  // check for display option after point
-  if (accuracy != 0) {
-    res[i] = '.';  // add dot
-    i++;
-    // Get the value of fraction part upto given no.
-    // of points after dot. The third parameter
-    // is needed to handle cases like 233.007
+  if (accuracy != 0) {  // check for display option after point
+    res[i++] = '.';
+    // Get the value of fraction part upto given by points after dot
     fpart = fpart * pow(10, accuracy);
+    // convert floating part to string
     i += intToStr((int)fpart, res + i, accuracy);
   }
   return i;
+}
+
+int c_specific(char *str, int *i, char symbol, specificator specificators,
+               int padding) {
+  if (specificators.minus) {
+    str[(*i)++] = symbol;
+    add_spaces(str, i, padding - 1);
+  } else {
+    add_spaces(str, i, padding - 1);
+    str[(*i)++] = symbol;
+  }
+  return padding - specificators.minus - 1;
 }
 
 int d_specific(char *str, int *i, int number, specificator specificators,
                int padding, int accuracy) {
   char num[S21_TEXTMAX];
   int length = s21_itoa(number, num, accuracy);
-  if (specificators.minus) {
-    print_number(str, i, num, length, specificators);
-    if (length > accuracy)
-      add_spaces(str, i,
-                 padding - length - specificators.plus - specificators.space);
-    else
-      add_spaces(str, i,
-                 padding - accuracy - specificators.plus - specificators.space);
-  } else {
-    if (length > accuracy)
-      add_spaces(str, i,
-                 padding - length - specificators.plus - specificators.space);
-    else
-      add_spaces(str, i,
-                 padding - accuracy - specificators.plus - specificators.space);
-    print_number(str, i, num, length, specificators);
-  }
+  print_number(str, i, num, length, specificators, padding);
   if (accuracy > length) length = accuracy;
   if (padding > length) length = padding;
   return length - specificators.minus;
@@ -167,19 +144,7 @@ int f_specific(char *str, int *i, float number, specificator specificators,
   if (!specificators.point) accuracy = 6;
   char num[S21_TEXTMAX];
   int length = s21_ftoa(number, num, accuracy);
-  if (specificators.minus) {
-    print_number(str, i, num, length, specificators);
-    if (length > accuracy)
-      add_spaces(str, i, padding - length - specificators.plus - specificators.space);
-    else
-      add_spaces(str, i, padding - accuracy - specificators.plus - specificators.space);
-  } else {
-    if (length > accuracy)
-      add_spaces(str, i, padding - length - specificators.plus - specificators.space);
-    else
-      add_spaces(str, i, padding - accuracy - specificators.plus - specificators.space);
-    print_number(str, i, num, length, specificators);
-  }
+  print_number(str, i, num, length, specificators, padding);
   if (accuracy > length) length = accuracy;
   if (padding > length) length = padding;
   return length - specificators.minus;
@@ -243,10 +208,10 @@ int main() {
   int number = 123;
   char buffer[50];
 
-  s21_sprintf(buffer, "sum of %12.6d and 20 is 30\n", number);
+  s21_sprintf(buffer, "sum of %-12d and 20 is 30\n", number);
   printf("%s", buffer);
 
-  sprintf(buffer, "sum of %12.6d and 20 is 30\n", number);
+  sprintf(buffer, "sum of %-12d and 20 is 30\n", number);
   printf("%s", buffer);
   return 0;
 }
