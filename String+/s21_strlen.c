@@ -3,7 +3,7 @@
 s21_size_t s21_strlen(const char *str) {
   const char *s;
   // move to the end of string
-  for (s = str; *s != '\n'; ++s) {
+  for (s = str; *s != '\n' && *s !=  '\0'; ++s) {
     ;
   }
   // end - start

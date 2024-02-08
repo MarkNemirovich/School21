@@ -49,16 +49,16 @@ void add_spaces(char *str, int *i, int padding) {
   }
 }
 
-void print_number(char *str, int *i, char *number, int length,
-                  specificator specificators, int padding, int sign) {
-  int shift = padding - length - (specificators.plus || specificators.space || !sign);
+void print(char *str, int *i, char *number, int length,
+           specificator specificators, int padding, int sign) {
+  int shift =
+      padding - length - (specificators.plus || specificators.space || !sign);
   if (length < padding && !specificators.minus) {
     add_spaces(str, i, shift);
   }
   if (!sign) {
     str[(*i)++] = '-';
-  }
-  else if (specificators.plus) {
+  } else if (specificators.plus) {
     str[(*i)++] = '+';
   } else if (specificators.space) {
     str[(*i)++] = ' ';
@@ -133,7 +133,7 @@ int d_specific(char *str, int *i, int number, specificator specificators,
   if (number < 0) number = -number;
   char num[S21_TEXTMAX];
   int length = s21_itoa(number, num, accuracy);
-  print_number(str, i, num, length, specificators, padding, sign);
+  print(str, i, num, length, specificators, padding, sign);
   if (accuracy > length) length = accuracy;
   if (padding > length) length = padding;
   return length - specificators.minus;
@@ -146,8 +146,17 @@ int f_specific(char *str, int *i, float number, specificator specificators,
   if (number < 0) number = -number;
   char num[S21_TEXTMAX];
   int length = s21_ftoa(number, num, accuracy);
-  print_number(str, i, num, length, specificators, padding, sign);
+  print(str, i, num, length, specificators, padding, sign);
   if (accuracy > length) length = accuracy;
+  if (padding > length) length = padding;
+  return length - specificators.minus;
+}
+
+int s_specific(char *str, int *i, char *text, specificator specificators,
+               int padding, int accuracy) {
+  int length = (int)s21_strlen(text);
+  if (accuracy < length) length = accuracy;
+  print(str, i, text, length, specificators, padding, 1);
   if (padding > length) length = padding;
   return length - specificators.minus;
 }
@@ -160,25 +169,25 @@ int transform_specificator(char *str, int *i, va_list list, char **format,
     case 'c':
       length_change =
           c_specific(str, i, va_arg(list, int), specificators, padding);
-      (*format)++;
       break;
     case 'd':
       length_change = d_specific(str, i, va_arg(list, int), specificators,
                                  padding, accuracy);
-      (*format)++;
       break;
     case 'f':
       length_change = f_specific(str, i, (float)va_arg(list, double),
                                  specificators, padding, accuracy);
-      (*format)++;
       break;
     case 's':
+      length_change = s_specific(str, i, va_arg(list, char*),
+                                 specificators, padding, accuracy);
       break;
     case 'u':
       break;
     default:
       break;
   }
+  (*format)++;
   return length_change;
 }
 
@@ -210,10 +219,10 @@ int main() {
   float number = -123.48741;
   char buffer[50];
 
-  s21_sprintf(buffer, "sum of %+12.3f and 20 is 30\n", number);
+  s21_sprintf(buffer, "sum of %12.13s and 20 is 30\n", "number");
   printf("%s", buffer);
 
-  sprintf(buffer, "sum of %+12.3f and 20 is 30\n", number);
+  sprintf(buffer, "sum of %12.13s and 20 is 30\n", "number");
   printf("%s", buffer);
   return 0;
 }
