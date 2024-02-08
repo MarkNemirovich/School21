@@ -1,4 +1,4 @@
-// #include <limits.h>
+#include <limits.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -6,9 +6,9 @@
 
 #include "s21_string.h"
 
-typedef struct specificator {
+typedef struct flags {
   int minus, plus, space, point;
-} specificator;
+} flags;
 
 s21_size_t get_num(char **format) {
   s21_size_t num = 0;
@@ -21,7 +21,7 @@ s21_size_t get_num(char **format) {
   return num;
 }
 
-void modificate_specificator(char **format, specificator *specificators,
+void modificate_flags(char **format, flags *specificators,
                              int *padding, int *accuracy) {
   if (**format == '-') {
     specificators->minus = 1;
@@ -50,7 +50,7 @@ void add_spaces(char *str, int *i, int padding) {
 }
 
 void print(char *str, int *i, char *number, int length,
-           specificator specificators, int padding, int sign) {
+           flags specificators, int padding, int sign) {
   int shift =
       padding - length - (specificators.plus || specificators.space || !sign);
   if (length < padding && !specificators.minus) {
@@ -72,7 +72,7 @@ void print(char *str, int *i, char *number, int length,
 }
 // Reverses a string 'str' of length 'len'
 void reverse(char *str, int len) {
-  int temp;
+  char temp;
   for (int i = 0, j = len - 1; i < j; i++, j--) {
     temp = str[i];
     str[i] = str[j];
@@ -82,7 +82,7 @@ void reverse(char *str, int len) {
 
 // Converts a given integer x to string str[].
 // n is the number of digits required in the output
-int intToStr(int number, char *str, int n) {
+int intToStr(long number, char *str, int n) {
   int i = 0;
   while (number) {  // fill from end to start
     str[i++] = (number % 10) + '0';
@@ -115,7 +115,11 @@ int s21_ftoa(float n, char *res, int accuracy) {
   return i;
 }
 
-int c_specific(char *str, int *i, char symbol, specificator specificators,
+int s21_utoa(unsigned int n, char *res, int accuracy) {
+  return intToStr(n, res, accuracy);
+}
+
+int c_specific(char *str, int *i, char symbol, flags specificators,
                int padding) {
   if (specificators.minus) {
     str[(*i)++] = symbol;
@@ -127,7 +131,7 @@ int c_specific(char *str, int *i, char symbol, specificator specificators,
   return padding - specificators.minus - 1;
 }
 
-int d_specific(char *str, int *i, int number, specificator specificators,
+int d_specific(char *str, int *i, int number, flags specificators,
                int padding, int accuracy) {
   int sign = number >= 0;
   if (number < 0) number = -number;
@@ -139,7 +143,7 @@ int d_specific(char *str, int *i, int number, specificator specificators,
   return length - specificators.minus;
 }
 
-int f_specific(char *str, int *i, float number, specificator specificators,
+int f_specific(char *str, int *i, float number, flags specificators,
                int padding, int accuracy) {
   if (!specificators.point) accuracy = 6;
   int sign = number >= 0;
@@ -152,7 +156,7 @@ int f_specific(char *str, int *i, float number, specificator specificators,
   return length - specificators.minus;
 }
 
-int s_specific(char *str, int *i, char *text, specificator specificators,
+int s_specific(char *str, int *i, char *text, flags specificators,
                int padding, int accuracy) {
   int length = (int)s21_strlen(text);
   if (accuracy < length) length = accuracy;
@@ -161,8 +165,24 @@ int s_specific(char *str, int *i, char *text, specificator specificators,
   return length - specificators.minus;
 }
 
+int u_specific(char *str, int *i, unsigned int number, flags specificators,
+               int padding, int accuracy) {
+  char num[S21_TEXTMAX];
+  int length = s21_utoa((int)number, num, accuracy);
+  print(str, i, num, length, specificators, padding, 1);
+  if (accuracy > length) length = accuracy;
+  if (padding > length) length = padding;
+  return length - specificators.minus;
+}
+
+int percent_specific(char *str, int *i) {
+  s21_memset(&str[*i], '%', 1);
+  *i += 1;
+  return 1;
+}
+
 int transform_specificator(char *str, int *i, va_list list, char **format,
-                           specificator specificators, int padding,
+                           flags specificators, int padding,
                            int accuracy) {
   int length_change = 0;
   switch (**format) {
@@ -183,6 +203,11 @@ int transform_specificator(char *str, int *i, va_list list, char **format,
                                  specificators, padding, accuracy);
       break;
     case 'u':
+      length_change = u_specific(str, i, va_arg(list, unsigned int), specificators,
+                                 padding, accuracy);
+      break;
+    case '%':
+      length_change = percent_specific(str, i);
       break;
     default:
       break;
@@ -196,13 +221,13 @@ int s21_sprintf(char *str, const char *format, ...) {
   va_start(list, format);
   int size = (int)s21_strlen(format);
   int i = 0;
-  specificator specificators = {0};
+  flags specificators = {0};
   while (*format != 0 && i < size) {
     if (*format++ == '%') {
-      specificators = (specificator){0};
+      specificators = (flags){0};
       int padding = 0;
       int accuracy = 0;
-      modificate_specificator((char **)&format, &specificators, &padding,
+      modificate_flags((char **)&format, &specificators, &padding,
                               &accuracy);
       size += transform_specificator(str, &i, list, (char **)&format,
                                      specificators, padding, accuracy);
@@ -216,13 +241,14 @@ int s21_sprintf(char *str, const char *format, ...) {
 }
 
 int main() {
-  float number = -123.48741;
+  long number = -123.23;
   char buffer[50];
-
-  s21_sprintf(buffer, "sum of %12.13s and 20 is 30\n", "number");
+  s21_sprintf(buffer, "sum of %-20u and 20 is 30\n", number);
   printf("%s", buffer);
 
-  sprintf(buffer, "sum of %12.13s and 20 is 30\n", "number");
+  sprintf(buffer, "sum of %-20u and 20 is 30\n", (unsigned int)number);
+  printf("%s", buffer);
+  sprintf(buffer, "sum of %-20lu and 20 is 30\n", number);
   printf("%s", buffer);
   return 0;
 }
