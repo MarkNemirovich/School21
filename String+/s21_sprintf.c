@@ -2,14 +2,9 @@
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include <string.h>
+#include <string.h>  // temprorarys delete after finish!!!
 
 #include "s21_string.h"
-
-#define s21_NULL ((void *)0)
-#define S21_TEXTMAX 2048
-
-typedef long unsigned s21_size_t;
 
 typedef struct specificator {
   int minus, plus, space, point;
@@ -55,15 +50,18 @@ void add_spaces(char *str, int *i, int padding) {
 }
 
 void print_number(char *str, int *i, char *number, int length,
-                  specificator specificators, int padding) {
-  if (specificators.plus) {
+                  specificator specificators, int padding, int sign) {
+  int shift = padding - length - (specificators.plus || specificators.space || !sign);
+  if (length < padding && !specificators.minus) {
+    add_spaces(str, i, shift);
+  }
+  if (!sign) {
+    str[(*i)++] = '-';
+  }
+  else if (specificators.plus) {
     str[(*i)++] = '+';
   } else if (specificators.space) {
     str[(*i)++] = ' ';
-  }
-  int shift = padding - length - specificators.plus - specificators.space;
-  if (length < padding && !specificators.minus) {
-    add_spaces(str, i, shift);
   }
   for (; length > 0; (*i)++, number++, length--) {
     str[*i] = *number;
@@ -131,9 +129,11 @@ int c_specific(char *str, int *i, char symbol, specificator specificators,
 
 int d_specific(char *str, int *i, int number, specificator specificators,
                int padding, int accuracy) {
+  int sign = number >= 0;
+  if (number < 0) number = -number;
   char num[S21_TEXTMAX];
   int length = s21_itoa(number, num, accuracy);
-  print_number(str, i, num, length, specificators, padding);
+  print_number(str, i, num, length, specificators, padding, sign);
   if (accuracy > length) length = accuracy;
   if (padding > length) length = padding;
   return length - specificators.minus;
@@ -142,9 +142,11 @@ int d_specific(char *str, int *i, int number, specificator specificators,
 int f_specific(char *str, int *i, float number, specificator specificators,
                int padding, int accuracy) {
   if (!specificators.point) accuracy = 6;
+  int sign = number >= 0;
+  if (number < 0) number = -number;
   char num[S21_TEXTMAX];
   int length = s21_ftoa(number, num, accuracy);
-  print_number(str, i, num, length, specificators, padding);
+  print_number(str, i, num, length, specificators, padding, sign);
   if (accuracy > length) length = accuracy;
   if (padding > length) length = padding;
   return length - specificators.minus;
@@ -205,13 +207,13 @@ int s21_sprintf(char *str, const char *format, ...) {
 }
 
 int main() {
-  int number = 123;
+  float number = -123.48741;
   char buffer[50];
 
-  s21_sprintf(buffer, "sum of %-12d and 20 is 30\n", number);
+  s21_sprintf(buffer, "sum of %+12.3f and 20 is 30\n", number);
   printf("%s", buffer);
 
-  sprintf(buffer, "sum of %-12d and 20 is 30\n", number);
+  sprintf(buffer, "sum of %+12.3f and 20 is 30\n", number);
   printf("%s", buffer);
   return 0;
 }
