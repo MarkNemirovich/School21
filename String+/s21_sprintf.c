@@ -46,7 +46,7 @@ void modificate_size(char **format, flag *flags, int *padding, int *accuracy) {
   if (**format == 'h') {
     flags->shorter = 1;
     (*format)++;
-  } else if (**format == 'l' || **format == 'L') {
+  } else if (**format == 'l') {
     flags->longer = 1;
     (*format)++;
     if (**format == 'l') {
@@ -98,14 +98,14 @@ void reverse(char *str, int len) {
 
 // Converts a given integer x to string str[].
 // n is the number of digits required in the output
-int intToStr(long long unsigned number, char *str, int n) {
+int intToStr(long long unsigned number, char *str, int length) {
   int i = 0;
   while (number) {  // fill from end to start
     str[i++] = (number % 10) + '0';
     number = number / 10;
   }
   // If number of digits required is more, add 0
-  while (i < n) {
+  while (i < length) {
     str[i++] = '0';
   }
   reverse(str, i);
@@ -118,16 +118,14 @@ int s21_itoa(long long int n, char *res, int accuracy) {
 }
 
 int s21_ftoa(long double n, char *res, int accuracy) {
-  long long int ipart = (int)n;                // Extract integer part
+  long long int ipart = (long long int)n;                // Extract integer part
   long double fpart = n - (long double)ipart;  // Extract floating part
   int i = intToStr(ipart, res, 0);
-  if (accuracy != 0) {  // check for display option after point
-    res[i++] = '.';
-    // Get the value of fraction part upto given by points after dot
-    fpart = fpart * pow(10, accuracy);
-    // convert floating part to string
-    i += intToStr((long long int)fpart, res + i, accuracy);
-  }
+  res[i++] = '.';
+  // Get the value of fraction part upto given by points after dot
+  fpart = fpart * pow(10, accuracy);
+  // convert floating part to string
+  i += intToStr((long long int)fpart, res + i, accuracy);
   return i;
 }
 
@@ -198,7 +196,7 @@ int s_specific(char *str, int *i, char *text, flag flags, int padding,
   return length - flags.minus;
 }
 
-int u_specific(char *str, int *i, unsigned long long int number, flag flags,
+int u_specific(char *str, int *i, long long unsigned int number, flag flags,
                int padding, int accuracy) {
   // cast to neccessary type
   if (flags.longer)
@@ -236,16 +234,21 @@ int transform_specificator(char *str, int *i, va_list list, char **format,
                                  padding, accuracy);
       break;
     case 'f':
-      length_change = f_specific(str, i, (float)va_arg(list, double), flags,
-                                 padding, accuracy);
+      if (flags.longest)
+        length_change =
+            f_specific(str, i, (long double)va_arg(list, long double), flags,
+                       padding, accuracy);
+      else
+        length_change = f_specific(str, i, (long double)va_arg(list, double),
+                                   flags, padding, accuracy);
       break;
     case 's':
       length_change =
           s_specific(str, i, va_arg(list, char *), flags, padding, accuracy);
       break;
     case 'u':
-      length_change = u_specific(str, i, va_arg(list, unsigned int), flags,
-                                 padding, accuracy);
+      length_change = u_specific(str, i, va_arg(list, long long unsigned int),
+                                 flags, padding, accuracy);
       break;
     case '%':
       length_change = percent_specific(str, i);
@@ -302,13 +305,16 @@ void print_int(char *buffer) {
 }
 void print_unsigned(char *buffer) {
   long long unsigned int integer = -7379234545437652;
-  s21_sprintf(buffer, "sum of %20hd and 20 is 30\n", (short unsigned int)integer);
+  s21_sprintf(buffer, "sum of %20hd and 20 is 30\n",
+              (short unsigned int)integer);
   printf("%s", buffer);
   s21_sprintf(buffer, "sum of %20d and 20 is 30\n", (unsigned int)integer);
   printf("%s", buffer);
-  s21_sprintf(buffer, "sum of %20ld and 20 is 30\n", (long unsigned int)integer);
+  s21_sprintf(buffer, "sum of %20ld and 20 is 30\n",
+              (long unsigned int)integer);
   printf("%s", buffer);
-  s21_sprintf(buffer, "sum of %20lld and 20 is 30\n", (long long unsigned int)integer);
+  s21_sprintf(buffer, "sum of %20lld and 20 is 30\n",
+              (long long unsigned int)integer);
   printf("%s", buffer);
   sprintf(buffer, "sum of %20hd and 20 is 30\n", (short unsigned int)integer);
   printf("%s", buffer);
@@ -316,18 +322,22 @@ void print_unsigned(char *buffer) {
   printf("%s", buffer);
   sprintf(buffer, "sum of %20ld and 20 is 30\n", (long unsigned int)integer);
   printf("%s", buffer);
-  sprintf(buffer, "sum of %20lld and 20 is 30\n", (long long unsigned int)integer);
+  sprintf(buffer, "sum of %20lld and 20 is 30\n",
+          (long long unsigned int)integer);
   printf("%s", buffer);
 }
+
 void print_fractal(char *buffer) {
-  long double fractal = -73792345445321.5437652;
-  sprintf(buffer, "sum of %20.5f and 20 is 30\n", (float)fractal);
+  long double fractal = 73755431351.52454612L;
+  s21_sprintf(buffer, "sum of %20.5f and 20 is 30\n", (float)fractal);
   printf("%s", buffer);
-  sprintf(buffer, "sum of %20.5lf and 20 is 30\n", (double)fractal);
+  s21_sprintf(buffer, "sum of %20.5lf and 20 is 30\n", (double)fractal);
   printf("%s", buffer);
-  sprintf(buffer, "sum of %20.5Lf and 20 is 30\n", (long double)fractal);
+  s21_sprintf(buffer, "sum of %20.5Lf and 20 is 30\n", (long double)fractal);
   printf("%s", buffer);
 
+  sprintf(buffer, "sum of %20.5e and 20 is 30\n", (float)fractal);
+  printf("%s", buffer);
   sprintf(buffer, "sum of %20.5f and 20 is 30\n", (float)fractal);
   printf("%s", buffer);
   sprintf(buffer, "sum of %20.5lf and 20 is 30\n", (double)fractal);
@@ -335,10 +345,11 @@ void print_fractal(char *buffer) {
   sprintf(buffer, "sum of %20.5Lf and 20 is 30\n", (long double)fractal);
   printf("%s", buffer);
 }
+
 int main() {
-  char buffer[50];
-  print_int(buffer);
-  print_unsigned(buffer);
+  char buffer[100];
+  //  print_int(buffer);
+  //  print_unsigned(buffer);
   print_fractal(buffer);
   return 0;
 }
