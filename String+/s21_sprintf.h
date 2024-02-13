@@ -3,6 +3,7 @@
 
 #include <limits.h>
 #include <stdarg.h>
+#include <math.h>
 
 #include "s21_string.h"
 

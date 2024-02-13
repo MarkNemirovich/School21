@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "stdio.h": "c",
-        "*.tcc": "c"
+        "*.tcc": "c",
+        "string_view": "c"
     },
     "cmake.configureOnOpen": false
 }

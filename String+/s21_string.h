@@ -1,6 +1,11 @@
 #ifndef __S21_STRING_H__
 #define __S21_STRING_H__
 
+#include <stdio.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <math.h>
+
 #define s21_NULL ((void *)0)
 #define S21_TEXTMAX 2048
 

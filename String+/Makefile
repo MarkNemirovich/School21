@@ -16,11 +16,15 @@ RM:= rm -f
 LIB = s21_string.a
 COVER = gcov_report
 
-all: $(LIB)
+all: $(LIB) sprintf
 
 $(LIB): clean
-	$(AR) $(LIB) $(OBJS)
-	$(RAN) $(LIB)
+	gcc -c -g s21_string.c
+	ar -r libs21_string.a s21_string.o
+
+sprintf:
+	gcc -c -g s21_sprintf.c
+	gcc -L. -o s21_sprintf s21_sprintf.o -ls21_string -lm
 
 $(OBJS): $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(INC) 
 	@$(MK) $(OBJ_DIR)

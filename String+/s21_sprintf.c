@@ -118,14 +118,13 @@ int s21_itoa(long long int n, char *res, int accuracy) {
 }
 
 int s21_ftoa(long double n, char *res, int accuracy) {
-  long long int ipart = (long long int)floorl(n);  // Extract integer part
-  long double fpart = n - (long double)ipart;      // Extract floating part
+  long double ipart;                     // Extract integer part
+  long double fpart = modfl(n, &ipart);  // Extract floating part
   int i = int_to_str(ipart, res, 0);
   if (accuracy > 0) {
     res[i++] = '.';
     // Get the value of fraction part upto given by points after dot
-    fpart = fpart * pow(10, accuracy);
-    fpart = round(fpart);
+    fpart = round(fpart * pow(10, accuracy));
     // convert floating part to string
     i += int_to_str((long long int)fpart, res + i, accuracy);
   }
@@ -140,11 +139,11 @@ int s21_etoa(long double n, char *res, int accuracy, char modificator) {
   if (power == 0) {  // shift 0.000123 number to 1.23...e-4
     for (; n < 1; power--) n *= 10;
   }
-  int i = int_to_str((int)n, res, 0);
+  int i = int_to_str((long long int)n, res, 0);
   if (accuracy > 0) {
     res[i++] = '.';
     // Get the value of fraction part upto given by points after dot
-    n = (n - (int)n) * pow(10, accuracy);
+    n = roundl((n - (long long int)n) * pow(10, accuracy));
     // convert floating part to string
     i += int_to_str((long long int)n, res + i, accuracy);
   }
@@ -167,7 +166,15 @@ int c_specific(char *str, int *i, char symbol, flag flags, int padding) {
     add_spaces(str, i, padding - 1);
     str[(*i)++] = symbol;
   }
-  return padding - flags.minus - 1;
+  return 1;
+}
+
+int s_specific(char *str, int *i, char *text, flag flags, int padding,
+               int accuracy) {
+  int length = (int)s21_strlen(text);
+  if (accuracy < length) length = accuracy;
+  print(str, i, text, length, flags, padding, 1);
+  return length;
 }
 
 int d_specific(char *str, int *i, long long int number, flag flags, int padding,
@@ -187,70 +194,7 @@ int d_specific(char *str, int *i, long long int number, flag flags, int padding,
   char num[S21_TEXTMAX];
   int length = s21_itoa(number, num, accuracy);
   print(str, i, num, length, flags, padding, sign);
-  if (accuracy > length) length = accuracy;
-  if (padding > length) length = padding;
-  return length - flags.minus;
-}
-
-int f_specific(char *str, int *i, long double number, flag flags, int padding,
-               int accuracy) {
-  // cast to neccessary type
-  if (flags.longer)
-    number = (double)number;
-  else if (flags.longest)
-    ;
-  else
-    number = (float)number;
-
-  if (!flags.point) accuracy = 6;
-  int sign = number >= 0;
-  if (number < 0) number = -number;
-  char num[S21_TEXTMAX];
-  int length = s21_ftoa(number, num, accuracy);
-  print(str, i, num, length, flags, padding, sign);
-  if (accuracy > length) length = accuracy;
-  if (padding > length) length = padding;
-  return length - flags.minus;
-}
-
-int e_specific(char *str, int *i, long double number, flag flags, int padding,
-               int accuracy, char modificator) {
-  if (flags.longest)
-    ;
-  else
-    number = (double)number;
-  if (!flags.point) accuracy = 6;
-  int sign = number >= 0;
-  if (number < 0) number = -number;
-  char num[S21_TEXTMAX];
-  int length = s21_etoa(number, num, accuracy, modificator);
-  print(str, i, num, length, flags, padding, sign);
-  if (accuracy > length) length = accuracy;
-  if (padding > length) length = padding;
-  return length - flags.minus;
-}
-
-int g_specific(char *str, int *i, long double number, flag flags, int padding,
-               int accuracy, char modificator) {
-  int len1 = e_specific(str, i, number, flags, padding, accuracy, modificator);
-  *i -= len1;
-  int len2 = f_specific(str, i, number, flags, padding, accuracy);
-  int length;
-  if (len2 > len1) {
-    *i -= len2;
-    length = e_specific(str, i, number, flags, padding, accuracy, modificator);
-  } else
-    length = len2;
-  return length - flags.minus;
-}
-
-int s_specific(char *str, int *i, char *text, flag flags, int padding,
-               int accuracy) {
-  int length = (int)s21_strlen(text);
-  if (accuracy < length) length = accuracy;
-  print(str, i, text, length, flags, padding, 1);
-  if (padding > length) length = padding;
-  return length - flags.minus;
+  return length;
 }
 
 int u_specific(char *str, int *i, long long unsigned int number, flag flags,
@@ -268,9 +212,78 @@ int u_specific(char *str, int *i, long long unsigned int number, flag flags,
   char num[S21_TEXTMAX];
   int length = s21_utoa((int)number, num, accuracy);
   print(str, i, num, length, flags, padding, 1);
-  if (accuracy > length) length = accuracy;
-  if (padding > length) length = padding;
-  return length - flags.minus;
+  return length;
+}
+
+int f_specific(char *str, int *i, long double number, flag flags, int padding,
+               int accuracy) {
+  // cast to neccessary type
+  if (flags.longer)
+    number = (double)number;
+  else if (flags.longest)
+    ;
+  else
+    number = (float)number;
+  int sign = number >= 0;
+  if (number < 0) number = -number;
+  char num[S21_TEXTMAX];
+  int length = s21_ftoa(number, num, accuracy);
+  print(str, i, num, length, flags, padding, sign);
+  return length;
+}
+
+int e_specific(char *str, int *i, long double number, flag flags, int padding,
+               int accuracy, char modificator) {
+  // cast to neccessary type
+  if (flags.longest)
+    ;
+  else
+    number = (double)number;
+  int sign = number >= 0;
+  if (number < 0) number = -number;
+  char num[S21_TEXTMAX];
+  int length = s21_etoa(number, num, accuracy, modificator);
+  print(str, i, num, length, flags, padding, sign);
+  return length;
+}
+
+int g_specific(char *str, int *i, long double number, flag flags, int padding,
+               int accuracy, char modificator) {
+  if (accuracy == 0) accuracy = 1;
+  if (!flags.point) accuracy = 6;
+  long long int ipart = (long long int)floorl(number);  // Extract integer part
+  long double fpart = number - (long double)ipart;      // Extract floating part
+  int epow = 0;
+  while (ipart > 0) {
+    epow++;
+    ipart /= 10;
+  }
+  if (epow == 0)
+    while (fpart > 0) {
+      epow--;
+      fpart /= 10;
+    }
+  if (accuracy > epow && epow >= -4)
+    accuracy -= (epow);
+  else
+    accuracy--;
+  // cast to neccessary type
+  if (flags.longest)
+    ;
+  else
+    number = (double)number;
+  int length;
+  int f_length = f_specific(str, i, number, flags, padding, accuracy);
+  *i -= f_length > padding ? f_length : padding;
+  int e_length =
+      e_specific(str, i, number, flags, padding, accuracy, modificator - 2);
+  printf("%d\t%d\t%d\t%d\n", f_length, e_length, accuracy, epow);
+  if (f_length < e_length) {
+    *i -= e_length > padding ? e_length : padding;
+    length = f_specific(str, i, number, flags, padding, accuracy);
+  } else
+    length = e_length;
+  return length;
 }
 
 int percent_specific(char *str, int *i) {
@@ -291,6 +304,7 @@ int transform_specificator(char *str, int *i, va_list list, char **format,
                                  padding, accuracy);
       break;
     case 'f':
+      if (!flags.point) accuracy = 6;
       if (flags.longest)
         length_change =
             f_specific(str, i, (long double)va_arg(list, long double), flags,
@@ -312,6 +326,7 @@ int transform_specificator(char *str, int *i, va_list list, char **format,
       break;
     case 'e':
     case 'E':
+      if (!flags.point) accuracy = 6;
       if (flags.longest)
         length_change =
             e_specific(str, i, (long double)va_arg(list, long double), flags,
@@ -334,6 +349,9 @@ int transform_specificator(char *str, int *i, va_list list, char **format,
       break;
   }
   (*format)++;
+  if (accuracy > length_change) length_change = accuracy;
+  if (padding > length_change) length_change = padding;
+  length_change = length_change - flags.minus;
   return length_change;
 }
 
@@ -405,30 +423,33 @@ void print_unsigned(char *buffer) {
 }
 
 void print_fractal(char *buffer) {
-  long double fractal = 73751.12L;
-  s21_sprintf(buffer, "sum of %20.5g and 20 is 30\n", (float)fractal);
-  printf("%s", buffer);
-  s21_sprintf(buffer, "sum of %20.5Lg and 20 is 30\n", (double)fractal);
-  printf("%s", buffer);
-  s21_sprintf(buffer, "sum of %Lg and 20 is 30\n", (long double)fractal);
-  printf("%s", buffer);
-  sprintf(buffer, "sum of %g and 20 is 30\n", (float)(fractal * fractal));
-  printf("%s", buffer);
-  sprintf(buffer, "sum of %LG and 20 is 30\n",
-          (long double)(fractal * fractal));
-  printf("%s", buffer);
+  double fractal = 73.7213;
+  s21_sprintf(buffer, "sum of %10.5e and 20 is 30\n", (float)fractal);
+  printf("MY:\t%s", buffer);
+  sprintf(buffer, "sum of %10.5e and 20 is 30\n", (float)fractal);
+  printf("BASE:\t%s", buffer);
 
-  sprintf(buffer, "sum of %20.5g and 20 is 30\n", (float)fractal);
-  printf("%s", buffer);
-  sprintf(buffer, "sum of %20.5lg and 20 is 30\n", (double)fractal);
-  printf("%s", buffer);
-  sprintf(buffer, "sum of %Lg and 20 is 30\n", (long double)fractal);
-  printf("%s", buffer);
-  sprintf(buffer, "sum of %g and 20 is 30\n", (float)(fractal * fractal));
-  printf("%s", buffer);
-  sprintf(buffer, "sum of %LG and 20 is 30\n",
+  s21_sprintf(buffer, "sum of %10.0le and 20 is 30\n", (double)fractal);
+  printf("MY:\t%s", buffer);
+  sprintf(buffer, "sum of %10.0le and 20 is 30\n", (double)fractal);
+  printf("BASE:\t%s", buffer);
+
+  s21_sprintf(buffer, "sum of %le and 20 is 30\n", (double)fractal);
+  printf("MY:\t%s", buffer);
+  sprintf(buffer, "sum of %le and 20 is 30\n", (double)fractal);
+  printf("BASE:\t%s", buffer);
+
+  s21_sprintf(buffer, "sum of %e and 20 is 30\n", (float)(fractal * fractal));
+  printf("MY:\t%s", buffer);
+  sprintf(buffer, "sum of %e and 20 is 30\n", (float)(fractal * fractal));
+  printf("BASE:\t%s", buffer);
+
+  s21_sprintf(buffer, "sum of %Le and 20 is 30\n",
+              (long double)(fractal * fractal));
+  printf("MY:\t%s", buffer);
+  sprintf(buffer, "sum of %Le and 20 is 30\n",
           (long double)(fractal * fractal));
-  printf("%s", buffer);
+  printf("BASE:\t%s", buffer);
 }
 
 int main() {
