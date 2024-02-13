@@ -99,7 +99,7 @@ void reverse(char *str, int len) {
 // Converts a given integer x to string str[].
 // n is the number of digits required in the output
 int int_to_str(long long unsigned number, char *str, int length, int base,
-                 char modificator) {
+               char modificator) {
   int i = 0;
   while (number) {  // fill from end to start
     int val = (number % base);
@@ -149,6 +149,13 @@ int s21_otoa(unsigned long long int n, char *res, int accuracy) {
   return int_to_str(n, res, accuracy, 8, '\0');
 }
 
+int s21_ptoa(unsigned long long int n, char *res, int accuracy) {
+  int i = 0;
+  res[i++] = '0';
+  res[i++] = 'x';
+  return i + int_to_str(n, res+i, accuracy, 16, 'a');
+}
+
 int s21_ftoa(long double n, char *res, int accuracy) {
   long double ipart;                     // Extract integer part
   long double fpart = modfl(n, &ipart);  // Extract floating part
@@ -181,8 +188,8 @@ int s21_etoa(long double n, char *res, int accuracy, char modificator) {
   }
   res[i++] = modificator;             // add e or E
   res[i++] = power >= 0 ? '+' : '-';  // add power sign
-  i += int_to_str((long long int)power, res + i,
-                  2, 10, '\0');  // add power in format at least 00
+  i += int_to_str((long long int)power, res + i, 2, 10,
+                  '\0');  // add power in format at least 00
   return i;
 }
 
@@ -279,7 +286,6 @@ int o_specific(char *str, int *i, long long unsigned int number, flag flags,
   return length;
 }
 
-
 int f_specific(char *str, int *i, long double number, flag flags, int padding,
                int accuracy) {
   // cast to neccessary type
@@ -351,6 +357,16 @@ int g_specific(char *str, int *i, long double number, flag flags, int padding,
   return length;
 }
 
+int p_specific(char *str, int *i, void *p, flag flags, int padding,
+               int accuracy) {
+  accuracy = 12;
+  long long unsigned int number = (long long unsigned int)p;
+  char num[S21_TEXTMAX];
+  int length = s21_ptoa(number, num, accuracy);
+  print(str, i, num, length, flags, padding, 1);
+  return length;
+}
+
 int percent_specific(char *str, int *i) {
   s21_memset(&str[*i], '%', 1);
   *i += 1;
@@ -419,6 +435,9 @@ int transform_specificator(char *str, int *i, va_list list, char **format,
       length_change = o_specific(str, i, va_arg(list, long long unsigned int),
                                  flags, padding, accuracy);
     default:
+    case 'p':
+      length_change =
+          p_specific(str, i, va_arg(list, void *), flags, padding, accuracy);
       break;
   }
   (*format)++;
@@ -531,5 +550,11 @@ int main() {
   //  print_int(buffer);
   print_unsigned(buffer);
   // print_fractal(buffer);
+
+  long long unsigned int integer = 100;
+  s21_sprintf(buffer, "sum of %6p and 20 is 30\n", &integer);
+  printf("%s", buffer);
+  sprintf(buffer, "sum of %6p and 20 is 30\n", &integer);
+  printf("%s", buffer);
   return 0;
 }
