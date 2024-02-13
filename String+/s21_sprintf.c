@@ -7,7 +7,7 @@
 #include "s21_string.h"
 
 typedef struct flag {
-  int minus, plus, space, point, shorter, longer, longest;
+  int minus, plus, space, point, shorter, longer, longest, zeros, hashes;
 } flag;
 
 s21_size_t get_num(char **format) {
@@ -31,12 +31,16 @@ void modificate_flags(char **format, flag *flags, int *padding, int *accuracy) {
   } else if (**format == ' ') {
     flags->space = 1;
     (*format)++;
+  } else if (**format == '0') {
+    flags->zeros = 1;
+    (*format)++;
   }
   if (**format >= '0' && **format <= '9') {
     *padding = get_num(format);
   }
   if (**format == '.') {
     flags->point = 1;
+    flags->zeros = 0;
     (*format)++;
     *accuracy = get_num(format);
   }
@@ -60,9 +64,9 @@ void modificate_size(char **format, flag *flags, int *padding, int *accuracy) {
   }
 }
 
-void add_spaces(char *str, int *i, int padding) {
+void add_spaces(char *str, int *i, int padding, int zeros) {
   for (; padding > 0; padding--) {
-    str[(*i)++] = ' ';
+    str[(*i)++] = zeros? '0' : ' ';
   }
 }
 
@@ -70,7 +74,7 @@ void print(char *str, int *i, char *number, int length, flag flags, int padding,
            int sign) {
   int shift = padding - length - (flags.plus || flags.space || !sign);
   if (length < padding && !flags.minus) {
-    add_spaces(str, i, shift);
+    add_spaces(str, i, shift, flags.zeros);
   }
   if (!sign) {
     str[(*i)++] = '-';
@@ -83,7 +87,7 @@ void print(char *str, int *i, char *number, int length, flag flags, int padding,
     str[*i] = *number;
   }
   if (length < padding && flags.minus) {
-    add_spaces(str, i, shift);
+    add_spaces(str, i, shift, flags.zeros);
   }
 }
 // Reverses a string 'str' of length 'len'
@@ -196,9 +200,9 @@ int s21_etoa(long double n, char *res, int accuracy, char modificator) {
 int c_specific(char *str, int *i, char symbol, flag flags, int padding) {
   if (flags.minus) {
     str[(*i)++] = symbol;
-    add_spaces(str, i, padding - 1);
+    add_spaces(str, i, padding - 1, flags.zeros);
   } else {
-    add_spaces(str, i, padding - 1);
+    add_spaces(str, i, padding - 1, flags.zeros);
     str[(*i)++] = symbol;
   }
   return 1;
@@ -472,22 +476,22 @@ int s21_sprintf(char *str, const char *format, ...) {
 }
 
 void print_int(char *buffer) {
-  long long int integer = -7379234545437652;
-  s21_sprintf(buffer, "sum of %20hd and 20 is 30\n", (short int)integer);
+  long long int integer = -73792345454652;
+  s21_sprintf(buffer, "sum of %020hd and 20 is 30\n", (short int)integer);
   printf("%s", buffer);
-  sprintf(buffer, "sum of %20hd and 20 is 30\n", (short int)integer);
+  sprintf(buffer, "sum of %020hd and 20 is 30\n", (short int)integer);
   printf("%s", buffer);
-  s21_sprintf(buffer, "sum of %20d and 20 is 30\n", (int)integer);
+  s21_sprintf(buffer, "sum of %20.2d and 20 is 30\n", (int)integer);
   printf("%s", buffer);
-  sprintf(buffer, "sum of %20d and 20 is 30\n", (int)integer);
+  sprintf(buffer, "sum of %20.2d and 20 is 30\n", (int)integer);
   printf("%s", buffer);
-  s21_sprintf(buffer, "sum of %20ld and 20 is 30\n", (long int)integer);
+  s21_sprintf(buffer, "sum of %05ld and 20 is 30\n", (long int)integer);
   printf("%s", buffer);
-  sprintf(buffer, "sum of %20ld and 20 is 30\n", (long int)integer);
+  sprintf(buffer, "sum of %05ld and 20 is 30\n", (long int)integer);
   printf("%s", buffer);
-  s21_sprintf(buffer, "sum of %20lld and 20 is 30\n", (long long int)integer);
+  s21_sprintf(buffer, "sum of %14.3lld and 20 is 30\n", (long long int)integer);
   printf("%s", buffer);
-  sprintf(buffer, "sum of %20lld and 20 is 30\n", (long long int)integer);
+  sprintf(buffer, "sum of %14.3lld and 20 is 30\n", (long long int)integer);
   printf("%s", buffer);
 }
 
@@ -547,14 +551,9 @@ void print_fractal(char *buffer) {
 
 int main() {
   char buffer[100];
-  //  print_int(buffer);
-  print_unsigned(buffer);
+    print_int(buffer);
+  // print_unsigned(buffer);
   // print_fractal(buffer);
 
-  long long unsigned int integer = 100;
-  s21_sprintf(buffer, "sum of %6p and 20 is 30\n", &integer);
-  printf("%s", buffer);
-  sprintf(buffer, "sum of %6p and 20 is 30\n", &integer);
-  printf("%s", buffer);
   return 0;
 }
