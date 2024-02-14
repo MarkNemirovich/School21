@@ -478,13 +478,13 @@ int s21_sprintf(char *str, const char *format, ...) {
 
 void print_d(char *buffer) {
   long long int integer = -73792344652;
-  s21_sprintf(buffer, "sum of %020hd and 20 is 30\n", (short int)integer);
+  s21_sprintf(buffer, "sum of %*hd and 20 is 30\n", 20, (short int)integer);
   printf("%s", buffer);
-  sprintf(buffer, "sum of %020hd and 20 is 30\n", (short int)integer);
+  sprintf(buffer, "sum of %*hd and 20 is 30\n", 20, (short int)integer);
   printf("%s", buffer);
-  s21_sprintf(buffer, "sum of %+020d and 20 is 30\n", (int)integer);
+  s21_sprintf(buffer, "sum of %+*.*d and 20 is 30\n",  20, 3, (int)integer);
   printf("%s", buffer);
-  sprintf(buffer, "sum of %+020d and 20 is 30\n", (int)integer);
+  sprintf(buffer, "sum of %+*.*d and 20 is 30\n", 20, 3, (int)integer);
   printf("%s", buffer);
   s21_sprintf(buffer, "sum of % 05ld and 20 is 30\n", (long int)integer);
   printf("%s", buffer);
