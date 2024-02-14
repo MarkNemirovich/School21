@@ -7,7 +7,7 @@
 #include "s21_string.h"
 
 typedef struct flag {
-  int minus, plus, space, point, shorter, longer, longest, zeros, hashes;
+  int minus, plus, space, point, shorter, longer, longest, zeros, hash;
 } flag;
 
 s21_size_t get_num(char **format) {
@@ -25,14 +25,20 @@ void modificate_flags(char **format, flag *flags, int *padding, int *accuracy) {
   if (**format == '-') {
     flags->minus = 1;
     (*format)++;
-  } else if (**format == '+') {
+  }
+  if (**format == '+') {
     flags->plus = 1;
     (*format)++;
   } else if (**format == ' ') {
     flags->space = 1;
     (*format)++;
-  } else if (**format == '0') {
-    flags->zeros = 1;
+  }
+  if (**format == '0') {
+    if (!flags->minus) flags->zeros = 1;
+    (*format)++;
+  }
+  if (**format == '#') {
+    if (!flags->plus && !flags->space) flags->hash = 1;
     (*format)++;
   }
   if (**format >= '0' && **format <= '9') {
@@ -64,17 +70,36 @@ void modificate_size(char **format, flag *flags, int *padding, int *accuracy) {
   }
 }
 
-void add_spaces(char *str, int *i, int padding, int zeros) {
-  for (; padding > 0; padding--) {
-    str[(*i)++] = zeros? '0' : ' ';
+void add_spaces(char *str, int *i, int padding, flag flags, char mode) {
+  int p = padding;
+  if (flags.hash && flags.zeros && mode == 'o') {
+    str[(*i)++] = '0';
+    p--;
+  }
+  if (flags.hash && flags.zeros && (mode == 'x' || mode == 'X')) {
+    str[(*i)++] = '0';
+    str[(*i)++] = mode;
+    p -= 2;
+  }
+  for (; p > 0; p--) {
+    str[(*i)++] = flags.zeros ? '0' : ' ';
+  }
+  if (flags.hash && !flags.zeros && mode == 'o') {
+    if (padding > 0) *i -= 1;
+    str[(*i)++] = '0';
+  }
+  if (flags.hash && !flags.zeros && (mode == 'x' || mode == 'X')) {
+    if (padding > 0) *i -= 2;
+    str[(*i)++] = '0';
+    str[(*i)++] = mode;
   }
 }
 
 void print(char *str, int *i, char *number, int length, flag flags, int padding,
-           int sign) {
+           int sign, char mode) {
   int shift = padding - length - (flags.plus || flags.space || !sign);
-  if (length < padding && !flags.minus) {
-    add_spaces(str, i, shift, flags.zeros);
+  if (length < padding && !flags.minus && !flags.zeros && !flags.hash) {
+    add_spaces(str, i, shift, flags, mode);
   }
   if (!sign) {
     str[(*i)++] = '-';
@@ -83,11 +108,14 @@ void print(char *str, int *i, char *number, int length, flag flags, int padding,
   } else if (flags.space) {
     str[(*i)++] = ' ';
   }
+  if (flags.zeros || flags.hash) {
+    add_spaces(str, i, shift, flags, mode);
+  }
   for (; length > 0; (*i)++, number++, length--) {
     str[*i] = *number;
   }
-  if (length < padding && flags.minus) {
-    add_spaces(str, i, shift, flags.zeros);
+  if (length < padding && flags.minus && !flags.zeros) {
+    add_spaces(str, i, shift, flags, mode);
   }
 }
 // Reverses a string 'str' of length 'len'
@@ -119,23 +147,6 @@ int int_to_str(long long unsigned number, char *str, int length, int base,
   return i;
 }
 
-int int_to_x_str(long long unsigned number, char *str, int length,
-                 char modificator) {
-  int i = 0;
-  while (number) {  // fill from end to start
-    int val = (number % 16);
-    str[i++] = val < 10 ? val + '0' : val - 10 + modificator;
-    number = number / 16;
-  }
-  // If number of digits required is more, add 0
-  while (i < length) {
-    str[i++] = '0';
-  }
-  reverse(str, i);
-  str[i] = '\0';
-  return i;
-}
-
 int s21_itoa(long long int n, char *res, int accuracy) {
   return int_to_str(n, res, accuracy, 10, '\0');
 }
@@ -157,7 +168,7 @@ int s21_ptoa(unsigned long long int n, char *res, int accuracy) {
   int i = 0;
   res[i++] = '0';
   res[i++] = 'x';
-  return i + int_to_str(n, res+i, accuracy, 16, 'a');
+  return i + int_to_str(n, res + i, accuracy, 16, 'a');
 }
 
 int s21_ftoa(long double n, char *res, int accuracy) {
@@ -200,9 +211,9 @@ int s21_etoa(long double n, char *res, int accuracy, char modificator) {
 int c_specific(char *str, int *i, char symbol, flag flags, int padding) {
   if (flags.minus) {
     str[(*i)++] = symbol;
-    add_spaces(str, i, padding - 1, flags.zeros);
+    add_spaces(str, i, padding - 1, flags, 'c');
   } else {
-    add_spaces(str, i, padding - 1, flags.zeros);
+    add_spaces(str, i, padding - 1, flags, 'c');
     str[(*i)++] = symbol;
   }
   return 1;
@@ -212,7 +223,7 @@ int s_specific(char *str, int *i, char *text, flag flags, int padding,
                int accuracy) {
   int length = (int)s21_strlen(text);
   if (accuracy < length) length = accuracy;
-  print(str, i, text, length, flags, padding, 1);
+  print(str, i, text, length, flags, padding, 1, 's');
   return length;
 }
 
@@ -232,7 +243,7 @@ int d_specific(char *str, int *i, long long int number, flag flags, int padding,
   if (number < 0) number = -number;
   char num[S21_TEXTMAX];
   int length = s21_itoa(number, num, accuracy);
-  print(str, i, num, length, flags, padding, sign);
+  print(str, i, num, length, flags, padding, sign, 'd');
   return length;
 }
 
@@ -250,7 +261,7 @@ int u_specific(char *str, int *i, long long unsigned int number, flag flags,
 
   char num[S21_TEXTMAX];
   int length = s21_utoa(number, num, accuracy);
-  print(str, i, num, length, flags, padding, 1);
+  print(str, i, num, length, flags, padding, 1, 'u');
   return length;
 }
 
@@ -268,7 +279,7 @@ int x_specific(char *str, int *i, long long unsigned int number, flag flags,
   char num[S21_TEXTMAX];
   int length =
       s21_xtoa(number, num, accuracy, modificator - 23);  // -23: x->a & X->A
-  print(str, i, num, length, flags, padding, 1);
+  print(str, i, num, length, flags, padding, 1, modificator);
   return length;
 }
 
@@ -283,10 +294,9 @@ int o_specific(char *str, int *i, long long unsigned int number, flag flags,
     ;
   else
     number = (unsigned int)number;
-
   char num[S21_TEXTMAX];
   int length = s21_otoa(number, num, accuracy);
-  print(str, i, num, length, flags, padding, 1);
+  print(str, i, num, length, flags, padding, 1, 'o');
   return length;
 }
 
@@ -303,7 +313,7 @@ int f_specific(char *str, int *i, long double number, flag flags, int padding,
   if (number < 0) number = -number;
   char num[S21_TEXTMAX];
   int length = s21_ftoa(number, num, accuracy);
-  print(str, i, num, length, flags, padding, sign);
+  print(str, i, num, length, flags, padding, sign, 'f');
   return length;
 }
 
@@ -318,7 +328,7 @@ int e_specific(char *str, int *i, long double number, flag flags, int padding,
   if (number < 0) number = -number;
   char num[S21_TEXTMAX];
   int length = s21_etoa(number, num, accuracy, modificator);
-  print(str, i, num, length, flags, padding, sign);
+  print(str, i, num, length, flags, padding, sign, 'e');
   return length;
 }
 
@@ -367,7 +377,7 @@ int p_specific(char *str, int *i, void *p, flag flags, int padding,
   long long unsigned int number = (long long unsigned int)p;
   char num[S21_TEXTMAX];
   int length = s21_ptoa(number, num, accuracy);
-  print(str, i, num, length, flags, padding, 1);
+  print(str, i, num, length, flags, padding, 1, 'p');
   return length;
 }
 
@@ -438,10 +448,12 @@ int transform_specificator(char *str, int *i, va_list list, char **format,
     case 'o':
       length_change = o_specific(str, i, va_arg(list, long long unsigned int),
                                  flags, padding, accuracy);
-    default:
+      break;
     case 'p':
       length_change =
           p_specific(str, i, va_arg(list, void *), flags, padding, accuracy);
+      break;
+    default:
       break;
   }
   (*format)++;
@@ -481,13 +493,13 @@ void print_int(char *buffer) {
   printf("%s", buffer);
   sprintf(buffer, "sum of %020hd and 20 is 30\n", (short int)integer);
   printf("%s", buffer);
-  s21_sprintf(buffer, "sum of %20.2d and 20 is 30\n", (int)integer);
+  s21_sprintf(buffer, "sum of %+020d and 20 is 30\n", (int)integer);
   printf("%s", buffer);
-  sprintf(buffer, "sum of %20.2d and 20 is 30\n", (int)integer);
+  sprintf(buffer, "sum of %+020d and 20 is 30\n", (int)integer);
   printf("%s", buffer);
-  s21_sprintf(buffer, "sum of %05ld and 20 is 30\n", (long int)integer);
+  s21_sprintf(buffer, "sum of % 05ld and 20 is 30\n", (long int)integer);
   printf("%s", buffer);
-  sprintf(buffer, "sum of %05ld and 20 is 30\n", (long int)integer);
+  sprintf(buffer, "sum of % 05ld and 20 is 30\n", (long int)integer);
   printf("%s", buffer);
   s21_sprintf(buffer, "sum of %14.3lld and 20 is 30\n", (long long int)integer);
   printf("%s", buffer);
@@ -497,26 +509,26 @@ void print_int(char *buffer) {
 
 void print_unsigned(char *buffer) {
   long long unsigned int integer = 7379234547652;
-  s21_sprintf(buffer, "sum of %20ho and 20 is 30\n",
+  s21_sprintf(buffer, "sum of %-#ho and 20 is 30\n",
               (short unsigned int)integer);
-  printf("%s", buffer);
-  sprintf(buffer, "sum of %20ho and 20 is 30\n", (short unsigned int)integer);
-  printf("%s", buffer);
-  s21_sprintf(buffer, "sum of %20o and 20 is 30\n", (unsigned int)integer);
-  printf("%s", buffer);
-  sprintf(buffer, "sum of %20o and 20 is 30\n", (unsigned int)integer);
-  printf("%s", buffer);
-  s21_sprintf(buffer, "sum of %20lo and 20 is 30\n",
+  printf("MY:\t%s", buffer);
+  sprintf(buffer, "sum of %-#ho and 20 is 30\n", (short unsigned int)integer);
+  printf("BASE:\t%s", buffer);
+  s21_sprintf(buffer, "sum of %0#20o and 20 is 30\n", (unsigned int)integer);
+  printf("MY:\t%s", buffer);
+  sprintf(buffer, "sum of %0#20o and 20 is 30\n", (unsigned int)integer);
+  printf("BASE:\t%s", buffer);
+  s21_sprintf(buffer, "sum of %#20lo and 20 is 30\n",
               (long unsigned int)integer);
-  printf("%s", buffer);
-  sprintf(buffer, "sum of %20lo and 20 is 30\n", (long unsigned int)integer);
-  printf("%s", buffer);
-  s21_sprintf(buffer, "sum of %20llo and 20 is 30\n",
+  printf("MY:\t%s", buffer);
+  sprintf(buffer, "sum of %#20lo and 20 is 30\n", (long unsigned int)integer);
+  printf("BASE:\t%s", buffer);
+  s21_sprintf(buffer, "sum of %#20llo and 20 is 30\n",
               (long long unsigned int)integer);
-  printf("%s", buffer);
-  sprintf(buffer, "sum of %20llo and 20 is 30\n",
+  printf("MY:\t%s", buffer);
+  sprintf(buffer, "sum of %#20llo and 20 is 30\n",
           (long long unsigned int)integer);
-  printf("%s", buffer);
+  printf("BASE:\t%s", buffer);
 }
 
 void print_fractal(char *buffer) {
@@ -551,8 +563,8 @@ void print_fractal(char *buffer) {
 
 int main() {
   char buffer[100];
-    print_int(buffer);
-  // print_unsigned(buffer);
+  // print_int(buffer);
+  print_unsigned(buffer);
   // print_fractal(buffer);
 
   return 0;
