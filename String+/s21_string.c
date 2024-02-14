@@ -1,5 +1,4 @@
 #include "s21_string.h"
-#include "s21_strerror.h"
 
 void *s21_memchr(const void *str, int c, s21_size_t n) {
   // convert bytes to chars

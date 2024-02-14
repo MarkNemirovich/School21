@@ -1,15 +1,5 @@
-#include <limits.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>  // temprorarys delete after finish!!!
-
 #include "s21_string.h"
-
-typedef struct flag {
-  int minus, plus, space, point, shorter, longer, longest, zeros, hash, width,
-      accuracy;
-} flag;
+#include <string.h>  // temprorarys delete after finish!!!
 
 s21_size_t get_num(char **format) {
   s21_size_t num = 0;
@@ -22,7 +12,7 @@ s21_size_t get_num(char **format) {
   return num;
 }
 
-void modificate_flags(char **format, va_list list, flag *flags) {
+void read_flags(char **format, va_list list, flag *flags) {
   if (**format == '-') {
     flags->minus = 1;
     (*format)++;
@@ -60,7 +50,7 @@ void modificate_flags(char **format, va_list list, flag *flags) {
   }
 }
 
-void modificate_size(char **format, flag *flags) {
+void read_size(char **format, flag *flags) {
   if (**format == 'h') {
     flags->shorter = 1;
     (*format)++;
@@ -464,8 +454,8 @@ int s21_sprintf(char *str, const char *format, ...) {
   while (*format != 0 && i < size) {
     if (*format++ == '%') {
       flags = (flag){0};
-      modificate_flags((char **)&format, list, &flags);
-      modificate_size((char **)&format, &flags);
+      read_flags((char **)&format, list, &flags);
+      read_size((char **)&format, &flags);
       size += get_specificator(str, &i, list, (char **)&format, flags);
     } else {
       str[i++] = *(format - 1);
@@ -546,8 +536,8 @@ void print_o(char *buffer) {
 
 void print_x(char *buffer) {
   long long unsigned int integer = 73792345472;
-  s21_sprintf(buffer, "sum of %-#hx and 20 is 30\n",
-              (short unsigned int)integer);
+  s21_sprintf(buffer, "sum of %-#hx and %o is %u\n",
+              (short unsigned int)integer, (short unsigned int)integer, (short unsigned int)integer);
   printf("MY:\t%s", buffer);
   sprintf(buffer, "sum of %-#hx and 20 is 30\n", (short unsigned int)integer);
   printf("BASE:\t%s", buffer);
@@ -599,7 +589,7 @@ void print_fractal(char *buffer) {
 }
 
 int main() {
-  char buffer[100];
+  char buffer[1000];
   printf("d:\n");
   print_d(buffer);
   printf("x:\n");

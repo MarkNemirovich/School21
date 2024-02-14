@@ -16,7 +16,7 @@ RM:= rm -f
 LIB = s21_string.a
 COVER = gcov_report
 
-all: $(LIB) sprintf
+all: $(LIB) sprintf sscanf
 
 $(LIB): clean
 	gcc -c -g s21_string.c
@@ -26,20 +26,27 @@ sprintf:
 	gcc -c -g s21_sprintf.c
 	gcc -L. -o s21_sprintf s21_sprintf.o -ls21_string -lm
 
-$(OBJS): $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(INC) 
-	@$(MK) $(OBJ_DIR)
-	$(CC) $(CFLAGS) -o $@ -c $<
+sscanf:
+	gcc -c -g s21_sscanf.c
+	gcc -L. -o s21_sscanf s21_sscanf.o -ls21_string -lm
+
+# $(OBJS): $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(INC) 
+# 	@$(MK) $(OBJ_DIR)
+# 	$(CC) $(CFLAGS) -o $@ -c $<
 
 rebuild:
 	make all
 
 clean:
-	$(RM) $(OBJS)
-	$(RM) $(GCDA)
-	$(RM) $(GCNO)
-	$(RM) $(TEST_OBJS)
-	$(RM) $(GCOV_OBJS)
-	$(RM) tests/objs/main.o
+	# $(RM) $(OBJS)
+	# $(RM) $(GCDA)
+	# $(RM) $(GCNO)
+	# $(RM) $(TEST_OBJS)
+	# $(RM) $(GCOV_OBJS)
+	# $(RM) tests/objs/main.o
+	$(RM) *.o
+	$(RM) s21_sprintf
+	$(RM) s21_sscanf
 
 clang:
 	clang-format -i --style=Google *.c *.h
