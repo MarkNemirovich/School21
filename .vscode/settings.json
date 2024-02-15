@@ -5,7 +5,8 @@
         "string_view": "c",
         "limits.h": "c",
         "sstream": "c",
-        "random": "c"
+        "random": "c",
+        "type_traits": "c"
     },
     "cmake.configureOnOpen": false
 }
