@@ -3,7 +3,9 @@
         "stdio.h": "c",
         "*.tcc": "c",
         "string_view": "c",
-        "limits.h": "c"
+        "limits.h": "c",
+        "sstream": "c",
+        "random": "c"
     },
     "cmake.configureOnOpen": false
 }

@@ -45,6 +45,7 @@ clean:
 	# $(RM) $(GCOV_OBJS)
 	# $(RM) tests/objs/main.o
 	$(RM) *.o
+	$(RM) *.a
 	$(RM) s21_sprintf
 	$(RM) s21_sscanf
 

@@ -3,11 +3,9 @@
 
 s21_size_t get_num(char **format) {
   s21_size_t num = 0;
-  int power = 1;
   for (; **format >= '0' && **format <= '9'; (*format)++) {
-    num *= power;
+    num *= 10;
     num += ((**format) - '0');
-    power *= 10;
   }
   return num;
 }
