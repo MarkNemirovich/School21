@@ -172,10 +172,14 @@ int parse_f(char **str, va_list list, flag flags) {
 }
 
 int parse_p(char **str, va_list list, flag flags) {
-  int error = 0;
-  long long unsigned int *p = va_arg(list, long long unsigned int *);
+  int error = 0, sign = 1;
+  void **p = va_arg(list, void **);
+  if (**str == '-') {
+    sign = -1;
+    *str += 1;
+  }
   *str += 2; // 0x
-  *p = get_x_num(str);
+  *p = (void *)(0x0 + sign*get_x_num(str));
   *str += 1;
   return error;
 }
@@ -243,18 +247,18 @@ int s21_sscanf(const char *str, const char *format, ...) {
 
 int main() {
   char i, you, percent;
-  int day, year, oct, hex, HEX;
+  int day, year, oct, hex, HEX, *p;
   float a, b, c, d, e, f;
   char at[5], weekday[5], month[5], strings[100], integers[100], fractals[100];
   strcpy(strings, "I at Saturday March ! 25 1989 -40 F aBc");
   strcpy(integers, "25 1989 -40 F aBc");
   strcpy(fractals, "25.1989 -40.5 7e02 9e-02 1.2e+12 4e+102");
 
-  s21_sscanf(strings, "%c %s %s %s %c %%", &i, at, weekday, month, &you);
-  printf("MY:     \t%c \t%s \t%s \t%s \t%c \t%%\n", i, at, weekday, month, you);
+  s21_sscanf(strings, "%c %s %s %s %c %% %p", &i, at, weekday, month, &you, &p);
+  printf("MY:     \t%c \t%s \t%s \t%s \t%c \t%% \t%p\n", i, at, weekday, month, you, &p);
 
-  sscanf(strings, "%c %s %s %s %c %%", &i, at, weekday, month, &you);
-  printf("BASE:   \t%c \t%s \t%s \t%s \t%c \t%%\n", i, at, weekday, month, you);
+  sscanf(strings, "%c %s %s %s %c %% %p", &i, at, weekday, month, &you, &p);
+  printf("BASE:   \t%c \t%s \t%s \t%s \t%c \t%% \t%p\n", i, at, weekday, month, you, &p);
 
   s21_sscanf(integers, "%d %u %o %x %X", &day, &year, &oct, &hex, &HEX);
   printf("MY:   \t%d \t%u \t%o \t%x \t%X\n", day, year, oct, hex, HEX);
