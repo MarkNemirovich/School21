@@ -15,7 +15,7 @@ typedef long unsigned s21_size_t;
 
 typedef struct flag {
   int minus, plus, space, point, shorter, longer, longest, zeros, hash, width,
-      accuracy;
+      accuracy, suppression;
 } flag;
 
 void *s21_memchr(const void *str, int c, s21_size_t n);

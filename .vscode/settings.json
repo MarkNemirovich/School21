@@ -6,7 +6,8 @@
         "limits.h": "c",
         "sstream": "c",
         "random": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "functional": "c"
     },
     "cmake.configureOnOpen": false
 }
