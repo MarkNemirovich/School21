@@ -1,33 +1,65 @@
-#include <string.h>  // temprorarys delete after finish!!!
-
 #include "s21_string.h"
 
-int get_sign(char **n, int *width) {
-  int sign = 1;
-  if (*width == 0) {
-    *width = INT_MAX;
+int s21_sscanf(const char *str, const char *format, ...) {
+  va_list list;
+  va_start(list, format);
+  flag flags = {0};
+  int error = 0;
+  const char *start = str;
+  while (!error && *str != '\0' && *format != 0) {
+    if (*format++ == '%') {
+      flags = (flag){0};
+      s21_read_flags((char **)&format, list, &flags);
+      s21_read_size(format, &flags);
+      error = s21_read_type((char **)&str, list, format, flags, start);
+    }
   }
-  if (**n == '-') {
-    sign = -1;
-    (*n)++;
-    (*width)--;
-  }
-  return sign;
+  va_end(list);
+  return 0;
 }
 
-s21_size_t get_num(char **n, int width) {
-  s21_size_t num = 0;
-  int sign = get_sign(n, &width);
-  for (; **n >= '0' && **n <= '9' && width > 0; (*n)++, width--) {
-    num *= 10;
-    num += (**n - '0');
+void s21_read_flags(char **format, va_list list, flag *flags) {
+  if (**format == '*') {
+    flags->suppression = 1;
+    (*format)++;
+  } else if (**format >= '0' && **format <= '9') {
+    flags->width = s21_get_num(format, 0);
   }
-  return num * sign;
 }
 
-s21_size_t get_o_num(char **n, int width) {
+int s21_read_type(char **str, va_list list, const char *format, flag flags,
+                   const char *start) {
+  int error = 0;
+  if (*format == 'c')
+    s21_parse_c(str, list, flags);
+  else if (*format == 's')
+    s21_parse_s(str, list, flags);
+  else if (*format == 'x' || *format == 'X' ||
+           *format == 'i' && (*(*str + 2) == 'x' || *(*str + 2) == 'X'))
+    s21_parse_x(str, list, flags);
+  else if (*format == 'o' || *format == 'i' && *(format + 1) == '0')
+    s21_parse_o(str, list, flags);
+  else if (*format == 'd')
+    s21_parse_d(str, list, flags);
+  else if (*format == 'u')
+    s21_parse_u(str, list, flags);
+  else if (*format == 'f' || *format == 'e' || *format == 'E' ||
+           *format == 'g' || *format == 'G')
+    s21_parse_f(str, list, flags);
+  else if (*format == 'p')
+    s21_parse_p(str, list, flags);
+  else if (*format == '%')
+    (*str)--;
+  else if (*format == 'n')
+    *va_arg(list, long int *) = *str - start;
+  format++;
+  if (**str == ' ') (*str)++;
+  return error;
+}
+
+s21_size_t s21_get_o_num(char **n, int width) {
   s21_size_t num = 0;
-  int sign = get_sign(n, &width);
+  int sign = s21_get_sign(n, &width);
   for (; **n >= '0' && **n <= '7' && width > 0; (*n)++, width--) {
     num *= 8;
     num += (**n - '0');
@@ -35,9 +67,9 @@ s21_size_t get_o_num(char **n, int width) {
   return num * sign;
 }
 
-s21_size_t get_x_num(char **n, int width) {
+s21_size_t s21_get_x_num(char **n, int width) {
   s21_size_t num = 0;
-  int sign = get_sign(n, &width);
+  int sign = s21_get_sign(n, &width);
   for (; **n >= '0' && **n <= '9' || **n >= 'a' && **n <= 'f' ||
          **n >= 'A' && **n <= 'F' && width > 0;
        (*n)++, width--) {
@@ -49,9 +81,9 @@ s21_size_t get_x_num(char **n, int width) {
   return num * sign;
 }
 
-float get_float_num(char **n, int width) {
+float s21_get_float_num(char **n, int width) {
   float num = 0.0;
-  int sign = get_sign(n, &width);
+  int sign = s21_get_sign(n, &width);
   // Читаем целую часть числа
   for (; **n >= '0' && **n <= '9' && width > 0; (*n)++, width--) {
     num = num * 10.0 + (**n - '0');
@@ -83,34 +115,41 @@ float get_float_num(char **n, int width) {
   return num * sign;
 }
 
-void read_flags(char **format, va_list list, flag *flags) {
-  if (**format == '*') {
-    flags->suppression = 1;
-    (*format)++;
-  } else if (**format >= '0' && **format <= '9') {
-    flags->width = get_num(format, 0);
+long double s21_get_double_num(char **n, int width) {
+  long double num = 0.0;
+  int sign = s21_get_sign(n, &width);
+  // Читаем целую часть числа
+  for (; **n >= '0' && **n <= '9' && width > 0; (*n)++, width--) {
+    num = num * 10.0 + (**n - '0');
   }
-}
-
-void read_size(const char *format, flag *flags) {
-  if (*format == 'h') {
-    flags->shorter = 1;
-    format++;
-  } else if (*format == 'l') {
-    flags->longer = 1;
-    format++;
-    if (*format == 'l') {
-      flags->longer = 0;
-      flags->longest = 1;
-      format++;
+  // Обрабатываем дробную часть числа
+  if (**n == '.') {
+    (*n)++;
+    width--;
+    long double fraction = 0.0;
+    long double fraction_power = 0.1;  // Для умножения на десятичные разряды
+    for (; **n >= '0' && **n <= '9' && width > 0; (*n)++, width--) {
+      fraction += (**n - '0') * fraction_power;
+      fraction_power *= 0.1;
     }
-  } else if (*format == 'L') {
-    flags->longest = 1;
-    format++;
+    num += fraction;
   }
+  // Обрабатываем экспоненту
+  if (**n == 'e' || **n == 'E') {
+    (*n)++;
+    int exponent_sign = 1;
+    if (**n == '-') exponent_sign = -1;
+    (*n)++;
+    int exponent = 0;
+    for (; **n >= '0' && **n <= '9' && width > 0; (*n)++, width--) {
+      exponent = exponent * 10 + (**n - '0');
+    }
+    num *= pow(10, exponent * exponent_sign);
+  }
+  return num * sign;
 }
 
-int parse_c(char **str, va_list list, flag flags) {
+int s21_parse_c(char **str, va_list list, flag flags) {
   int error = 0;
   if (!flags.suppression) {
     *va_arg(list, char *) = **str;
@@ -119,7 +158,7 @@ int parse_c(char **str, va_list list, flag flags) {
   return error;
 }
 
-int parse_s(char **str, va_list list, flag flags) {
+int s21_parse_s(char **str, va_list list, flag flags) {
   int error = 0;
   char *result;
   if (flags.width == 0) {
@@ -136,155 +175,70 @@ int parse_s(char **str, va_list list, flag flags) {
   return error;
 }
 
-int parse_d(char **str, va_list list, flag flags) {
+int s21_parse_d(char **str, va_list list, flag flags) {
   int error = 0;
-  long long int number = (long long int)get_num(str, flags.width);
+  long long int number = (long long int)s21_get_num(str, flags.width);
   if (!flags.suppression) {
     *va_arg(list, long long int *) = number;
   }
   return error;
 }
 
-int parse_u(char **str, va_list list, flag flags) {
+int s21_parse_u(char **str, va_list list, flag flags) {
   int error = 0;
-  long long unsigned number = (long long unsigned)get_num(str, flags.width);
+  long long unsigned number = (long long unsigned)s21_get_num(str, flags.width);
   if (!flags.suppression) {
     *va_arg(list, long long unsigned int *) = number;
   }
   return error;
 }
 
-int parse_x(char **str, va_list list, flag flags) {
+int s21_parse_x(char **str, va_list list, flag flags) {
   int error = 0;
-  long long int number = (long long int)get_x_num(str, flags.width);
+  long long int number = (long long int)s21_get_x_num(str, flags.width);
   if (!flags.suppression) {
     *va_arg(list, long long int *) = number;
   }
   return error;
 }
 
-int parse_o(char **str, va_list list, flag flags) {
+int s21_parse_o(char **str, va_list list, flag flags) {
   int error = 0;
-  long long int number = (long long int)get_o_num(str, flags.width);
+  long long int number = (long long int)s21_get_o_num(str, flags.width);
   if (!flags.suppression) {
     *va_arg(list, long long int *) = number;
   }
   return error;
 }
 
-int parse_f(char **str, va_list list, flag flags) {
+int s21_parse_f(char **str, va_list list, flag flags) {
   int error = 0;
-  float number = (float)get_float_num(str, flags.width);
+  long double long_number;
+  double number;
+  if (flags.longest)
+    long_number = (long double)s21_get_double_num(str, flags.width);
+  else
+    number = (float)s21_get_float_num(str, flags.width);
   if (!flags.suppression) {
-    *va_arg(list, float *) = number;
+    if (flags.longest)
+      *va_arg(list, long double *) = long_number;
+    else
+      *va_arg(list, float *) = number;
   }
   return error;
 }
 
-int parse_p(char **str, va_list list, flag flags) {
+int s21_parse_p(char **str, va_list list, flag flags) {
   int error = 0, sign = 1;
   if (**str == '-') {
     sign = -1;
     *str += 1;
   }
   *str += 2;  // 0x
-  long long int number = get_x_num(str, flags.width);
+  long long int number = s21_get_x_num(str, flags.width);
   if (!flags.suppression) {
     void **p = va_arg(list, void **);
     *p = (void *)(0x0 + sign * number);
   }
   return error;
-}
-
-int read_types(char **str, va_list list, const char *format, flag flags,
-               const char *start) {
-  int error = 0;
-  if (*format == 'c')
-    parse_c(str, list, flags);
-  else if (*format == 's')
-    parse_s(str, list, flags);
-  else if (*format == 'x' || *format == 'X' ||
-           *format == 'i' && (*(*str + 2) == 'x' || *(*str + 2) == 'X'))
-    parse_x(str, list, flags);
-  else if (*format == 'o' || *format == 'i' && *(format + 1) == '0')
-    parse_o(str, list, flags);
-  else if (*format == 'd')
-    parse_d(str, list, flags);
-  else if (*format == 'u')
-    parse_u(str, list, flags);
-  else if (*format == 'f' || *format == 'e' || *format == 'E' ||
-           *format == 'g' || *format == 'G')
-    parse_f(str, list, flags);
-  else if (*format == 'p')
-    parse_p(str, list, flags);
-  else if (*format == '%')
-    (*str)--;
-  else if (*format == 'n')
-    *va_arg(list, long int *) = *str - start;
-  format++;
-  if (**str == ' ') (*str)++;
-  return error;
-}
-
-int s21_sscanf(const char *str, const char *format, ...) {
-  va_list list;
-  va_start(list, format);
-  flag flags = {0};
-  int error = 0;
-  const char *start = str;
-  while (!error && *str != '\0' && *format != 0) {
-    if (*format++ == '%') {
-      flags = (flag){0};
-      read_flags((char **)&format, list, &flags);
-      read_size(format, &flags);
-      error = read_types((char **)&str, list, format, flags, start);
-    }
-  }
-  va_end(list);
-  return 0;
-}
-
-int main() {
-  char i, you, percent;
-  int day, year, oct, hex, HEX, any, *p;
-  float a, b, c, d, e, f;
-  char word[5], weekday[5], month[5], strings[100], integers[100],
-      fractals[100];
-  strcpy(strings, "I at Saturday March F aBc");
-  strcpy(integers, "25 1989 -40 F aBc");
-  strcpy(fractals, "25.1989 -40.5 7e02 9e-02 1.2e+12 4e+102");
-
-  s21_sscanf(strings, "%*c %s %*s %s %c %% %p", /*&i,*/ word,
-             /*weekday,*/ month, &you, &p);
-  printf("MY:     \t%s \t%s \t%c \t%% \t%p\n", /*i,*/ word, /*weekday, */ month,
-         you, &p);
-
-  strcpy(strings, "I at Saturday March F aBc");
-
-  sscanf(strings, "%*c %s %*s %s %c %% %p", /*&i,*/ word, /*weekday,*/ month,
-         &you, &p);
-  printf("BASE:   \t%s \t%s \t%c \t%% \t%p\n", /*i,*/ word, /*weekday, */ month,
-         you, &p);
-
-  s21_sscanf(integers, "%d %2u %o %x %X %*X", &day, &year, &oct, &hex, &HEX/*,
-               &any*/);
-  printf("MY:   \t%d \t%u \t%o \t%x \t%X \n", day, year, oct, hex, HEX/*,
-         any*/);
-
-  strcpy(integers, "25 1989 -40 F aBc");
-
-  sscanf(integers, "%d %2u %o %x %X %*X", &day, &year, &oct, &hex,
-         &HEX /*, &any*/);
-  printf("BASE: \t%d \t%u \t%o \t%x \t%X \n", day, year, oct, hex, HEX/*,
-         any*/);
-
-  s21_sscanf(fractals, "%5f %f %e %E %g %G", &a, &b, &c, &d, &e, &f);
-  printf("MY:   \t%f \t%f \t%e \t%E \t%g \t%G\n", a, b, c, d, e, f);
-
-  strcpy(fractals, "25.1989 -40.5 7e02 9e-02 1.2e+12 4e+102");
-
-  sscanf(fractals, "%5f %f %e %E %g %G", &a, &b, &c, &d, &e, &f);
-  printf("BASE: \t%f \t%f \t%e \t%E \t%g \t%G\n", a, b, c, d, e, f);
-
-  return (0);
 }

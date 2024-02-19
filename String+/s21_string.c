@@ -48,6 +48,21 @@ void *s21_memset(void *str, int c, s21_size_t n) {
   return str;
 }
 
+char *s21_strncat(char *dest, const char *src, s21_size_t n) {
+  char *append = dest;
+  // move to the end of string
+  for (;*append != '\n'; append++) {
+    ;
+  }
+  // add n elements
+  for (;n>0; n--, append++, src++) {
+    *append = *src;
+  }
+  // and end of string symbol (because we didn't copy it in the loop)
+  *append = '\0';
+  return dest;
+}
+
 char* s21_strchr(const char* str, int c) {
   const char* s = s21_NULL;
   s21_size_t i = 0;
@@ -57,6 +72,34 @@ char* s21_strchr(const char* str, int c) {
     }
   }
   return (char*)s; // convert from const char to char
+}
+
+int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
+  int result = 0;
+  // gi ti the end of string 1 or limit (n)
+  for (s21_size_t i = 0; i < n && str1[i] == '\0' && result == 0; i++) {
+    // compare ascii codes
+    if (str1[i] != str2[i]) {
+      result = str1[i] - str2[i];
+    }
+  }
+  return result;
+}
+
+char *s21_strncpy(char *dest, const char *src, s21_size_t n) {
+  char *res = dest;
+  // copy n elements (unprotected as base func)
+  for (; n > 0; n--, dest++) {
+    // if string 2 is
+    if (*src != '\0') {
+      *dest = *src;
+      src++;
+      // fill by empty (null) symbols
+    } else {
+      *dest = '\0';
+    }
+  }
+  return res;
 }
 
 s21_size_t s21_strcspn(const char *str1, const char *str2) {
@@ -73,7 +116,7 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
   return match;
 }
 
-static void s21_errstr(int num, char *buf) {
+void s21_errstr(int num, char *buf) {
   unsigned int uerr;
   char tmp[21] = {'\0'};
   char *r = tmp + sizeof(tmp);
@@ -111,49 +154,6 @@ s21_size_t s21_strlen(const char *str) {
   }
   // end - start
   return (s21_size_t)(s - str);
-}
-
-char *s21_strncat(char *dest, const char *src, s21_size_t n) {
-  char *append = dest;
-  // move to the end of string
-  for (;*append != '\n'; append++) {
-    ;
-  }
-  // add n elements
-  for (;n>0; n--, append++, src++) {
-    *append = *src;
-  }
-  // and end of string symbol (because we didn't copy it in the loop)
-  *append = '\0';
-  return dest;
-}
-
-int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
-  int result = 0;
-  // gi ti the end of string 1 or limit (n)
-  for (s21_size_t i = 0; i < n && str1[i] == '\0' && result == 0; i++) {
-    // compare ascii codes
-    if (str1[i] != str2[i]) {
-      result = str1[i] - str2[i];
-    }
-  }
-  return result;
-}
-
-char *s21_strncpy(char *dest, const char *src, s21_size_t n) {
-  char *res = dest;
-  // copy n elements (unprotected as base func)
-  for (; n > 0; n--, dest++) {
-    // if string 2 is
-    if (*src != '\0') {
-      *dest = *src;
-      src++;
-      // fill by empty (null) symbols
-    } else {
-      *dest = '\0';
-    }
-  }
-  return res;
 }
 
 char *s21_strpbrk(const char *str1, const char *str2) {

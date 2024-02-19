@@ -1,22 +1,16 @@
 #ifndef __S21_STRING_H__
 #define __S21_STRING_H__
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdlib.h>
 #include <limits.h>
-#include <stdarg.h>
 #include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define s21_NULL ((void *)0)
 #define S21_TEXTMAX 2048
 
 typedef long unsigned s21_size_t;
-
-typedef struct flag {
-  int minus, plus, space, point, shorter, longer, longest, zeros, hash, width,
-      accuracy, suppression;
-} flag;
 
 void *s21_memchr(const void *str, int c, s21_size_t n);
 int s21_memcmp(const void *str1, const void *str2, s21_size_t n);
@@ -27,6 +21,7 @@ char *s21_strchr(const char *str, int c);
 int s21_strncmp(const char *str1, const char *str2, s21_size_t n);
 char *s21_strncpy(char *dest, const char *src, s21_size_t n);
 s21_size_t s21_strcspn(const char *str1, const char *str2);
+void s21_errstr(int num, char *buf);
 char *s21_strerror(int errnum);
 s21_size_t s21_strlen(const char *str);
 char *s21_strpbrk(const char *str1, const char *str2);
@@ -34,15 +29,68 @@ char *s21_strrchr(const char *str, int c);
 char *s21_strstr(const char *haystack, const char *needle);
 char *s21_strtok(char *str, const char *delim);
 
+// sprintf & sscanf = common
+typedef struct flag {  // sprintf & sscanf
+  int minus, plus, space, point, shorter, longer, longest, zeros, hash, width,
+      accuracy, suppression;
+} flag;
+
+void s21_read_flags(char **format, va_list list, flag *flags);
+void s21_read_size(const char *format, flag *flags);
+s21_size_t s21_get_num(char **n, int width);
+int s21_get_sign(char **n, int *width);
+
+// sprintf
 int s21_sprintf(char *str, const char *format, ...);
+int s21_get_type(char *str, int *i, va_list list, char **format, flag flags);
+int s21_get_c(char *str, int *i, char symbol, flag flags);
+int s21_get_s(char *str, int *i, char *text, flag flags);
+int s21_get_d(char *str, int *i, long long int number, flag flags);
+int s21_get_u(char *str, int *i, long long unsigned number, flag flags);
+int s21_get_x(char *str, int *i, long long unsigned number, flag flags,
+              char mode);
+int s21_get_o(char *str, int *i, long long unsigned number, flag flags);
+int s21_get_f(char *str, int *i, long double number, flag flags);
+int s21_get_e(char *str, int *i, long double number, flag flags, char mode);
+int s21_get_g(char *str, int *i, long double number, flag flags, char mode);
+int s21_get_p(char *str, int *i, void *p, flag flags);
+int s21_get_perc(char *str, int *i);
+void s21_add_spaces(char *str, int *i, flag flags, char mode);
+void s21_print(char *str, int *i, char *number, int length, flag flags,
+               int sign, char mode);
+int s21_itoa(long long int n, char *res, flag flags);
+int s21_utoa(unsigned long long int n, char *res, flag flags);
+int s21_xtoa(unsigned long long int n, char *res, flag flags, char mode);
+int s21_otoa(unsigned long long int n, char *res, flag flags);
+int s21_ptoa(unsigned long long int n, char *res, flag flags);
+int s21_ftoa(long double n, char *res, flag flags);
+int s21_etoa(long double n, char *res, flag flags, char mode);
+int s21_int_to_str(long long unsigned number, char *str, int length, int base,
+                   char mode);
+void s21_reverse(char *str, int len);
 
-static void s21_errstr(int num, char *buf);
+// sscanf
+int s21_sscanf(const char *str, const char *format, ...);
+int s21_read_type(char **str, va_list list, const char *format, flag flags,
+                  const char *start);
+s21_size_t s21_get_o_num(char **n, int width);
+s21_size_t s21_get_x_num(char **n, int width);
+float s21_get_float_num(char **n, int width);
+double s21_get_double_num(char **n, int width);
+int s21_parse_c(char **str, va_list list, flag flags);
+int s21_parse_s(char **str, va_list list, flag flags);
+int s21_parse_d(char **str, va_list list, flag flags);
+int s21_parse_u(char **str, va_list list, flag flags);
+int s21_parse_x(char **str, va_list list, flag flags);
+int s21_parse_o(char **str, va_list list, flag flags);
+int s21_parse_f(char **str, va_list list, flag flags);
+int s21_parse_p(char **str, va_list list, flag flags);
 
+// C#
 /*void *s21_insert(const char *src, const char *str, s21_size_t start_index);
 void *s21_to_lower(const char *str);
 void *s21_to_upper(const char *str);
 void *s21_trim(const char *src, const char *trim_chars);*/
-
 
 #if defined(__APPLE__) || defined(__MACH__)
 #define S21_NERR 107
@@ -299,5 +347,4 @@ static const char *const s21_sys_errlist[S21_NERR] = {
     [133] = "Memory page has hardware error",
 };
 #endif
-
 #endif
