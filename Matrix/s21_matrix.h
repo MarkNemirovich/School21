@@ -38,6 +38,6 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result);
 int s21_is_Empty(matrix_t *A);
 void s21_free_matrix(matrix_t *A, int rows);
 double s21_get_determinant(matrix_t *A);
-void s21_get_matrix(int row, int col, matrix_t *A, matrix_t *result);
+void s21_get_minor(int row, int col, matrix_t *A, matrix_t *result);
 
 #endif

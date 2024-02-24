@@ -40,7 +40,7 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
         matrix_t minor = {0};
         double determinant = 0;
         s21_create_matrix(A->columns - 1, A->rows - 1, &minor);
-        s21_get_matrix(i, j, A, &minor);
+        s21_get_minor(i, j, A, &minor);
         s21_determinant(&minor, &determinant);
         result->matrix[i][j] = pow(-1, (i + j)) * determinant;
         s21_remove_matrix(&minor);
@@ -54,12 +54,11 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
 /// @param result Стрктура для записи результата
 /// @return успешность выполнения
 int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
-  int error = 1 + s21_is_Empty(A);
-  if (error == 1 && A->rows == 1) {
+  int error = 1 + !s21_is_Empty(A);
+  if (error == 2 && A->rows == 1) {
     error = s21_create_matrix(A->rows, A->rows, result);
     if (!error) result->matrix[0][0] = 1.0 / A->matrix[0][0];
-  }
-  if (error == 1 && A->rows > 1) {
+  } else if (error == 2 && A->rows > 1) {
     double det = 0.0;
     s21_determinant(A, &det);
     if (det != 0) {
