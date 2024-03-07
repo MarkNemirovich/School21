@@ -6,7 +6,7 @@ void *s21_memchr(const void *str, int c, s21_size_t n) {
   void *out = s21_NULL;
   // go till end of string or find
   for (s21_size_t i = 0; i < n && out == s21_NULL; i++) {
-    if (buff[i] == c) {
+    if (buff[i] == (unsigned char)c) {
       // convert char to byte
       out = (void *)&buff[i];
     }
@@ -16,34 +16,32 @@ void *s21_memchr(const void *str, int c, s21_size_t n) {
 
 int s21_memcmp(const void *str1, const void *str2, s21_size_t n) {
   // convert bytes to chars
-  char *buff1 = (char *)str1;
-  char *buff2 = (char *)str2;
+  const unsigned char *buff1 = (const unsigned char *)str1;
+  const unsigned char *buff2 = (const unsigned char *)str2;
   int result = 0;
   // go till end of string or find different symbols
   for (s21_size_t i = 0; i < n && !result; i++) {
     // compare ascii codes (65- 32 for example)
-    if (buff1[i] != buff2[i]) {
-      result = buff1[i] - buff2[i];
-    }
+    result = (int)buff1[i] - (int)buff2[i];
   }
   return result;
 }
 
 void *s21_memcpy(void *dest, const void *src, s21_size_t n) {
   // convert bytes to chars
-  char *buff = (char *)src; 
+  char *buff = (char *)src;
   char *result = (char *)dest;
   // count how much elements left to copy (unprotected as base func)
-  while (n-- > 0) { 
+  while (n-- > 0) {
     *result++ = *buff++;
   }
   return dest;
 }
 
 void *s21_memset(void *str, int c, s21_size_t n) {
-  char *buff = (char *)str; // convert bytes to chars
-  for (s21_size_t i = 0; i < n; i++) { // (unprotected as base func)
-    buff[i] = c; // just change symbol :)
+  char *buff = (char *)str;             // convert bytes to chars
+  for (s21_size_t i = 0; i < n; i++) {  // (unprotected as base func)
+    buff[i] = c;                        // just change symbol :)
   }
   return str;
 }
@@ -51,11 +49,11 @@ void *s21_memset(void *str, int c, s21_size_t n) {
 char *s21_strncat(char *dest, const char *src, s21_size_t n) {
   char *append = dest;
   // move to the end of string
-  for (;*append != '\n'; append++) {
+  for (; *append != '\0'; append++) {
     ;
   }
   // add n elements
-  for (;n>0; n--, append++, src++) {
+  for (; n > 0; n--, append++, src++) {
     *append = *src;
   }
   // and end of string symbol (because we didn't copy it in the loop)
@@ -63,25 +61,25 @@ char *s21_strncat(char *dest, const char *src, s21_size_t n) {
   return dest;
 }
 
-char* s21_strchr(const char* str, int c) {
-  const char* s = s21_NULL;
+char *s21_strchr(const char *str, int c) {
+  const char *s = s21_NULL;
   s21_size_t i = 0;
-  for (i = 0; str[i] != '\0' && s == s21_NULL; i++) { // go to the end of till find symbol
+  for (i = 0; str[i] != '\0' && s == s21_NULL;
+       i++) {  // go to the end of till find symbol
     if ((unsigned char)str[i] == c) {
-      s = &str[i]; // get reference!!! not value!
+      s = &str[i];  // get reference!!! not value!
     }
   }
-  return (char*)s; // convert from const char to char
+  return (char *)s;  // convert from const char to char
 }
 
 int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
   int result = 0;
-  // gi ti the end of string 1 or limit (n)
-  for (s21_size_t i = 0; i < n && str1[i] == '\0' && result == 0; i++) {
-    // compare ascii codes
-    if (str1[i] != str2[i]) {
-      result = str1[i] - str2[i];
-    }
+  s21_size_t i = 0;
+  // go to the end of string 1 or limit (n)
+  while (i < n && str1[i] != '\0' && str2[i] != '\0' && result == 0) {
+    result = (unsigned char)str1[i] - (unsigned char)str2[i];
+    i++;  // compare ascii codes
   }
   return result;
 }
@@ -103,17 +101,22 @@ char *s21_strncpy(char *dest, const char *src, s21_size_t n) {
 }
 
 s21_size_t s21_strcspn(const char *str1, const char *str2) {
-  s21_size_t match = 0;
-  for (s21_size_t i = 0; *str1 != '\0' && !match;
-       str1++, i++) {  // go to the end of the 1st string till find symbol
-    for (const char *s = str2; *s != '\0' && !match;
-         s++) {  // go to the end of the 2nd string till find symbol
-      if (*str1 == *s) {
-        match = i;  // get index of the 1st string :)
+  s21_size_t counter = 0;
+
+  unsigned short match = 0;
+  // go to the end of the 1st string till find symbol
+  for (const char *a = str1; *a && !match; a++) {
+    // go to the end of the 2nd string till find symbol
+    for (const char *b = str2; *b && !match; b++) {
+      if (*a == *b) {
+        match = 1;  // get index of the 1st string :)
       }
     }
+    if (!match) {
+      counter++;
+    }
   }
-  return match;
+  return counter;
 }
 
 void s21_errstr(int num, char *buf) {
@@ -149,23 +152,22 @@ char *s21_strerror(int errnum) {
 s21_size_t s21_strlen(const char *str) {
   const char *s;
   // move to the end of string
-  for (s = str; *s != '\n' && *s !=  '\0'; ++s) {
+  for (s = str; *s != '\0'; s++) {
     ;
   }
-  // end - start
-  return (s21_size_t)(s - str);
+  return (s21_size_t)(s - str);  // end - start
 }
 
 char *s21_strpbrk(const char *str1, const char *str2) {
   char *fp = s21_NULL;
   // go ti the end of 1st string till match
   for (s21_size_t i = 0; *str1 != '\0' && fp == s21_NULL; str1++, i++) {
-  // go ti the end of 2nd string till match
+    // go ti the end of 2nd string till match
     for (const char *s = str2; *s != '\0' && fp == s21_NULL; s++) {
       // match
-        if (*str1 == *s) {
-          fp = (char *)str1;
-        }
+      if (*str1 == *s) {
+        fp = (char *)str1;
+      }
     }
   }
   return fp;
@@ -173,69 +175,57 @@ char *s21_strpbrk(const char *str1, const char *str2) {
 
 char *s21_strrchr(const char *str, int c) {
   char *end = s21_NULL;
+  s21_size_t length = s21_strlen(str);
   // move to the end of string
-  for (; *str != '\0'; str++) {
-  // remember (rewrite) position!!! of the match symbol
+  do {
+    // remember (rewrite) position!!! of the match symbol
     if (*str == (char)c) {
-        end = (char *)str;
+      end = (char *)str;
     }
-  }
+    str++;
+  } while (length-- > 0);
   return end;
 }
 
 char *s21_strstr(const char *haystack, const char *needle) {
-  char *position = s21_NULL;
+  unsigned int i = 0;
+  int flag = 1;
   // move to the end of 1st string
-  for (; *haystack != '\0' && position == s21_NULL; haystack++) {
-    // if match - start to look next symbols (and remember the start position)
-    if (*haystack == *needle) {
-      char *str = (char *)haystack;
-      // move to the end of 2nd string
-      for (; *needle != '\0' && *str == *needle; str++, needle++) {
-        ;
+  for (i = 0; haystack[i] != '\0' && flag == 1; i++) {
+    flag = 0;
+    // move to the end of 2nd string
+    for (unsigned int j = 0; needle[j] != '\0' && flag == 0; j++) {
+      if ((haystack[i + j] == '\0') || (haystack[i + j] != needle[j])) {
+        flag = 1;
       }
-      // copy in a case if out by 1st codition in the loop above
-      if (*needle == '\0') position = (char *)haystack;
     }
   }
-  return position;
+  if (haystack[0] == '\0' && needle[0] == '\0') {
+    flag = 0;
+  } else
+    i--;
+  return flag ? s21_NULL : (char *)&haystack[i];
 }
 
 char *s21_strtok(char *str, const char *delim) {
-  // static allow us to remember part of string we cutted last time
-  static char *last;
-  int length = 0;
-  int end_line = -1;
-  int start_last = -1;
-  char *ref = str;
-  if (ref == s21_NULL)  // check is it a new string
-    ref = last;
-  if (ref != s21_NULL)  // check is there anything left in the previous string
-    for (int i = 0; ref[i] != '\0' && ref[i] != '\n'; i++) {  // get length
-      length++;
-    }
-  // go till the end of string or meet the delimiter (group them)
-  for (int i = 0; i < length && start_last == -1; i++) {
-    int match = 0;
-    for (int j = 0; delim[j] != '\0' && !match; j++) {
-      if (ref[i] == delim[j]) {  // is string symbol presents in the delimiter
-        match = 1;
-      }
-    }
-    if (match && end_line == -1) {  // if we met 1st dilimeter
-      end_line = i;
-    }
-    if (end_line != -1 && !match && start_last == -1) {  // last one
-      start_last = i;
-    }
+  static char *final;  // Статическая переменная хранит "остаток"
+  int ch;
+  int empty = 0;
+  if (str == 0) {
+    str = final;  // Если новая строка, устанавливаем "остаток" в её начало
   }
-  if (length > 0) {
-    str = ref;
-    str[end_line] = '\0';     // cut left part till first delimiter (in group)
-    last = ref + start_last;  // left right part from last delimiter for future
-  }
-  if (end_line == length - 1) {  // if string is over
-    last = s21_NULL;
-  }
+  do {
+    if ((ch = *str++) == '\0') {  // Check is it end
+      empty = 1;
+    }
+  } while (!empty && s21_strchr(delim, ch));  // skip delimeters
+  if (!empty) {
+    --str;                                  // start point
+    final = str + s21_strcspn(str, delim);  // skip delimeters
+    if (*final != 0) {                      // cut end
+      *final++ = 0;
+    }
+  } else
+    str = s21_NULL;
   return str;
 }

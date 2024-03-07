@@ -1,0 +1,58 @@
+
+
+#suite test_strpbrk
+
+#test test_strpbrk1
+  char str1[] = "";
+  char str2[] = "";
+
+  ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
+
+
+#test test_strpbrk2
+  char str1[] = "apple";
+  char str2[] = "";
+
+  ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
+
+
+#test test_strpbrk3
+  char str1[] = "";
+  char str2[] = "apple";
+
+  ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
+
+
+#test test_strpbrk4
+  char str1[] = "apple tree";
+  char str2[] = "p";
+
+  ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
+
+#test test_strpbrk5
+  char str1[] = "apple treep";
+  char str2[] = "p";
+
+  ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
+
+
+#test test_strpbrk6
+  char str1[] = "apple treep";
+  char str2[] = "a";
+
+  ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
+
+
+#test test_strpbrk7
+  char str1[] = "aaaaaAaaaa";
+  char str2[] = "P";
+
+  ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
+
+#test test_strpbrk8
+  char str1[] = "aaaaaAaaaa";
+  char str2[] = "\0";
+
+  ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
+
+

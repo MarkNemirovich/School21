@@ -1,0 +1,43 @@
+
+
+#suite test_to_lower
+
+#test test_to_lower1
+    char str[] = "Lublu VodiCHku!";
+    char expected[] = "lublu vodichku!";
+    char *got = s21_to_lower(str);
+    ck_assert_str_eq(got, expected);
+    if (got) free(got);
+
+#test test_to_lower2
+    char str[] = "123456789Q";
+    char expected[] = "123456789q";
+    char *got = s21_to_lower(str);
+    ck_assert_str_eq(got, expected);
+    if (got) free(got);
+
+
+#test test_to_lower3
+    char str[] = "Lublu vodichku";
+    char expected[] = "lublu vodichku";
+    char *got = s21_to_lower(str);
+    ck_assert_str_eq(got, expected);
+    if (got) free(got);
+
+
+
+#test test_to_lower4
+    char str[] = " ";
+    char expected[] = " ";
+    char *got = s21_to_lower(str);
+    ck_assert_str_eq(got, expected);
+    if (got) free(got);
+
+
+#test test_to_lower5
+    char str[] = "";
+    char expected[] = "";
+    char *got = s21_to_lower(str);
+    ck_assert_str_eq(got, expected);
+    if (got) free(got);
+

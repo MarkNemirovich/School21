@@ -1,0 +1,293 @@
+
+
+#suite test_strtok
+
+#test test_strtok1
+  char str1[] = "Apple++Pie_! LOve==TH+=is";
+  char str2[] = "Apple++Pie_! LOve==TH+=is";
+  const char delims[] = "+_! =";
+
+  char *got = s21_strtok(str1, delims);
+  char *expected = strtok(str2, delims);
+
+  ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+  ck_assert_str_eq(got, expected);
+
+  while (got && expected) {
+    got = s21_strtok(NULL, delims);
+    expected = strtok(NULL, delims);
+
+
+    if (got && expected) {
+      ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+      ck_assert_str_eq(got, expected);
+    } else {
+      ck_assert_ptr_null(got);
+      ck_assert_ptr_null(expected);
+    }
+  }
+
+
+#test test_strtok2
+  char str1[] = "Apple++Pie_! LOve==TH+=is A +";
+  char str2[] = "Apple++Pie_! LOve==TH+=is A +";
+  const char delims[] = "+_! =";
+
+  char *got = s21_strtok(str1, delims);
+  char *expected = strtok(str2, delims);
+
+  ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+  ck_assert_str_eq(got, expected);
+
+  while (got && expected) {
+    got = s21_strtok(NULL, delims);
+    expected = strtok(NULL, delims);
+
+
+    if (got && expected) {
+    ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+      ck_assert_str_eq(got, expected);
+    } else {
+      ck_assert_ptr_null(got);
+      ck_assert_ptr_null(expected);
+    }
+  }
+
+
+#test test_strtok3
+  char str1[] = "Apple+Pie_LOve_TH_is";
+  char str2[] = "Apple+Pie_LOve_TH_is";
+  const char delims[] = "+_! =";
+
+  char *got = s21_strtok(str1, delims);
+  char *expected = strtok(str2, delims);
+
+  ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+  ck_assert_str_eq(got, expected);
+
+  while (got && expected) {
+    got = s21_strtok(NULL, delims);
+    expected = strtok(NULL, delims);
+
+    if (got && expected) {
+    ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+      ck_assert_str_eq(got, expected);
+    } else {
+      ck_assert_ptr_null(got);
+      ck_assert_ptr_null(expected);
+    }
+  }
+
+
+#test test_strtok4
+  char str1[] = "ApplePieTreePop";
+  char str2[] = "ApplePieTreePop";
+  const char delims[] = "+_! =";
+
+  char *got = s21_strtok(str1, delims);
+  char *expected = strtok(str2, delims);
+
+  ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+  ck_assert_str_eq(got, expected);
+
+  while (got && expected) {
+    got = s21_strtok(NULL, delims);
+    expected = strtok(NULL, delims);
+
+    if (got && expected) {
+    ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+      ck_assert_str_eq(got, expected);
+    } else {
+      ck_assert_ptr_null(got);
+      ck_assert_ptr_null(expected);
+    }
+  }
+
+
+#test test_strtok5
+  char str1[] = "++++++++";
+  char str2[] = "++++++++";
+  const char delims[] = "+_! =";
+
+  char *got = s21_strtok(str1, delims);
+  char *expected = strtok(str2, delims);
+
+  ck_assert_ptr_null(got);
+  ck_assert_ptr_null(expected);
+
+
+#test test_strtok6
+  char str1[] = "Apple_Tree_Pie";
+  char str2[] = "Apple_Tree_Pie";
+  const char delims[] = "+_! =";
+
+  char *got = s21_strtok(str1, delims);
+  char *expected = strtok(str2, delims);
+
+  ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+  ck_assert_str_eq(got, expected);
+
+  int i = 5;
+  while (i) {
+    got = s21_strtok(NULL, delims);
+    expected = strtok(NULL, delims);
+    i--;
+
+    if (got && expected) {
+    ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+      ck_assert_str_eq(got, expected);
+    } else {
+      ck_assert_ptr_null(got);
+      ck_assert_ptr_null(expected);
+    }
+  }
+
+
+#test test_strtok7
+  char str1[] = "Apple++++Pie++P++++S__Z";
+  char str2[] = "Apple++++Pie++P++++S__Z";
+  const char delims[] = "+_! =";
+
+  char *got = s21_strtok(str1, delims);
+  char *expected = strtok(str2, delims);
+
+  ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+  ck_assert_str_eq(got, expected);
+
+  while (got && expected) {
+    got = s21_strtok(NULL, delims);
+    expected = strtok(NULL, delims);
+
+    if (got && expected) {
+    ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+      ck_assert_str_eq(got, expected);
+    } else {
+      ck_assert_ptr_null(got);
+      ck_assert_ptr_null(expected);
+    }
+  }
+
+
+#test test_strtok8
+  char str1[] = "Happy__+Apple  Pie";
+  char str2[] = "Happy__+Apple  Pie";
+  const char delims[] = "+_! =";
+
+  char *got = s21_strtok(str1, delims);
+  char *expected = strtok(str2, delims);
+
+  ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+  ck_assert_str_eq(got, expected);
+
+  while (got && expected) {
+    got = s21_strtok(NULL, delims);
+    expected = strtok(NULL, delims);
+
+    if (got && expected) {
+    ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+      ck_assert_str_eq(got, expected);
+    } else {
+      ck_assert_ptr_null(got);
+      ck_assert_ptr_null(expected);
+    }
+  }
+
+
+#test test_strtok9
+  char str1[] = "Apple__Happy_+++Pie_Tree";
+  char str2[] = "Apple__Happy_+++Pie_Tree";
+  const char delims[] = "+_! =";
+
+  char *got = s21_strtok(str1, delims);
+  char *expected = strtok(str2, delims);
+
+  ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+  ck_assert_str_eq(got, expected);
+
+  while (got && expected) {
+    got = s21_strtok(NULL, delims);
+    expected = strtok(NULL, delims);
+
+    if (got && expected) {
+    ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+      ck_assert_str_eq(got, expected);
+    } else {
+      ck_assert_ptr_null(got);
+      ck_assert_ptr_null(expected);
+    }
+  }
+
+
+#test test_strtok10
+  char str1[] = "     Apple__+ Hep!py_   Tree+";
+  char str2[] = "     Apple__+ Hep!py_   Tree+";
+  const char delims[] = "+_! =";
+
+  char *got = s21_strtok(str1, delims);
+  char *expected = strtok(str2, delims);
+
+  ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+  ck_assert_str_eq(got, expected);
+
+  while (got || expected) {
+    got = s21_strtok(NULL, delims);
+    expected = strtok(NULL, delims);
+
+    if (got && expected) {
+    ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+      ck_assert_str_eq(got, expected);
+    } else {
+      ck_assert_ptr_null(got);
+      ck_assert_ptr_null(expected);
+    }
+  }
+
+
+#test test_strtok11
+  char str1[] = "!Apple__+_!Hep!py_!___Tree+";
+  char str2[] = "!Apple__+_!Hep!py_!___Tree+";
+  const char delims[] = "+_! =";
+
+  char *got = s21_strtok(str1, delims);
+  char *expected = strtok(str2, delims);
+
+  ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+  ck_assert_str_eq(got, expected);
+
+  while (got || expected) {
+    got = s21_strtok(NULL, delims);
+    expected = strtok(NULL, delims);
+
+    if (got && expected) {
+    ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+      ck_assert_str_eq(got, expected);
+    } else {
+      ck_assert_ptr_null(got);
+      ck_assert_ptr_null(expected);
+    }
+  }
+
+
+#test test_strtok12
+  char str1[] = "!       H!A!P!P!Y!F!F!F!F";
+  char str2[] = "!       H!A!P!P!Y!F!F!F!F";
+  const char delims[] = "+_! =";
+
+  char *got = s21_strtok(str1, delims);
+  char *expected = strtok(str2, delims);
+
+  ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+  ck_assert_str_eq(got, expected);
+
+  while (got || expected) {
+    got = s21_strtok(NULL, delims);
+    expected = strtok(NULL, delims);
+
+    if (got && expected) {
+    ck_assert_uint_eq(s21_strlen(got), s21_strlen(expected));
+      ck_assert_str_eq(got, expected);
+    } else {
+      ck_assert_ptr_null(got);
+      ck_assert_ptr_null(expected);
+    }
+  }

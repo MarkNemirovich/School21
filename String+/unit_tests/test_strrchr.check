@@ -1,0 +1,60 @@
+
+
+#suite test_strrchr
+
+#test test_strrchr1
+  char str1[] = "";
+  char str2 = '\0';
+
+  ck_assert_pstr_eq(s21_strrchr(str1, str2), strrchr(str1, str2));
+
+
+#test test_strrchr2
+  char str1[] = "apple";
+  char str2 = '\0';
+
+  ck_assert_pstr_eq(s21_strrchr(str1, str2), strrchr(str1, str2));
+
+
+#test test_strrchr3
+  char str2 = '\0';
+  char str1[] = "apple";
+
+  ck_assert_pstr_eq(s21_strrchr(str1, str2), strrchr(str1, str2));
+
+
+#test test_strrchr4
+  char str1[] = "apple pie";
+  char str2 = 'p';
+
+  ck_assert_pstr_eq(s21_strrchr(str1, str2), strrchr(str1, str2));
+
+
+#test test_strrchr5
+  char str1[] = "apple trae";
+  char str2 = 'a';
+
+  ck_assert_pstr_eq(s21_strrchr(str1, str2), strrchr(str1, str2));
+
+
+#test test_strrchr6
+  char str1[] = "apple l trel";
+  char str2 = 'p';
+
+  ck_assert_pstr_eq(s21_strrchr(str1, str2), strrchr(str1, str2));
+
+
+#test test_strrchr7
+  char str1[] = "ppPpppppppppP";
+  char str2 = 'P';
+
+  ck_assert_pstr_eq(s21_strrchr(str1, str2), strrchr(str1, str2));
+
+
+#test test_strrchr8
+  char str1[] = "34576657";
+  char str2 = '0';
+
+  ck_assert_pstr_eq(s21_strrchr(str1, str2), strrchr(str1, str2));
+
+

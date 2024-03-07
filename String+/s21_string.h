@@ -35,13 +35,13 @@ typedef struct flag {  // sprintf & sscanf
       accuracy, suppression;
 } flag;
 
-void s21_read_flags(char **format, va_list list, flag *flags);
-void s21_read_size(const char *format, flag *flags);
-s21_size_t s21_get_num(char **n, int width);
+void s21_read_size(char **format, flag *flags);
+s21_size_t s21_get_num(char **n, int width, int *error);
 int s21_get_sign(char **n, int *width);
 
 // sprintf
 int s21_sprintf(char *str, const char *format, ...);
+void s21_get_flags(char **format, va_list list, flag *flags);
 int s21_get_type(char *str, int *i, va_list list, char **format, flag flags);
 int s21_get_c(char *str, int *i, char symbol, flag flags);
 int s21_get_s(char *str, int *i, char *text, flag flags);
@@ -71,12 +71,13 @@ void s21_reverse(char *str, int len);
 
 // sscanf
 int s21_sscanf(const char *str, const char *format, ...);
-int s21_read_type(char **str, va_list list, const char *format, flag flags,
+void s21_read_flags(char **format, va_list list, flag *flags);
+int s21_read_type(char **str, va_list list, const char *format, flag *flags,
                   const char *start);
-s21_size_t s21_get_o_num(char **n, int width);
-s21_size_t s21_get_x_num(char **n, int width);
+s21_size_t s21_get_o_num(char **n, int width, int *error);
+s21_size_t s21_get_x_num(char **n, int width, int *error);
 float s21_get_float_num(char **n, int width);
-double s21_get_double_num(char **n, int width);
+long double s21_get_double_num(char **n, int width);
 int s21_parse_c(char **str, va_list list, flag flags);
 int s21_parse_s(char **str, va_list list, flag flags);
 int s21_parse_d(char **str, va_list list, flag flags);
@@ -87,10 +88,10 @@ int s21_parse_f(char **str, va_list list, flag flags);
 int s21_parse_p(char **str, va_list list, flag flags);
 
 // C#
-/*void *s21_insert(const char *src, const char *str, s21_size_t start_index);
+void *s21_insert(const char *src, const char *str, s21_size_t start_index);
 void *s21_to_lower(const char *str);
 void *s21_to_upper(const char *str);
-void *s21_trim(const char *src, const char *trim_chars);*/
+void *s21_trim(const char *src, const char *trim_chars);
 
 #if defined(__APPLE__) || defined(__MACH__)
 #define S21_NERR 107

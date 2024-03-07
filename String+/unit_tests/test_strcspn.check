@@ -1,0 +1,109 @@
+
+
+#suite test_strcspn
+
+#test test_strcspn1
+  char src[] = "";
+  char res[] = "";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn2
+  char src[] = "pine";
+  char res[] = "";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn3
+  char src[] = "";
+  char res[] = "pine";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn4
+  char src[] = "pine";
+  char res[] = "piNe";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn5
+  char src[] = "123";
+  char res[] = "123";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn6
+  char src[] = "12345";
+  char res[] = "123";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn7
+  char src[] = "123";
+  char res[] = "12345";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn8
+  char src[] = "4237896845";
+  char res[] = "2398575483";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn9
+  char src[] = "243HJKGHGJ124";
+  char res[] = "123";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn10
+  char src[] = "sdgfs1sdf23lkj";
+  char res[] = "123";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn11
+  char src[] = "Pine";
+  char res[] = "Pe";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn12
+  char src[] = "woeirfjslq 2349 0 09df8 23k4";
+  char res[] = "9432ql";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn13
+  char src[] = "ALFJ21342sdf KHG82134 Yjhf4323sdf";
+  char res[] = "3458SKJLDHFLKXCV234NHKFSJSDF JKS";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn14
+  char src[] = "32jersASDASDPare[0g9jf m07y271234567890";
+  char res[] = "1234567890qwertyuiopasdfghjklczxcvbnm";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+
+#test test_strcspn15
+  char src[] = "444444444444444444444444444444";
+  char res[] = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFF4";
+
+  ck_assert_int_eq(s21_strcspn(res, src), strcspn(res, src));
+
+

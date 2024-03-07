@@ -1,0 +1,809 @@
+
+
+#suite test_sprintf
+
+#test test_sprintf1
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%.5i";
+    int val = 69;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf2
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%5d";
+    int val = 69;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf3
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%-5i";
+    int val = 69;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf4
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%+12d";
+    int val = 69;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf5
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%012i";
+    int val = 69;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf6
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%0*d";
+    int val = 69;
+    ck_assert_int_eq(s21_sprintf(str1, format, 5, val),
+                     sprintf(str2, format, 5, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf7
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%0.*i";
+    int val = 69;
+    ck_assert_int_eq(s21_sprintf(str1, format, 5, val),
+                     sprintf(str2, format, 5, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf8
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%0.*i %d %4.*i %013d %d";
+    int val = 69;
+    ck_assert_int_eq(
+        s21_sprintf(str1, format, 5, val, -10431, 13, 5311, 0, -581813581),
+        sprintf(str2, format, 5, val, -10431, 13, 5311, 0, -581813581));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf9
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%+5.31li";
+    long int val = 698518581899;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+    ck_assert_str_eq(str1, str2);
+
+
+
+#test test_sprintf10
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%-16.9hi";
+    short int val = 6958;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+    ck_assert_str_eq(str1, str2);
+
+
+
+#test test_sprintf11
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%0.*ld";
+    long val = 8581385185;
+    ck_assert_int_eq(s21_sprintf(str1, format, 5, val),
+                     sprintf(str2, format, 5, val));
+    ck_assert_str_eq(str1, str2);
+
+
+
+#test test_sprintf12
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%.0d";
+    int val = 0;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+    ck_assert_str_eq(str1, str2);
+
+
+
+#test test_sprintf13
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "% d";
+    int val = 0;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf14
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%u";
+    unsigned int val = 14140;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf15
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%15u";
+    unsigned int val = 14140;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf16
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%-16u";
+    unsigned int val = 14140;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf17
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%.51u";
+    unsigned int val = 14140;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+#test test_sprintf18
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "% 5.51u";
+    unsigned int val = 14140;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf19
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%hu";
+    unsigned short int val = 14140;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf20
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%lu";
+    unsigned long int val = 949149114140;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf21
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%lo";
+    long int val = 84518;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf22
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%u";
+    ck_assert_int_eq(s21_sprintf(str1, format, 0),
+                     sprintf(str2, format, (unsigned)0));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf23
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%5x";
+    unsigned val = 858158158;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf24
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%#-10x";
+    unsigned val = 858158158;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf25
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%.15x";
+    unsigned val = 858158158;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf26
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%#-10x%x%X%#x%#X%5.5x";
+    unsigned val = 858158158;
+    ck_assert_int_eq(s21_sprintf(str1, format, val, val, val, val, val, val),
+                     sprintf(str2, format, val, val, val, val, val, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf27
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%#-5.10x";
+    unsigned val = 858158158;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf28
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%#x";
+    unsigned val = 0;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf29
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%#x";
+    unsigned val = 18571;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+
+#test test_sprintf30
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%#hx";
+    unsigned short val = 12352;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf31
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%#lx";
+    unsigned long val = 18571757371571;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf32
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%#2x";
+    unsigned val = 1;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf33
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%#30x";
+    unsigned val = 1;
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf34
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%c";
+    char val = 'X';
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+
+#test test_sprintf35
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%.5c";
+    char val = 'c';
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf36
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "% -5c";
+    char val = 'c';
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf37
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%15c";
+    char val = 'c';
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+#test test_sprintf38
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%-5.3c%c%c%c%c Hello! ABOBA";
+    char val = 'c';
+    ck_assert_int_eq(s21_sprintf(str1, format, val, 'c', 'a', 'b', 'b'),
+                     sprintf(str2, format, val, 'c', 'a', 'b', 'b'));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf39
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%-5.3c";
+    char val = 'c';
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf40
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    char *format = "%s";
+    char *val = "I LOVE STRINGS AND TESTS AND SCHOOL21 NO JOKE";
+    ck_assert_int_eq(s21_sprintf(str1, format, val),
+                     sprintf(str2, format, val));
+
+    ck_assert_str_eq(str1, str2);
+
+
+
+#test test_sprintf41
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    
+    ck_assert_int_eq(
+        s21_sprintf(str1, "%s%s%s%s%s", "Drop", " ", "Sega", " ", "PLS"),
+        sprintf(str2, "%s%s%s%s%s", "Drop", " ", "Sega", " ", "PLS"));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf42
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(s21_sprintf(str1, "%d", 666), sprintf(str2, "%d", 666));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf43
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(s21_sprintf(str1, "%d%d%d%d", -999, 0, 666, -100),
+                     sprintf(str2, "%d%d%d%d", -999, 0, 666, -100));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf44
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(s21_sprintf(str1, "%i", -0), sprintf(str2, "%i", -0));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf45
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(s21_sprintf(str1, "%i%i%i%i", -999, 0, 666, -100),
+                     sprintf(str2, "%i%i%i%i", -999, 0, 666, -100));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf46
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(s21_sprintf(str1, "%f", 0.0001),
+                     sprintf(str2, "%f", 0.0001));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf47
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(
+        s21_sprintf(str1, "%f%f%f%f", -999.666, 0.0001, 666.999, -100.001),
+        sprintf(str2, "%f%f%f%f", -999.666, 0.0001, 666.999, -100.001));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf48
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(s21_sprintf(str1, "%u", 100),
+                     sprintf(str2, "%u", (unsigned)100));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf49
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(s21_sprintf(str1, "%u%u%u%u", 999, 0, 666, 100),
+                     sprintf(str2, "%u%u%u%u", (unsigned)999, (unsigned)0,
+                             (unsigned)666, (unsigned)100));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf50
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(s21_sprintf(str1, "%8c", '\t'),
+                     sprintf(str2, "%8c", '\t'));
+
+    ck_assert_str_eq(str1, str2);
+
+#test test_sprintf51
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(s21_sprintf(str1, "%-8c", '\t'),
+                     sprintf(str2, "%-8c", '\t'));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf52
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(
+        s21_sprintf(str1, "%3c%-11c%10c%-2c%c", '\t', '\n', '0', 'S', 's'),
+        sprintf(str2, "%3c%-11c%10c%-2c%c", '\t', '\n', '0', 'S', 's'));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf53
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(
+        s21_sprintf(str1, "%x%x%x%x%x", 12340987, 135, 0, -1230, -123213123),
+        sprintf(str2, "%x%x%x%x%x", 12340987, 135, 0, -1230, -123213123));
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf54
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(
+        s21_sprintf(str1, "%X%X%X%X%X", 12340987, 135, 0, -1230, -123213123),
+        sprintf(str2, "%X%X%X%X%X", 12340987, 135, 0, -1230, -123213123));
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf55
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+
+    ck_assert_int_eq(
+        s21_sprintf(str1, "%2x%-7x%9x%11x%0x", 12340987, 100, 0, 1, -666999),
+        sprintf(str2, "%2x%-7x%9x%11x%0x", 12340987, 100, 0, 1, -666999));
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf56
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    char *format = "%10ld";
+
+    ck_assert_int_eq(s21_sprintf(str1, format, 1), sprintf(str2, format, 1));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf57
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    char *format = "%1.1f";
+
+    ck_assert_int_eq(s21_sprintf(str1, format, 1.1),
+                     sprintf(str2, format, 1.1));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf58
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    char *format = "%8.3c";
+
+    ck_assert_int_eq(s21_sprintf(str1, format, 'a'),
+                     sprintf(str2, format, 'a'));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf59
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    char *format = "%+5.5d aboba";
+
+    int val = 10000;
+    int a = s21_sprintf(str1, format, val);
+    int b = sprintf(str2, format, val);
+    ck_assert_int_eq(a, b);
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf60
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    char *format = "%7.7f";
+
+    ck_assert_int_eq(s21_sprintf(str1, format, 11.123456),
+                     sprintf(str2, format, 11.123456));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf61
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    char *format = "%7.4s";
+
+    ck_assert_int_eq(s21_sprintf(str1, format, "aboba floppa"),
+                     sprintf(str2, format, "aboba floppa"));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf62
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    char *format = "%6.6u";
+
+    ck_assert_int_eq(s21_sprintf(str1, format, 12341151),
+                     sprintf(str2, format, 12341151));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf63
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    char *format = "%li%ld%lu";
+
+    ck_assert_int_eq(s21_sprintf(str1, format, 666666666666, 777, 111),
+                     sprintf(str2, format, 666666666666, 777, 111));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf64
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    char *format = "%hi%hd%hu";
+
+    ck_assert_int_eq(s21_sprintf(str1, format, 666, -777, 111),
+                     sprintf(str2, format, 666, -777, 111));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf65
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    char *format = "%.f";
+
+    ck_assert_int_eq(s21_sprintf(str1, format, 121.123),
+                     sprintf(str2, format, 121.123));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf66
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    //char *format = "%%";
+
+    ck_assert_int_eq(s21_sprintf(str1, "%%"), sprintf(str2, "%%"));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf67
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    //char *format = "%%%%%%%%";
+
+    ck_assert_int_eq(s21_sprintf(str1, "%%%%%%%%"), sprintf(str2, "%%%%%%%%"));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf68
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    int n1;
+    int n2;
+    int a = s21_sprintf(str1, "%d%n", 123, &n1);
+    int b = sprintf(str2, "%d%n", 123, &n2);
+
+    ck_assert_int_eq(a, b);
+    ck_assert_int_eq(n1, n2);
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf69
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    char *format = "%-.f";
+
+    ck_assert_int_eq(s21_sprintf(str1, format, 111.111),
+                     sprintf(str2, format, 111.111));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf70
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    char *format = "%-.1d";
+
+    ck_assert_int_eq(s21_sprintf(str1, format, 111),
+                     sprintf(str2, format, 111));
+
+    ck_assert_str_eq(str1, str2);
+
+
+#test test_sprintf71
+    char str1[S21_TEXTMAX];
+    char str2[S21_TEXTMAX];
+    char *format = "%e";
+    double x = 111;
+    ck_assert_int_eq(s21_sprintf(str1, format, x), sprintf(str2, format, x));
+
+    ck_assert_str_eq(str1, str2);
