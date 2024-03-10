@@ -213,13 +213,6 @@ int s21_get_o(char *str, int *i, long long unsigned int number, flag flags) {
 }
 
 int s21_get_f(char *str, int *i, long double number, flag flags) {
-  // cast to neccessary type
-  if (flags.longer)
-    number = (double)number;
-  else if (flags.longest)
-    ;
-  else
-    number = (float)number;
   int sign = number >= 0;
   if (number < 0) number = -number;
   char num[S21_TEXTMAX];
@@ -229,11 +222,6 @@ int s21_get_f(char *str, int *i, long double number, flag flags) {
 }
 
 int s21_get_e(char *str, int *i, long double number, flag flags, char mode) {
-  // cast to neccessary type
-  if (flags.longest)
-    ;
-  else
-    number = (double)number;
   int sign = number >= 0;
   if (number < 0) number = -number;
   char num[S21_TEXTMAX];
@@ -371,36 +359,20 @@ int s21_ptoa(unsigned long long int n, char *res, flag flags) {
 int s21_ftoa(long double n, char *res, flag flags) {
   long double ipart;                     // Extract integer part
   long double fpart = modfl(n, &ipart);  // Extract floating part
+  fpart += 1 / LLONG_MAX;
   int i = s21_int_to_str(ipart, res, 0, 10, '\0');
   if (flags.accuracy > 0) {
     res[i++] = '.';
     // Get the value of fraction part upto given by points after dot
-    for (int shift = i; shift < flags.accuracy; flags.accuracy--) {
-      fpart *= 10;
-      int digit = (int)fpart;
-      if (digit >= 10) {
-        res[i - 1] = res[i - 1] + 1;
-        res[i] = digit / 10 + '0';
-      } else
-        res[i] = digit + '0';
-      i++;
-      fpart -= digit;
-    }
-    if (flags.accuracy-- > 0) {
-      fpart *= 10;
-      int digit = round(fpart);
-      if (digit >= 10) {
-        res[i - 1] = res[i - 1] + 1;
-        res[i] = 0 + '0';
-      } else
-        res[i] = digit + '0';
-      i++;
-      fpart -= digit;
-    }
-    while (flags.accuracy-- > 0) res[i++] = '0';
-    // end float part
-    res[i] = '\0';
+    fpart = round(fpart * pow(10, flags.accuracy));
+    // convert floating part to string
+    i +=
+        s21_int_to_str((long long int)fpart, res + i, flags.accuracy, 10, '\0');
   }
+  // while (flags.accuracy-- > 0) res[i++] = '0';
+  // end float part
+  res[i] = '\0';
+
   return i;
 }
 

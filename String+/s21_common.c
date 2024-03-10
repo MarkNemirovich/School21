@@ -39,8 +39,7 @@ int s21_get_sign(char **n, int *width) {
     sign = -1;
     (*n)++;
     (*width)--;
-  }
-  else if (**n == ' ' || **n == '+') {
+  } else if (**n == ' ' || **n == '+') {
     sign = 1;
     (*n)++;
     (*width)--;

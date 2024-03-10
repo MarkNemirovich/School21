@@ -76,22 +76,26 @@ int s21_read_type(char **str, va_list list, const char *format, flag *flags,
                   const char *start);
 s21_size_t s21_get_o_num(char **n, int width, int *error);
 s21_size_t s21_get_x_num(char **n, int width, int *error);
-float s21_get_float_num(char **n, int width);
-long double s21_get_double_num(char **n, int width);
+float s21_get_float_num(char **n, int *width, int *error);
+long double s21_get_double_num(char **n, int *width, int *error);
 int s21_parse_c(char **str, va_list list, flag flags);
 int s21_parse_s(char **str, va_list list, flag flags);
 int s21_parse_d(char **str, va_list list, flag flags);
 int s21_parse_u(char **str, va_list list, flag flags);
-int s21_parse_x(char **str, va_list list, flag flags);
-int s21_parse_o(char **str, va_list list, flag flags);
-int s21_parse_f(char **str, va_list list, flag flags);
-int s21_parse_p(char **str, va_list list, flag flags);
+int s21_parse_x(char **str, va_list list, flag *flags);
+int s21_parse_o(char **str, va_list list, flag *flags);
+int s21_parse_f(char **str, va_list list, flag *flags);
+int s21_parse_p(char **str, va_list list, flag *flags);
 
 // C#
 void *s21_insert(const char *src, const char *str, s21_size_t start_index);
 void *s21_to_lower(const char *str);
 void *s21_to_upper(const char *str);
 void *s21_trim(const char *src, const char *trim_chars);
+void s21_trim_left(const char **src, const char *trim_chars,
+                   s21_size_t *src_len, const s21_size_t trim_chars_len);
+void s21_trim_right(const char **src, const char *trim_chars,
+                    s21_size_t *src_len, const s21_size_t trim_chars_len);
 
 #if defined(__APPLE__) || defined(__MACH__)
 #define S21_NERR 107

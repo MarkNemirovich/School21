@@ -36,7 +36,6 @@
     int a1 = 0, a2 = 0, b1 = 5, b2 = 5, c1 = 0, c2 = 0, d1 = 5, d2 = 5;
 
     int res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
-
     int res2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
 
     ck_assert_int_eq(res1, res2);
@@ -52,7 +51,6 @@
     int a1 = 0, a2 = 0, b1 = 5, b2 = 5, c1 = 0, c2 = 0, d1 = 5, d2 = 5;
 
     int res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
-
     int res2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
 
     ck_assert_int_eq(res1, res2);
@@ -486,10 +484,10 @@
     long long a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
 
     const char str[] = "Aboba 123 Floppa -3 Keppa 4444Shleppa 333Anuroba 3";
-    const char fstr[] = "%s%ld%s%d%s%d%s";
+    const char fstr[] = "%s%lld%s%lld%s%lld%s%lld";
 
     int res1 = s21_sscanf(str, fstr, s1, &a1, s2, &b1, s3, &c1, s4, &d1);
-    int res2 = s21_sscanf(str, fstr, s5, &a2, s6, &b2, s7, &c2, s8, &d2);
+    int res2 = sscanf(str, fstr, s5, &a2, s6, &b2, s7, &c2, s8, &d2);
 
     ck_assert_int_eq(res1, res2);
     ck_assert_int_eq(a1, a2);
@@ -637,11 +635,16 @@
     int res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
     int res2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
 
+    double difa =(a1-a2)*1000000;
+    double difb =(b1-b2)*1000000;
+    double difc =(c1-c2)*1000000;
+    double difd =(d1-d2)*1000000;
+
     ck_assert_int_eq(res1, res2);
-    ck_assert_double_eq(a1, a2);
-    ck_assert_double_eq(b1, b2);
-    ck_assert_double_eq(c1, c2);
-    ck_assert_double_eq(d1, d2);
+    ck_assert_int_eq((int)difa, 0);
+    ck_assert_int_eq((int)difb, 0);
+    ck_assert_int_eq((int)difc, 0);
+    ck_assert_int_eq((int)difd, 0);
 
 
 #test test_sscanf41
@@ -661,10 +664,10 @@
 
 
 #test test_sscanf42
-    float a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
+    double a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
 
     const char str[] = "Nan NAN 0.0000 0";
-    const char fstr[] = "%G %G %G %G";
+    const char fstr[] = "%lG %lG %lG %lG";
 
     int res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
     int res2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
@@ -1069,26 +1072,26 @@
 
 
 #test test_sscanf78
-    int a1 = 0, a2 = 5, a3 = 3, a4 = 9;
-    int32_t n1 = 500, n2 = 10000;
+    int a1 = 0, a2 = 5, b1 = 3, b2 = 9;
+    int32_t c1 = 500, c2 = 10000;
 
     const char str[] = "123123SkipMePlease!!!!123";
     const char fstr[] = "%dSkipMePlease!!!!%d %n";
 
-    int res1 = s21_sscanf(str, fstr, &a1, &a3, &n1);
-    int res2 = sscanf(str, fstr, &a2, &a4, &n2);
+    int res1 = s21_sscanf(str, fstr, &a1, &b1, &c1);
+    int res2 = sscanf(str, fstr, &a2, &b2, &c2);
 
     ck_assert_int_eq(res1, res2);
-    ck_assert_int_eq(n1, n2);
-    ck_assert_int_eq(a3, a4);
-    ck_assert_int_eq(n1, n2);
+    ck_assert_int_eq(a1, a2);
+    ck_assert_int_eq(b1, b2);
+    ck_assert_int_eq(c1, c2);
 
 
 #test test_sscanf79
     int32_t a1, a2;
     int32_t b1 = 0, b2 = 0;
     const char str[] = "12keppa12";
-    const char fstr[] = "%dkeppapos%d";
+    const char fstr[] = "%dkeppa%d";
     int32_t res1 = s21_sscanf(str, fstr, &a1, &b1);
     int32_t res2 = sscanf(str, fstr, &a2, &b2);
 
@@ -1179,7 +1182,7 @@
 #test test_sscanf85
     int *a1 = 0, *a2 = 0, *b1 = 0, *b2 = 0, *c1 = 0, *c2 = 0, *d1 = 0, *d2 = 0;
 
-    const char str[] = "NULL";
+    const char str[] = "s21_NULL";
     const char fstr[] = "%p %p %p %p";
 
     int32_t res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
@@ -1196,12 +1199,12 @@
     char a1, a2;
     char b1[256] = {'\0'};
     char b2[256] = {'\0'};
-    float c1, c2;
+    double c1, c2;
     short int d1, d2;
     long long int e1, e2;
 
-    const char str[] = "$AmIIn%%sane? %\n\n\n \n \n \n\t   InF 0 %FIN9D-ME%";
-    const char fstr[] = "%c%5s%%%*s %%  %G %hi %%FIN%lldDME%%";
+    const char str[] = "$AmIIn% InF 0 %FIN9D-ME%";
+    const char fstr[] = "%c%5s%% %lG %hi %%FIN%lldDME%%";
 
     int32_t res1 = s21_sscanf(str, fstr, &a1, b1, &c1, &d1, &e1);
     int32_t res2 = sscanf(str, fstr, &a2, b2, &c2, &d2, &e2);

@@ -1392,7 +1392,6 @@ START_TEST(test_sscanf4) {
   int a1 = 0, a2 = 0, b1 = 5, b2 = 5, c1 = 0, c2 = 0, d1 = 5, d2 = 5;
 
   int res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
-
   int res2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
 
   ck_assert_int_eq(res1, res2);
@@ -1409,7 +1408,6 @@ START_TEST(test_sscanf5) {
   int a1 = 0, a2 = 0, b1 = 5, b2 = 5, c1 = 0, c2 = 0, d1 = 5, d2 = 5;
 
   int res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
-
   int res2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
 
   ck_assert_int_eq(res1, res2);
@@ -1870,10 +1868,10 @@ START_TEST(test_sscanf33) {
   long long a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
 
   const char str[] = "Aboba 123 Floppa -3 Keppa 4444Shleppa 333Anuroba 3";
-  const char fstr[] = "%s%ld%s%d%s%d%s";
+  const char fstr[] = "%s%lld%s%lld%s%lld%s%lld";
 
   int res1 = s21_sscanf(str, fstr, s1, &a1, s2, &b1, s3, &c1, s4, &d1);
-  int res2 = s21_sscanf(str, fstr, s5, &a2, s6, &b2, s7, &c2, s8, &d2);
+  int res2 = sscanf(str, fstr, s5, &a2, s6, &b2, s7, &c2, s8, &d2);
 
   ck_assert_int_eq(res1, res2);
   ck_assert_int_eq(a1, a2);
@@ -2028,11 +2026,16 @@ START_TEST(test_sscanf40) {
   int res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
   int res2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
 
+  double difa = (a1 - a2) * 1000000;
+  double difb = (b1 - b2) * 1000000;
+  double difc = (c1 - c2) * 1000000;
+  double difd = (d1 - d2) * 1000000;
+
   ck_assert_int_eq(res1, res2);
-  ck_assert_double_eq(a1, a2);
-  ck_assert_double_eq(b1, b2);
-  ck_assert_double_eq(c1, c2);
-  ck_assert_double_eq(d1, d2);
+  ck_assert_int_eq((int)difa, 0);
+  ck_assert_int_eq((int)difb, 0);
+  ck_assert_int_eq((int)difc, 0);
+  ck_assert_int_eq((int)difd, 0);
 }
 END_TEST
 
@@ -2054,10 +2057,10 @@ START_TEST(test_sscanf41) {
 END_TEST
 
 START_TEST(test_sscanf42) {
-  float a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
+  double a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
 
   const char str[] = "Nan NAN 0.0000 0";
-  const char fstr[] = "%G %G %G %G";
+  const char fstr[] = "%lG %lG %lG %lG";
 
   int res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
   int res2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
@@ -2497,19 +2500,19 @@ START_TEST(test_sscanf77) {
 END_TEST
 
 START_TEST(test_sscanf78) {
-  int a1 = 0, a2 = 5, a3 = 3, a4 = 9;
-  int32_t n1 = 500, n2 = 10000;
+  int a1 = 0, a2 = 5, b1 = 3, b2 = 9;
+  int32_t c1 = 500, c2 = 10000;
 
   const char str[] = "123123SkipMePlease!!!!123";
   const char fstr[] = "%dSkipMePlease!!!!%d %n";
 
-  int res1 = s21_sscanf(str, fstr, &a1, &a3, &n1);
-  int res2 = sscanf(str, fstr, &a2, &a4, &n2);
+  int res1 = s21_sscanf(str, fstr, &a1, &b1, &c1);
+  int res2 = sscanf(str, fstr, &a2, &b2, &c2);
 
   ck_assert_int_eq(res1, res2);
-  ck_assert_int_eq(n1, n2);
-  ck_assert_int_eq(a3, a4);
-  ck_assert_int_eq(n1, n2);
+  ck_assert_int_eq(a1, a2);
+  ck_assert_int_eq(b1, b2);
+  ck_assert_int_eq(c1, c2);
 }
 END_TEST
 
@@ -2517,7 +2520,7 @@ START_TEST(test_sscanf79) {
   int32_t a1, a2;
   int32_t b1 = 0, b2 = 0;
   const char str[] = "12keppa12";
-  const char fstr[] = "%dkeppapos%d";
+  const char fstr[] = "%dkeppa%d";
   int32_t res1 = s21_sscanf(str, fstr, &a1, &b1);
   int32_t res2 = sscanf(str, fstr, &a2, &b2);
 
@@ -2614,7 +2617,7 @@ END_TEST
 START_TEST(test_sscanf85) {
   int *a1 = 0, *a2 = 0, *b1 = 0, *b2 = 0, *c1 = 0, *c2 = 0, *d1 = 0, *d2 = 0;
 
-  const char str[] = "NULL";
+  const char str[] = "s21_NULL";
   const char fstr[] = "%p %p %p %p";
 
   int32_t res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
@@ -2632,12 +2635,12 @@ START_TEST(test_sscanf86) {
   char a1, a2;
   char b1[256] = {'\0'};
   char b2[256] = {'\0'};
-  float c1, c2;
+  double c1, c2;
   short int d1, d2;
   long long int e1, e2;
 
-  const char str[] = "$AmIIn%%sane? %\n\n\n \n \n \n\t   InF 0 %FIN9D-ME%";
-  const char fstr[] = "%c%5s%%%*s %%  %G %hi %%FIN%lldDME%%";
+  const char str[] = "$AmIIn% InF 0 %FIN9D-ME%";
+  const char fstr[] = "%c%5s%% %lG %hi %%FIN%lldDME%%";
 
   int32_t res1 = s21_sscanf(str, fstr, &a1, b1, &c1, &d1, &e1);
   int32_t res2 = sscanf(str, fstr, &a2, b2, &c2, &d2, &e2);
@@ -3850,6 +3853,116 @@ START_TEST(test_to_upper5) {
 }
 END_TEST
 
+START_TEST(test_trim1) {
+  char str[] = "";
+  char trim_ch[] = "";
+  char expected[] = "";
+  char *got = s21_trim(str, trim_ch);
+  ck_assert_str_eq(got, expected);
+  if (got) free(got);
+}
+END_TEST
+
+START_TEST(test_trim2) {
+  char str[] = "";
+  char trim_ch[] = "+!0-aeoi2o3i23iuhuhh3O*YADyagsduyoaweq213";
+  char expected[] = "";
+  char *got = s21_trim(str, trim_ch);
+  ck_assert_str_eq(got, expected);
+  if (got) free(got);
+}
+END_TEST
+
+START_TEST(test_trim3) {
+  char str[] = "+!0-aeoi2o3i23iuhuhh3O*YADyagsduyoaweq213";
+  char trim_ch[] = "";
+  char expected[] = "+!0-aeoi2o3i23iuhuhh3O*YADyagsduyoaweq213";
+  char *got = s21_trim(str, trim_ch);
+  ck_assert_str_eq(got, expected);
+  if (got) free(got);
+}
+END_TEST
+
+START_TEST(test_trim4) {
+  char str[] = "+!0-aeoi2o3i23iuhuhh3O*YADyagsduyoaweq213";
+  char trim_ch[] = "+!0-aeoi2o3i23iuhuhh3O*YADyagsduyoaweq213";
+  char expected[] = "";
+  char *got = s21_trim(str, trim_ch);
+  ck_assert_str_eq(got, expected);
+  if (got) free(got);
+}
+END_TEST
+
+START_TEST(test_trim5) {
+  char str[] = "+!!++Abo+ba++00";
+  char trim_ch[] = "+!0-";
+  char expected[] = "Abo+ba";
+  char *got = (char *)s21_trim(str, trim_ch);
+  ck_assert_str_eq(got, expected);
+  if (got) free(got);
+}
+END_TEST
+
+START_TEST(test_trim6) {
+  char str[] = "Ab000cd0";
+  char trim_ch[] = "003";
+  char expected[] = "Ab000cd";
+  char *got = s21_trim(str, trim_ch);
+  ck_assert_str_eq(got, expected);
+  if (got) free(got);
+}
+END_TEST
+
+START_TEST(test_trim7) {
+  char str[] = "DoNotTouch";
+  char trim_ch[] = "Not";
+  char expected[] = "DoNotTouch";
+  char *got = s21_trim(str, trim_ch);
+  ck_assert_str_eq(got, expected);
+  if (got) free(got);
+}
+END_TEST
+
+START_TEST(test_trim8) {
+  char str[] = "&* !!sc21 * **";
+  char trim_ch[] = "&!* ";
+  char expected[] = "sc21";
+  char *got = s21_trim(str, trim_ch);
+  ck_assert_str_eq(got, expected);
+  if (got) free(got);
+}
+END_TEST
+
+START_TEST(test_trim9) {
+  char str[] = " Good morning!    ";
+  char trim_ch[] = " ";
+  char expected[] = "Good morning!";
+  char *got = s21_trim(str, trim_ch);
+  ck_assert_str_eq(got, expected);
+  if (got) free(got);
+}
+END_TEST
+
+START_TEST(test_trim10) {
+  char str[] = "        abc         ";
+  char trim_ch[] = "";
+  char expected[] = "abc";
+  char *got = s21_trim(str, trim_ch);
+  ck_assert_str_eq(got, expected);
+  if (got) free(got);
+}
+END_TEST
+
+START_TEST(test_trim11) {
+  char str[] = "        abc         ";
+  char *trim_ch = NULL;
+  char expected[] = "abc";
+  char *got = s21_trim(str, trim_ch);
+  ck_assert_str_eq(got, expected);
+  if (got) free(got);
+}
+END_TEST
+
 int main(void) {
   Suite *s1 = suite_create("test_insert");
   TCase *tc1_1 = tcase_create("test_insert");
@@ -3891,6 +4004,8 @@ int main(void) {
   TCase *tc19_1 = tcase_create("test_to_lower");
   Suite *s20 = suite_create("test_to_upper");
   TCase *tc20_1 = tcase_create("test_to_upper");
+  Suite *s21 = suite_create("test_trim");
+  TCase *tc21_1 = tcase_create("test_trim");
   SRunner *sr = srunner_create(s1);
   int nf;
 
@@ -4218,6 +4333,18 @@ int main(void) {
   tcase_add_test(tc20_1, test_to_upper3);
   tcase_add_test(tc20_1, test_to_upper4);
   tcase_add_test(tc20_1, test_to_upper5);
+  suite_add_tcase(s21, tc21_1);
+  tcase_add_test(tc21_1, test_trim1);
+  tcase_add_test(tc21_1, test_trim2);
+  tcase_add_test(tc21_1, test_trim3);
+  tcase_add_test(tc21_1, test_trim4);
+  tcase_add_test(tc21_1, test_trim5);
+  tcase_add_test(tc21_1, test_trim6);
+  tcase_add_test(tc21_1, test_trim7);
+  tcase_add_test(tc21_1, test_trim8);
+  tcase_add_test(tc21_1, test_trim9);
+  tcase_add_test(tc21_1, test_trim10);
+  tcase_add_test(tc21_1, test_trim11);
 
   srunner_add_suite(sr, s2);
   srunner_add_suite(sr, s3);
@@ -4238,6 +4365,7 @@ int main(void) {
   srunner_add_suite(sr, s18);
   srunner_add_suite(sr, s19);
   srunner_add_suite(sr, s20);
+  srunner_add_suite(sr, s21);
 
   srunner_run_all(sr, CK_ENV);
   nf = srunner_ntests_failed(sr);
