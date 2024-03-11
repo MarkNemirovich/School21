@@ -1,0 +1,68 @@
+
+
+#suite test_insert
+
+#test test_insert1
+    char str[] = "Bamboo";
+    char src[] = "I rly love . Blue sky";
+    s21_size_t index = 11;
+    char expected[] = "I rly love Bamboo. Blue sky";
+    char *got = (char *)s21_insert(src, str, index);
+    ck_assert_str_eq(got, expected);
+    if (got)
+        free(got);
+
+
+#test test_insert2
+    char str[] = "Apple ";
+    char src[] = "tree!";
+    s21_size_t index = 0;
+    char expected[] = "Apple tree!";
+    char *got = (char *)s21_insert(src, str, index);
+    ck_assert_str_eq(got, expected);
+    if (got)
+        free(got);
+
+
+#test test_insert3
+    char str[] = "";
+    char src[] = "";
+    s21_size_t index = 100;
+    char *expected = "";
+    char *got = (char *)s21_insert(src, str, index);
+    ck_assert_str_eq(got, expected);
+    if (got) 
+        free(got);
+
+
+#test test_insert4
+    char *src = s21_NULL;
+    char *str = s21_NULL;
+    s21_size_t index = 100;
+    char *expected = s21_NULL;
+    char *got = (char *)s21_insert(src, str, index);
+    ck_assert_ptr_eq(got, expected);
+    if (got)
+        free(got);
+
+
+#test test_insert5
+    char str[] = "People";
+    char src[] = "Space  ";
+    s21_size_t index = 6;
+    char expected[] = "Space People ";
+    char *got = (char *)s21_insert(src, str, index);
+    ck_assert_str_eq(got, expected);
+    if (got)
+        free(got);
+
+
+#test test_insert6
+    char *str = s21_NULL;
+    char src[] = "Space  ";
+    s21_size_t index = 6;
+    char expected[] = "Space  ";
+    char *got = (char *)s21_insert(src, str, index);
+    ck_assert_str_eq(got, expected);
+    if (got) 
+        free(got);

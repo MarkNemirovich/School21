@@ -1,0 +1,62 @@
+
+
+#suite test_strlen
+
+#test test_strlen1
+  char src[] = "";
+
+  ck_assert_int_eq(s21_strlen(src), strlen(src));
+
+
+#test test_strlen2
+  char src[] = "apple";
+
+  ck_assert_int_eq(s21_strlen(src), strlen(src));
+
+
+#test test_strlen3
+  char src[] = "3498573923456";
+
+  ck_assert_int_eq(s21_strlen(src), strlen(src));
+
+
+#test test_strlen4
+  char src[] = "34059803453dkfjghKJSDHFKLPHJ";
+
+  ck_assert_int_eq(s21_strlen(src), strlen(src));
+
+
+#test test_strlen5
+  char src[] = "apple\0pie!";
+
+  ck_assert_int_eq(s21_strlen(src), strlen(src));
+
+
+#test test_strlen6
+  char src[] = "apple_pie...234(345) 3245 hi";
+
+  ck_assert_int_eq(s21_strlen(src), strlen(src));
+
+
+#test test_strlen7
+  char src[] = "Apple_tree";
+
+  ck_assert_int_eq(s21_strlen(src), strlen(src));
+
+#test test_strlen8
+  char src[] = "HI_appLE_Tree";
+
+  ck_assert_int_eq(s21_strlen(src), strlen(src));
+
+
+#test test_strlen9
+  char src[] = "Apple tree";
+
+  ck_assert_int_eq(s21_strlen(src), strlen(src));
+
+
+#test test_strlen10
+  char src[] = "appple";
+
+  ck_assert_int_eq(s21_strlen(src), strlen(src));
+

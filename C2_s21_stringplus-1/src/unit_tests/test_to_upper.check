@@ -1,0 +1,46 @@
+
+
+#suite test_to_upper
+
+#test test_to_upper1
+    char str[] = "vodka";
+    char expected[] = "VODKA";
+    char *got = s21_to_upper(str);
+    ck_assert_str_eq(got, expected);
+    if (got) free(got);
+
+
+#test test_to_upper2
+    char str[] = "empty";
+    char expected[] = "EMPTY";
+    char *got = s21_to_upper(str);
+    ck_assert_str_eq(got, expected);
+    if (got) free(got);
+
+
+#test test_to_upper3
+    char str[] = "1+1*1";
+    char expected[] = "1+1*1";
+    char *got = s21_to_upper(str);
+    ck_assert_str_eq(got, expected);
+    if (got) free(got);
+
+
+
+#test test_to_upper4
+    char str[] = " ";
+    char expected[] = " ";
+    char *got = s21_to_upper(str);
+    ck_assert_str_eq(got, expected);
+    if (got) free(got);
+
+
+
+#test test_to_upper5
+    char str[] = "";
+    char expected[] = "";
+    char *got = s21_to_upper(str);
+    ck_assert_str_eq(got, expected);
+    if (got) free(got);
+
+

@@ -1,0 +1,79 @@
+
+
+#suite test_memset
+
+#test test_memset1
+  char res[] = "apple";
+  char expected[] = "apple";
+  char replace = 'h';
+  s21_size_t n_byte = 5;
+
+  s21_memset(res, replace, n_byte);
+  memset(expected, replace, n_byte);
+
+  ck_assert_str_eq(res, expected);
+
+
+#test test_memset2
+  char res[] = "apple";
+  char expected[] = "apple";
+  char replace = 'h';
+  s21_size_t n_byte = 0;
+
+  s21_memset(res, replace, n_byte);
+  memset(expected, replace, n_byte);
+
+  ck_assert_str_eq(res, expected);
+
+
+#test test_memset3
+  char res[] = "";
+  char expected[] = "";
+  char replace = '\0';
+  s21_size_t n_byte = 0;
+
+  s21_memset(res, replace, n_byte);
+  memset(expected, replace, n_byte);
+
+  ck_assert_str_eq(res, expected);
+
+
+#test test_memset4
+  char res[] = "apple";
+  char expected[] = "apple";
+  char replace = 'P';
+  s21_size_t n_byte = 3;
+
+  s21_memset(res, replace, n_byte);
+  memset(expected, replace, n_byte);
+
+  ck_assert_str_eq(res, expected);
+
+
+#test test_memset5
+  char res[] = "Appl4";
+  char expected[] = "Appl4";
+  char replace = '4';
+  s21_size_t n_byte = 5;
+
+  s21_memset(res, replace, n_byte);
+  memset(expected, replace, n_byte);
+
+  ck_assert_str_eq(res, expected);
+
+
+#test test_memset6
+  char res[] =
+      "fjlskdfHello apple pie aslfh SDFLKGJ hnalksdsdf123!! @#$ ((( "
+      ")*(___...././,.)))";
+  char expected[] =
+      "fjlskdfHello apple pie aslfh SDFLKGJ hnalksdsdf123!! @#$ ((( "
+      ")*(___...././,.)))";
+  char replace = '1';
+  s21_size_t n_byte = 5;
+
+  s21_memset(res, replace, n_byte);
+  memset(expected, replace, n_byte);
+
+  ck_assert_str_eq(res, expected);
+

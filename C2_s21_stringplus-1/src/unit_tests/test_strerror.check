@@ -1,0 +1,16 @@
+
+
+#suite test_strerror
+
+#test test_strerror1
+    for (int i = -1000; i < 150; i++) {
+        char *got = s21_strerror(i);
+        char *expected = strerror(i);
+        ck_assert_str_eq(got, expected);
+    }
+
+
+#test test_strerror2
+    const char *got = s21_strerror(-1);
+    char *expected = strerror(-1);
+    ck_assert_str_eq(got, expected);

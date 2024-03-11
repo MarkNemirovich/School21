@@ -1,0 +1,124 @@
+
+
+#suite test_strncat
+
+#test test_strncat1
+  char src[] = "";
+  char res[] = "";
+  char expected[] = "";
+  s21_size_t n_byte = 0;
+
+  s21_strncat(res, src, n_byte);
+  strncat(expected, src, n_byte);
+
+  ck_assert_mem_ge(res, expected, n_byte);
+
+
+#test test_strncat2
+  char src[] = "apple";
+  char res[10] = "";
+  char expected[10] = "";
+  s21_size_t n_byte = 0;
+
+  s21_strncat(res, src, n_byte);
+  strncat(expected, src, n_byte);
+
+  ck_assert_mem_ge(res, expected, n_byte);
+
+
+#test test_strncat3
+  char src[] = "";
+  char res[10] = "cd";
+  char expected[10] = "cd";
+  s21_size_t n_byte = 0;
+
+  s21_strncat(res, src, n_byte);
+  strncat(expected, src, n_byte);
+
+  ck_assert_mem_ge(res, expected, n_byte);
+
+
+#test test_strncat4
+  char src[] = "apple";
+  char res[10] = "cd";
+  char expected[10] = "cd";
+  s21_size_t n_byte = 5;
+
+  s21_strncat(res, src, n_byte);
+  strncat(expected, src, n_byte);
+
+  ck_assert_mem_ge(res, expected, n_byte);
+
+
+#test test_strncat5
+  char src[] = "apple";
+  char res[25] = "treee";
+  char expected[25] = "treee";
+  s21_size_t n_byte = 6;
+
+  s21_strncat(res, src, n_byte);
+  strncat(expected, src, n_byte);
+
+  ck_assert_mem_ge(res, expected, n_byte);
+
+
+#test test_strncat6
+  char src[] = "APPLEPIEE";
+  char res[25] = "APPLEPIEE";
+  char expected[25] = "APPLEPIEE";
+  s21_size_t n_byte = 5;
+
+  s21_strncat(res, src, n_byte);
+  strncat(expected, src, n_byte);
+
+  ck_assert_mem_ge(res, expected, n_byte);
+
+
+#test test_strncat7
+  char src[] = "APPLEPIEE";
+  char res[25] = "APPLEPIEE";
+  char expected[25] = "APPLEPIEE";
+  s21_size_t n_byte = 0;
+
+  s21_strncat(res, src, n_byte);
+  strncat(expected, src, n_byte);
+
+  ck_assert_mem_ge(res, expected, n_byte);
+
+
+#test test_strncat8
+  char src[] = "APPLEPIEE";
+  char res[25] = "APPLEPIEE";
+  char expected[25] = "APPLEPIEE";
+  s21_size_t n_byte = 1;
+
+  s21_strncat(res, src, n_byte);
+  strncat(expected, src, n_byte);
+
+  ck_assert_mem_ge(res, expected, n_byte);
+
+
+#test test_strncat9
+  char src[] = "APPLEPIEE";
+  char res[25] = "APPLEPIEE";
+  char expected[25] = "APPLEPIEE";
+  s21_size_t n_byte = 10;
+
+  s21_strncat(res, src, n_byte);
+  strncat(expected, src, n_byte);
+
+  ck_assert_mem_ge(res, expected, n_byte);
+
+
+#test test_strncat10
+  char src[] = "\0";
+  char res[25] = "APPLEPIEE";
+  char expected[25] = "APPLEPIEE";
+  s21_size_t n_byte = 1;
+
+  s21_strncat(res, src, n_byte);
+  strncat(expected, src, n_byte);
+
+  ck_assert_mem_ge(res, expected, n_byte);
+
+
