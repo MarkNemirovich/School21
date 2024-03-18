@@ -1,0 +1,106 @@
+
+
+#suite test_strncmp
+
+#test test_strncmp1
+  char str1[] = "";
+  char str2[] = "";
+  s21_size_t n_byte = 0;
+
+  int got = s21_strncmp(str1, str2, n_byte);
+  int expected = strncmp(str1, str2, n_byte);
+
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
+
+  ck_assert_int_eq(got, expected);
+
+
+#test test_strncmp2
+  char str1[] = "apple";
+  char str2[] = "";
+  s21_size_t n_byte = 0;
+
+  int got = s21_strncmp(str1, str2, n_byte);
+  int expected = strncmp(str1, str2, n_byte);
+
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
+
+  ck_assert_int_eq(got, expected);
+
+
+#test test_strncmp3
+  char str1[] = "";
+  char str2[] = "apple";
+  s21_size_t n_byte = 0;
+
+  int got = s21_strncmp(str1, str2, n_byte);
+  int expected = strncmp(str1, str2, n_byte);
+
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
+
+  ck_assert_int_eq(got, expected);
+
+
+#test test_strncmp4
+  char str1[] = "apple";
+  char str2[] = "apple";
+  s21_size_t n_byte = 6;
+
+  int got = s21_strncmp(str1, str2, n_byte);
+  int expected = strncmp(str1, str2, n_byte);
+
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
+
+  ck_assert_int_eq(got, expected);
+
+
+#test test_strncmp5
+  char str1[] = "applepietreee";
+  char str2[] = "applepie";
+  s21_size_t n_byte = 0;
+
+  int got = s21_strncmp(str1, str2, n_byte);
+  int expected = strncmp(str1, str2, n_byte);
+
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
+
+  ck_assert_int_eq(got, expected);
+
+
+#test test_strncmp6
+  char str1[] = "apple";
+  char str2[] = "apple";
+  s21_size_t n_byte = 1;
+
+  int got = s21_strncmp(str1, str2, n_byte);
+  int expected = strncmp(str1, str2, n_byte);
+
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
+
+  ck_assert_int_eq(got, expected);
+
+

@@ -1,0 +1,76 @@
+
+
+#suite test_memchr
+
+#test test_memchr1
+  s21_size_t n_byte = 0;
+  char str[10] = "";
+  int find_byte = '\0';
+
+  ck_assert_ptr_eq(s21_memchr(str, find_byte, n_byte),
+                   memchr(str, find_byte, n_byte));
+
+
+#test test_memchr2
+  s21_size_t n_byte = 7;
+  char str[10] = "Hello!";
+  int find_byte = '\0';
+
+  ck_assert_ptr_eq(s21_memchr(str, find_byte, n_byte),
+                   memchr(str, find_byte, n_byte));
+
+
+#test test_memchr3
+  s21_size_t n_byte = 6;
+  char str[10] = "Hello!";
+  int find_byte = 'H';
+
+  ck_assert_ptr_eq(s21_memchr(str, find_byte, n_byte),
+                   memchr(str, find_byte, n_byte));
+
+
+#test test_memchr4
+  s21_size_t n_byte = 7;
+  char str[10] = "HelloI";
+  int find_byte = 'I';
+
+  ck_assert_ptr_eq(s21_memchr(str, find_byte, n_byte),
+                   memchr(str, find_byte, n_byte));
+
+
+#test test_memchr5
+  s21_size_t n_byte = 15;
+  char str[16] = "Hello238746pie";
+  int find_byte = '7';
+
+  ck_assert_ptr_eq(s21_memchr(str, find_byte, n_byte),
+                   memchr(str, find_byte, n_byte));
+
+
+#test test_memchr6
+  int array[] = {4, 3, 5, 743, 9, 83, 100};
+  s21_size_t n_byte = sizeof(int) * 7;
+  int find_byte = 743;
+
+  ck_assert_ptr_eq(s21_memchr(array, find_byte, n_byte),
+                   memchr(array, find_byte, n_byte));
+
+
+#test test_memchr7
+  float array[] = {4, 3, 5, 743, 9, 83, 100};
+  s21_size_t n_byte = sizeof(float) * 7;
+  int find_byte = 743;
+
+  ck_assert_ptr_eq(s21_memchr(array, find_byte, n_byte),
+                   memchr(array, find_byte, n_byte));
+
+
+#test test_memchr8
+  s21_size_t n_byte = 6;
+  char str[10] = "Hello!";
+  int find_byte = 'b';
+
+  ck_assert_ptr_eq(s21_memchr(str, find_byte, n_byte),
+                   memchr(str, find_byte, n_byte));
+
+

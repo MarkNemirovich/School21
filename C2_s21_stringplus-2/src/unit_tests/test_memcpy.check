@@ -1,0 +1,149 @@
+
+
+#suite test_memcpy
+
+#test test_memcpy1
+  char src[] = "Hello, apple!";
+  s21_size_t kByte = 13;
+  char res[kByte + 8];
+  char expected[kByte + 8];
+
+  s21_memcpy(res, src, kByte);
+  memcpy(expected, src, kByte);
+
+  ck_assert_mem_eq(res, expected, kByte);
+
+
+#test test_memcpy2
+  char src[] = "Hello";
+  s21_size_t kByte = 0;
+  char res[kByte + 8];
+  char expected[kByte + 8];
+
+  s21_memcpy(res, src, kByte);
+  memcpy(expected, src, kByte);
+
+  ck_assert_mem_eq(res, expected, kByte);
+
+
+#test test_memcpy3
+  char src[] = "";
+  s21_size_t kByte = 0;
+  char res[kByte + 8];
+  char expected[kByte + 8];
+
+  s21_memcpy(res, src, kByte);
+  memcpy(expected, src, kByte);
+
+  ck_assert_mem_eq(res, expected, kByte);
+
+
+#test test_memcpy4
+  char src[] = "Hello, apple!";
+  s21_size_t kByte = 0;
+  char res[kByte + 8];
+  char expected[kByte + 8];
+
+  s21_memcpy(res, src, kByte);
+  memcpy(expected, src, kByte);
+
+  ck_assert_mem_eq(res, expected, kByte);
+
+
+#test test_memcpy5
+  char src[] = "123";
+  s21_size_t kByte = 1;
+  char res[kByte + 8];
+  char expected[kByte + 8];
+
+  s21_memcpy(res, src, kByte);
+  memcpy(expected, src, kByte);
+
+  ck_assert_mem_eq(res, expected, kByte);
+
+
+#test test_memcpy6
+  char src[] = "Hello";
+  s21_size_t kByte = 1;
+  char res[kByte + 8];
+  char expected[kByte + 8];
+
+  s21_memcpy(res, src, kByte);
+  memcpy(expected, src, kByte);
+
+  ck_assert_mem_eq(res, expected, kByte);
+
+
+#test test_memcpy7
+  char src[] = "Pello";
+  s21_size_t kByte = 1;
+  char res[kByte + 8];
+  char expected[kByte + 8];
+
+  s21_memcpy(res, src, kByte);
+  memcpy(expected, src, kByte);
+
+  ck_assert_mem_eq(res, expected, kByte);
+
+
+#test test_memcpy8
+  char src[] = "04";
+  s21_size_t kByte = 1;
+  char res[kByte + 8];
+  char expected[kByte + 8];
+
+  s21_memcpy(res, src, kByte);
+  memcpy(expected, src, kByte);
+
+  ck_assert_mem_eq(res, expected, kByte);
+
+
+#test test_memcpy9
+  char src[] = "fjlskdfHello apple pie asldk";
+  s21_size_t kByte = 28;
+  char res[kByte + 8];
+  char expected[kByte + 8];
+
+  s21_memcpy(res, src, kByte);
+  memcpy(expected, src, kByte);
+
+  ck_assert_mem_eq(res, expected, kByte);
+
+
+#test test_memcpy10
+  char src[] = "fjlskdfHello ae pie aslfh SDFLJ hnalk";
+  s21_size_t kByte = 37;
+  char res[kByte + 8];
+  char expected[kByte + 8];
+
+  s21_memcpy(res, src, kByte);
+  memcpy(expected, src, kByte);
+
+  ck_assert_mem_eq(res, expected, kByte);
+
+
+#test test_memcpy11
+  char src[] = "fjlskdfHello apple pie aslfh SDFLKGJ hnalksdsdf123";
+  s21_size_t kByte = 50;
+  char res[kByte + 8];
+  char expected[kByte + 8];
+
+  s21_memcpy(res, src, kByte);
+  memcpy(expected, src, kByte);
+
+  ck_assert_mem_eq(res, expected, kByte);
+
+
+#test test_memcpy12
+  char src[] =
+      "fjlskdfHello apple pie aslfh SDFLKGJ hnalksdsdf123!! @#$ ((( "
+      ")*(___...././,.)))";
+  s21_size_t kByte = 79;
+  char res[kByte + 8];
+  char expected[kByte + 8];
+
+  s21_memcpy(res, src, kByte);
+  memcpy(expected, src, kByte);
+
+  ck_assert_mem_eq(res, expected, kByte);
+

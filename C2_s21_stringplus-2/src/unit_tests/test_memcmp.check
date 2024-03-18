@@ -1,0 +1,113 @@
+
+
+#suite test_memcmp
+
+#test test_memcmp1
+  char str1[] = "Hello";
+  char str2[] = "Hello";
+  int n = 0;
+
+  ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+
+
+#test test_memcmp2
+  char str1[] = "Hello";
+  char str2[] = "Hello";
+  int n = 3;
+
+  ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+
+#test test_memcmp3
+  char str1[] = "Hello";
+  char str2[] = "Hello";
+  int n = 1;
+
+  ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+
+
+#test test_memcmp4
+  char str1[] = "1";
+  char str2[] = "1";
+  int n = 0;
+
+  ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+
+
+#test test_memcmp5
+  char str1[] = "1";
+  char str2[] = "1234";
+  int n = 1;
+
+  int got = s21_memcmp(str1, str2, n);
+  int expected = memcmp(str1, str2, n);
+
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
+
+  ck_assert_int_eq(got, expected);
+  
+  
+#test test_memcmp6
+  char str1[] = "1234";
+  char str2[] = "1234";
+  int n = 2;
+
+  ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+
+
+#test test_memcmp7
+  char str1[] = "13";
+  char str2[] = "1234";
+  int n = 2;
+
+  int got = s21_memcmp(str1, str2, n);
+  int expected = memcmp(str1, str2, n);
+
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
+
+  ck_assert_int_eq(got, expected);
+
+
+#test test_memcmp8
+  char str1[] = "134567";
+  char str2[] = "1234";
+  int n = 2;
+
+  int got = s21_memcmp(str1, str2, n);
+  int expected = memcmp(str1, str2, n);
+
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
+
+  ck_assert_int_eq(got, expected);
+ 
+
+#test test_memcmp9
+  char str1[] =
+      "Hello, pie! 742389 0923 0-2 coffe woirGUUHh 92193 jwdfo 03245 FSDKJSD";
+  char str2[] =
+      "Hello, pie! 742389 0923 0-2 coffe woirGUUHh 92193 jwdfo 03245 FSDKJSD";
+  int n = 69;
+
+  ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+
+
+#test test_memcmp10
+  char str1[] =
+      "Hello, pie! 742389 0923 0-2 coffe woirGUUHh 92193 jwdfo 03245 FSDKJSD";
+  char str2[] =
+      "Hello, pie! 742389 0923 0-2 coffe woirGUUHh 92193 jwdfo 03245 FSDKJSd";
+  int n = 69;
+
+  ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+

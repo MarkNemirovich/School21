@@ -1,0 +1,82 @@
+
+
+#suite test_strstr
+
+#test test_strstr1
+  char haystack[] = "";
+  char needle[] = "";
+
+  ck_assert_pstr_eq(s21_strstr(haystack, needle), strstr(haystack, needle));
+
+
+#test test_strstr2
+  char haystack[] = "";
+  char needle[] = "jho1faQsdkjnSa3aefwf8hiuJafeHioj";
+
+  ck_assert_pstr_eq(s21_strstr(haystack, needle), strstr(haystack, needle));
+
+
+#test test_strstr3
+  char haystack[] = "safQhilufas7MaSef2345wknwefnkjHawe2fhilu";
+  char needle[] = "";
+
+  ck_assert_pstr_eq(s21_strstr(haystack, needle), strstr(haystack, needle));
+
+
+#test test_strstr4
+  char haystack[] = "apple tree pie";
+  char needle[] = "tree";
+
+  ck_assert_pstr_eq(s21_strstr(haystack, needle), strstr(haystack, needle));
+
+
+#test test_strstr5
+  char haystack[] = "There is no right word in this test!";
+  char needle[] = "NOT";
+
+  ck_assert_pstr_eq(s21_strstr(haystack, needle), strstr(haystack, needle));
+
+
+#test test_strstr6
+  char haystack[] = "AbOBosNyTSa";
+  char needle[] = "aBoboSNYTsa";
+
+  ck_assert_pstr_eq(s21_strstr(haystack, needle), strstr(haystack, needle));
+
+
+#test test_strstr7
+  char haystack[] = "AD AD AD";
+  char needle[] = "AD";
+
+  ck_assert_pstr_eq(s21_strstr(haystack, needle), strstr(haystack, needle));
+
+
+#test test_strstr8
+  char haystack[] = "22 321 123";
+  char needle[] = "123";
+
+  ck_assert_pstr_eq(s21_strstr(haystack, needle), strstr(haystack, needle));
+
+
+#test test_strstr9
+  char haystack[] = "1";
+  char needle[] = "1";
+
+  ck_assert_pstr_eq(s21_strstr(haystack, needle), strstr(haystack, needle));
+
+
+#test test_strstr10
+  char haystack[] =
+      "13625523478437263475984675342345sdghyftrg freshtsyASFWEt wEafe";
+  char needle[] = " ";
+
+  ck_assert_pstr_eq(s21_strstr(haystack, needle), strstr(haystack, needle));
+
+
+#test test_strstr11
+  char haystack[] = "-";
+  char needle[] = "1234567890qwertyuiopasdfghjk-";
+
+  ck_assert_pstr_eq(s21_strstr(haystack, needle), strstr(haystack, needle));
+
+
