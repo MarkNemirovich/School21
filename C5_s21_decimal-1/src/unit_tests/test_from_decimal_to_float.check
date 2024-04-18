@@ -1,0 +1,381 @@
+#suite test_from_decimal_to_float
+#test test_from_decimal_to_float1
+  s21_decimal value = {{0xFFFFFF, 0, 0, 0}};
+  float result = 0;
+  float check = 16777215;
+  int return_value = s21_from_decimal_to_float(value, &result);
+  ck_assert_float_eq(result, check);
+  ck_assert_int_eq(return_value, 0);
+
+#test test_from_decimal_to_float2
+  s21_decimal value = {{0xFFFFFFFF, 0xFFFFFFFF, 0, 0}};
+  float result = 0;
+  float check = 0xFFFFFFFFFFFFFFFF;
+  int return_value = s21_from_decimal_to_float(value, &result);
+  ck_assert_float_eq(result, check);
+  ck_assert_int_eq(return_value, 0);
+
+#test test_from_decimal_to_float3
+  s21_decimal src = {0};
+  int result = 0;
+  float number = 0.0;
+  src.bits[0] = 234509;
+  src.bits[1] = 0;
+  src.bits[2] = 0;
+  src.bits[3] = 2147745792;
+  result = s21_from_decimal_to_float(src, &number);
+  ck_assert_float_eq(number, -23.4509);
+  ck_assert_int_eq(result, 0);
+
+#test test_from_decimal_to_float4
+    // 792281625.14264337593543950335
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x140000}};
+    int code = s21_from_decimal_to_float(decimal, NULL);
+
+    ck_assert_int_eq(code, 1);
+
+#test test_from_decimal_to_float5
+    // степень 154 (показатель степени должен быть от 0 до 28)
+    // биты 0-15 не нули
+    // биты 24-30 не нули
+    s21_decimal decimal = {{0, 0, 0, 1000000000}};
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+
+    ck_assert_int_eq(code, 1);
+
+#test test_from_decimal_to_float6
+    // степень 29 (показатель степени должен быть от 0 до 28)
+    s21_decimal decimal = {{-1, 0, 0, 0x1D0000}};
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+
+    ck_assert_int_eq(code, 1);
+
+#test test_from_decimal_to_float7
+    // степень 29 (показатель степени должен быть от 0 до 28)
+    s21_decimal decimal = {{0, 0, 0, 0x1D0000}};
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+
+    ck_assert_int_eq(code, 1);
+
+#test test_from_decimal_to_float8
+    // степень 28 (что корректно), но биты 0-15 не нули (младший бит)
+    s21_decimal decimal = {{-1, 0, 0, 0x1C0001}};
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+
+    ck_assert_int_eq(code, 1);
+
+#test test_from_decimal_to_float9
+    // степень 28 (что корректно), но биты 0-15 не нули (старший бит)
+    s21_decimal decimal = {{-1, 0, 0, 0x1C8000}};
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+
+    ck_assert_int_eq(code, 1);
+
+#test test_from_decimal_to_float10
+    // степень 28 (что корректно), но биты 24-30 не нули (младший бит)
+    s21_decimal decimal = {{-1, 0, 0, 0x11C0000}};
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+
+    ck_assert_int_eq(code, 1);
+
+#test test_from_decimal_to_float11
+    // степень 28 (что корректно), но биты 24-30 не нули (старший бит)
+    s21_decimal decimal = {{-1, 0, 0, 0x401C0000}};
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+
+    ck_assert_int_eq(code, 1);
+
+#test test_from_decimal_to_float12
+    // Просто все единицы
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF}};
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+
+    ck_assert_int_eq(code, 1);
+
+#test test_from_decimal_to_float13
+    // 79228162514264337593543950335
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x0}};
+    float check = 1870659584;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float14
+    // -79228162514264337593543950335
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80000000}};
+    float check = -276824064;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float15
+    // 7922816251426433759354395033.5
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x10000}};
+    float check = 1842138317;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float16
+    // -7922816251426433759354395033.5
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80010000}};
+    float check = -305345331;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float17
+    // 20995463066280049462289146839
+    s21_decimal decimal = {{0x3D70A3D7, 0x70A3D70A, 0x43D70A3D, 0x0}};
+    float check = 1854385684;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float18
+    // -20995463066280049462289146839
+    s21_decimal decimal = {{0x3D70A3D7, 0x70A3D70A, 0x43D70A3D, 0x80000000}};
+    float check = -293097964;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float19
+    // 792281625142643375935439503.35
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x20000}};
+    float check = 1814288138;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float20
+    // -792281625142643375935439503.35
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80020000}};
+    float check = -333195510;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float21
+    // 2099546306628004946228914683.9
+    s21_decimal decimal = {{0x3D70A3D7, 0x70A3D70A, 0x43D70A3D, 0x10000}};
+    float check = 1826166407;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float22
+    // -18446744073709551615
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0x0, 0x80000000}};
+    float check = -545259520;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float23
+    // -48883871795330311779.75
+    s21_decimal decimal = {{0xFFFFFEF7, 0xFFFFFFFF, 0x108, 0x80020000}};
+    float check = -534144614;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float24
+    // -1844674407370955161.5
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0x0, 0x80010000}};
+    float check = -573780787;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float25
+    // -4888387179533031177.975
+    s21_decimal decimal = {{0xFFFFFEF7, 0xFFFFFFFF, 0x108, 0x80030000}};
+    float check = -561533420;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float26
+    // 79227860282809433936250273792
+    s21_decimal decimal = {{0x0, 0x0, 0xFFFFC000, 0x0}};
+    float check = 1870659520;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float27
+    // -79227860282809433936250273792
+    s21_decimal decimal = {{0x0, 0x0, 0xFFFFC000, 0x80000000}};
+    float check = -276824128;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float28
+    // 66023467187764787038071554048
+    s21_decimal decimal = {{0x0, 0x0, 0xD5555500, 0x0}};
+    float check = 1867863381;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float29
+    // -59421121885698253195157962752
+    s21_decimal decimal = {{0x0, 0x0, 0xC0000000, 0x80000000}};
+    float check = -281018368;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float30
+    // 52818771861265236482599157760
+    s21_decimal decimal = {{0x0, 0x0, 0xAAAAAA00, 0x0}};
+    float check = 1865067178;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float31
+    // 5131066.5000000000000000000000
+    s21_decimal decimal = {{0x7BA00000, 0x3BDA1AE2, 0xA5CB2FF3, 0x160000}};
+    float check = 1251776117;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float32
+    // -5131066.5000000000000000000000
+    s21_decimal decimal = {{0x7BA00000, 0x3BDA1AE2, 0xA5CB2FF3, 0x80160000}};
+    float check = -895707531;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float33
+    // 13597326.225000000000000000000
+    s21_decimal decimal = {{0xDBA40000, 0xA82E471F, 0x2BEF71D3, 0x150000}};
+    float check = 1263499918;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float34
+    // -13597326.225000000000000000000
+    s21_decimal decimal = {{0xDBA40000, 0xA82E471F, 0x2BEF71D3, 0x80150000}};
+    float check = -883983730;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float35
+    // 0.0000000000000251058418337654
+    s21_decimal decimal = {{0x17D7C776, 0xE456, 0x0, 0x1C0000}};
+    float check = 685908513;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float36
+    // -0.0000000000000251058418337654
+    s21_decimal decimal = {{0x17D7C776, 0xE456, 0x0, 0x801C0000}};
+    float check = -1461575135;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float37
+    // 0.0000000000000047369512893897
+    s21_decimal decimal = {{0x12FD3DC9, 0x2B15, 0x0, 0x1C0000}};
+    float check = 665496234;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float38
+    // -0.0000000000000047369512893897
+    s21_decimal decimal = {{0x12FD3DC9, 0x2B15, 0x0, 0x801C0000}};
+    float check = -1481987414;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float39
+    // 0.00008087158203125
+    s21_decimal decimal = {{0xF03122F5, 0x75A, 0x0, 0x110000}};
+    float check = 950639002;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);
+
+#test test_from_decimal_to_float40
+    // -0.00008087158203125
+    s21_decimal decimal = {{0xF03122F5, 0x75A, 0x0, 0x80110000}};
+    float check = -1196844646;
+
+    float result;
+    int code = s21_from_decimal_to_float(decimal, &result);
+    ck_assert_int_eq(code, 0);
+    ck_assert_float_eq(result, check);

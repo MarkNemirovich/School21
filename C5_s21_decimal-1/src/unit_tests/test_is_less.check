@@ -1,0 +1,59 @@
+#suite test_is_less
+#test test_is_less1
+  s21_decimal val1 = {{0}};
+  s21_decimal val2 = {{0}};
+  ck_assert_int_eq(0, s21_is_less(val1, val2));
+
+#test test_is_less2
+  s21_decimal val1 = {{0}};
+  s21_decimal val2 = {{0}};
+  val1.bits[0] = 255;
+  val2.bits[0] = 256;
+  ck_assert_int_eq(1, s21_is_less(val1, val2));
+
+#test test_is_less3
+  s21_decimal val1 = {{0}};
+  s21_decimal val2 = {{0}};
+  val1.bits[0] = 256;
+  val2.bits[0] = 256;
+  ck_assert_int_eq(0, s21_is_less(val1, val2));
+
+#test test_is_less4
+  s21_decimal val1 = {{0}};
+  s21_decimal val2 = {{0}};
+  val1.bits[0] = 257;
+  val2.bits[0] = 256;
+  ck_assert_int_eq(0, s21_is_less(val1, val2));
+
+#test test_is_less5
+  s21_decimal value_1 = {{123457u, 654u, 0xFFFFFFFF, 0}};
+  s21_decimal value_2 = {{123456u, 654u, 0xFFFFFFFF, 0}};
+  int return_value = s21_is_less(value_1, value_2);
+  ck_assert_int_eq(return_value, 0);
+
+#test test_is_less6
+  s21_decimal dec1 = {
+      {12345, 0, 0, 0b00000000000001000000000000000000}};  //  1.2345
+  s21_decimal dec2 = {{12, 0, 0, 0b00000000000001000000000000000000}};  //  1.2;
+  ck_assert_int_eq(s21_is_less(dec1, dec2), 0);
+  ck_assert_int_eq(s21_is_less(dec2, dec1), 1);
+
+#test test_is_less7
+  s21_decimal dec3 = {
+      {12345, 0, 0, 0b10000000000000010000000000000000}};  // -1.2345
+  s21_decimal dec4 = {
+      {12345, 0, 0, 0b10000000000000010000000000000000}};  //  -1.2345;
+  ck_assert_int_eq(s21_is_less(dec3, dec4), 0);
+  ck_assert_int_eq(s21_is_less(dec4, dec3), 0);
+
+#test test_is_less8
+  s21_decimal dec9 = {{12345, 0, 0, 0}};
+  s21_decimal dec10 = {{12345, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_less(dec9, dec10), 0);
+  ck_assert_int_eq(s21_is_less(dec10, dec9), 0);
+
+#test test_is_less9
+  s21_decimal dec11 = {{0, 0, 0, 0}};
+  s21_decimal dec12 = {{0, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_less(dec11, dec12), 0);
+  ck_assert_int_eq(s21_is_less(dec12, dec11), 0);

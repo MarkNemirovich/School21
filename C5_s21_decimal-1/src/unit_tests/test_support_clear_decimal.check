@@ -1,0 +1,64 @@
+#suite test_clear_decimal
+#test test_clear_decimal1
+    // 792281625.14264337593543950335
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x140000}};
+    s21_clear_decimal(&decimal);
+    
+    ck_assert_int_eq(0, decimal.bits[3]);
+    ck_assert_int_eq(0, decimal.bits[2]);
+    ck_assert_int_eq(0, decimal.bits[1]);
+    ck_assert_int_eq(0, decimal.bits[0]);
+
+#test test_clear_decimal2
+    s21_decimal decimal = {{2, 0, 0, 0}};
+    s21_clear_decimal(&decimal);
+    
+    ck_assert_int_eq(0, decimal.bits[3]);
+    ck_assert_int_eq(0, decimal.bits[2]);
+    ck_assert_int_eq(0, decimal.bits[1]);
+    ck_assert_int_eq(0, decimal.bits[0]);
+
+#test test_clear_decimal3
+    s21_decimal decimal = {{2, 0, 0, ~(UINT_MAX / 2)}};
+    s21_clear_decimal(&decimal);
+    
+    ck_assert_int_eq(0, decimal.bits[3]);
+    ck_assert_int_eq(0, decimal.bits[2]);
+    ck_assert_int_eq(0, decimal.bits[1]);
+    ck_assert_int_eq(0, decimal.bits[0]);
+
+#test test_clear_decimal4
+    s21_decimal decimal = {{0, 0, 0, ~(UINT_MAX / 2)}};
+    s21_clear_decimal(&decimal);
+    
+    ck_assert_int_eq(0, decimal.bits[3]);
+    ck_assert_int_eq(0, decimal.bits[2]);
+    ck_assert_int_eq(0, decimal.bits[1]);
+    ck_assert_int_eq(0, decimal.bits[0]);
+
+#test test_clear_decimal5
+    s21_decimal decimal = {{0, 0, 0, 0}};
+    s21_clear_decimal(&decimal);
+    
+    ck_assert_int_eq(0, decimal.bits[3]);
+    ck_assert_int_eq(0, decimal.bits[2]);
+    ck_assert_int_eq(0, decimal.bits[1]);
+    ck_assert_int_eq(0, decimal.bits[0]);
+
+#test test_clear_decimal6
+    s21_decimal decimal = {{0, 1, 0, 0}};
+    s21_clear_decimal(&decimal);
+    
+    ck_assert_int_eq(0, decimal.bits[3]);
+    ck_assert_int_eq(0, decimal.bits[2]);
+    ck_assert_int_eq(0, decimal.bits[1]);
+    ck_assert_int_eq(0, decimal.bits[0]);
+
+#test test_clear_decimal7
+    s21_decimal decimal = {{0, 0, 1, 0}};
+    s21_clear_decimal(&decimal);
+    
+    ck_assert_int_eq(0, decimal.bits[3]);
+    ck_assert_int_eq(0, decimal.bits[2]);
+    ck_assert_int_eq(0, decimal.bits[1]);
+    ck_assert_int_eq(0, decimal.bits[0]);

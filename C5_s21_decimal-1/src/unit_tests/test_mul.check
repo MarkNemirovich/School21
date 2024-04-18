@@ -1,0 +1,72 @@
+#suite test_mul
+#test test_mul1
+    s21_decimal val1 = {{2, 0, 0, 1u << 31}};
+    s21_decimal val2 = {{2, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mul(val1, val2, &res));
+
+#test test_mul2
+    s21_decimal val1 = {{2, 0, 0, 0}};
+    s21_decimal val2 = {{2, 0, 0, 1u << 31}};
+    s21_decimal res;
+    ck_assert_int_eq(0, s21_mul(val1, val2, &res));
+
+#test test_mul3
+    s21_decimal val1 = {{2, 0, 0, 1u << 31}};
+    s21_decimal val2 = {{2, 0, 0, 1u << 31}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mul(val1, val2, &res));
+
+#test test_mul4
+    s21_decimal val1 = {{2, 0, 0, 0}};
+    s21_decimal val2 = {{2, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mul(val1, val2, &res));
+
+#test test_mul5
+    s21_decimal val1 = {{8, 0, 0, 0}};
+    s21_decimal val2 = {{2, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mul(val1, val2, &res));
+
+#test test_mul6
+    s21_decimal val1 = {{2, 0, 0, 0}};
+    s21_decimal val2 = {{8, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mul(val1, val2, &res));
+
+#test test_mul7
+    s21_decimal val1 = {{8, 0, 0, 1u << 31}};
+    s21_decimal val2 = {{2, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mul(val1, val2, &res));
+
+#test test_mul8
+    s21_decimal val1 = {{2, 0, 0, 1u << 31}};
+    s21_decimal val2 = {{8, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mul(val1, val2, &res));
+
+#test test_mul9
+    s21_decimal val1 = {{UINT_MAX, UINT_MAX, UINT_MAX, 1u << 31}};
+    s21_decimal val2 = {{2, 0, 0, 1u << 31}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mul(val1, val2, &res));
+
+#test test_mul10
+    s21_decimal val1 = {{UINT_MAX, UINT_MAX, UINT_MAX, 1u << 31}};
+    s21_decimal val2 = {{2, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mul(val1, val2, &res));
+
+#test test_mul11
+    s21_decimal val1 = {{UINT_MAX, UINT_MAX, UINT_MAX, 0}};
+    s21_decimal val2 = {{2, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mul(val1, val2, &res));
+
+#test test_mul12
+    s21_decimal val1 = {{UINT_MAX, UINT_MAX, UINT_MAX, 1u << 31}};
+    s21_decimal val2 = {{0, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mul(val1, val2, &res));

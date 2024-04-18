@@ -1,0 +1,453 @@
+#suite test_is_less_or_equal
+#test test_is_less_or_equal1
+  s21_decimal val1 = {{0}};
+  s21_decimal val2 = {{0}};
+  ck_assert_int_eq(1, s21_is_less_or_equal(val1, val2));
+
+#test test_is_less_or_equal2
+  s21_decimal val1 = {{0}};
+  s21_decimal val2 = {{0}};
+  val1.bits[0] = 255;
+  val2.bits[0] = 256;
+  ck_assert_int_eq(1, s21_is_less_or_equal(val1, val2));
+
+#test test_is_less_or_equal3
+  s21_decimal val1 = {{0}};
+  s21_decimal val2 = {{0}};
+  val1.bits[0] = 256;
+  val2.bits[0] = 256;
+  ck_assert_int_eq(1, s21_is_less_or_equal(val1, val2));
+
+#test test_is_less_or_equal4
+  s21_decimal val1 = {{0}};
+  s21_decimal val2 = {{0}};
+  val1.bits[0] = 257;
+  val2.bits[0] = 256;
+  ck_assert_int_eq(0, s21_is_less_or_equal(val1, val2));
+
+#test test_is_less_or_equal5
+  s21_decimal value_1 = {{123457u, 654u, 0xFFFFFFFF, 0}};
+  s21_decimal value_2 = {{123456u, 654u, 0xFFFFFFFF, 0}};
+  int return_value = s21_is_less_or_equal(value_1, value_2);
+  ck_assert_int_eq(return_value, 0);
+
+#test test_is_less_or_equal6
+  s21_decimal dec1 = {
+      {12345, 0, 0, 0b00000000000001000000000000000000}};  //  1.2345
+  s21_decimal dec2 = {{12, 0, 0, 0b00000000000001000000000000000000}};  //  1.2;
+  ck_assert_int_eq(s21_is_less_or_equal(dec1, dec2), 0);
+  ck_assert_int_eq(s21_is_less_or_equal(dec2, dec1), 1);
+
+#test test_is_less_or_equal7
+  s21_decimal dec3 = {
+      {12345, 0, 0, 0b10000000000000010000000000000000}};  // -1.2345
+  s21_decimal dec4 = {
+      {12345, 0, 0, 0b10000000000000010000000000000000}};  //  -1.2345;
+  ck_assert_int_eq(s21_is_less_or_equal(dec3, dec4), 1);
+  ck_assert_int_eq(s21_is_less_or_equal(dec4, dec3), 1);
+
+#test test_is_less_or_equal8
+  s21_decimal dec9 = {{12345, 0, 0, 0}};
+  s21_decimal dec10 = {{12345, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(dec9, dec10), 1);
+  ck_assert_int_eq(s21_is_less_or_equal(dec10, dec9), 1);
+
+#test test_is_less_or_equal9
+  s21_decimal dec11 = {{0, 0, 0, 0}};
+  s21_decimal dec12 = {{0, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(dec11, dec12), 1);
+  ck_assert_int_eq(s21_is_less_or_equal(dec12, dec11), 1);
+
+#test test_is_less_or_equal10
+  s21_decimal a = {{1, 0, 0, 0}};
+  s21_decimal b = {{1, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(a, b), 1);
+
+#test test_is_less_or_equal11
+  s21_decimal a = {{1, 0, 0, 0}};
+  s21_decimal b = {{UINT_MAX, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(a, b), 1);
+
+#test test_is_less_or_equal12
+  s21_decimal a = {{UINT_MAX, 0, 0, 0}};
+  s21_decimal b = {{UINT_MAX, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(a, b), 1);
+
+#test test_is_less_or_equal13
+  s21_decimal a = {{UINT_MAX - 1, 0, 0, 0}};
+  s21_decimal b = {{UINT_MAX, 0, 0, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(a, b), 1);
+
+#test test_is_less_or_equal14
+  s21_decimal a = {{UINT_MAX, 0, 0, 0}};
+  s21_decimal b = {{UINT_MAX, 1, 0, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(a, b), 1);
+
+#test test_is_less_or_equal15
+  s21_decimal a = {{UINT_MAX, 1, 0, 0}};
+  s21_decimal b = {{UINT_MAX, 1, 0, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(a, b), 1);
+
+#test test_is_less_or_equal16
+  s21_decimal a = {{UINT_MAX, UINT_MAX - 1, 0, 0}};
+  s21_decimal b = {{UINT_MAX, UINT_MAX, 0, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(a, b), 1);
+
+#test test_is_less_or_equal17
+  s21_decimal a = {{UINT_MAX, UINT_MAX, UINT_MAX, 0}};
+  s21_decimal b = {{UINT_MAX, UINT_MAX, UINT_MAX, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(a, b), 1);
+
+#test test_is_less_or_equal18
+  s21_decimal a = {{UINT_MAX, UINT_MAX, UINT_MAX - 1, 0}};
+  s21_decimal b = {{UINT_MAX, UINT_MAX, UINT_MAX, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(a, b), 1);
+
+#test test_is_less_or_equal19
+  s21_decimal a = {{0, UINT_MAX, UINT_MAX, 0}};
+  s21_decimal b = {{0, UINT_MAX, UINT_MAX, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(a, b), 1);
+
+#test test_is_less_or_equal20
+  s21_decimal a = {{0, 0, UINT_MAX, 0}};
+  s21_decimal b = {{0, 0, UINT_MAX, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(a, b), 1);
+
+#test test_is_less_or_equal21
+  s21_decimal a = {{0, 0, 0, 0}};
+  s21_decimal b = {{0, 0, UINT_MAX, 0}};
+  ck_assert_int_eq(s21_is_less_or_equal(a, b), 1);
+
+#test test_is_less_or_equal22
+  // 2596
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  src2.bits[0] = 0b00000000000000000000000000000011;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 1;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal23
+  // 3172
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 2;
+  // src2 = 3;
+  src1.bits[0] = 0b00000000000000000000000000000010;
+  src1.bits[1] = 0b00000000000000000000000000000000;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000000000000000000000000000;
+  src2.bits[0] = 0b00000000000000000000000000000011;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 1;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal24
+  // 3190
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 3;
+  // src2 = 2;
+  src1.bits[0] = 0b00000000000000000000000000000011;
+  src1.bits[1] = 0b00000000000000000000000000000000;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000000000000000000000000000;
+  src2.bits[0] = 0b00000000000000000000000000000010;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 0;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal25
+  // 3208
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 3;
+  // src2 = 3;
+  src1.bits[0] = 0b00000000000000000000000000000011;
+  src1.bits[1] = 0b00000000000000000000000000000000;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000000000000000000000000000;
+  src2.bits[0] = 0b00000000000000000000000000000011;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 1;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal26
+  // 3226
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 2;
+  // src2 = 0;
+
+  src1.bits[0] = 0b00000000000000000000000000000010;
+  src1.bits[1] = 0b00000000000000000000000000000000;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000000000000000000000000000;
+  src2.bits[0] = 0b00000000000000000000000000000000;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 0;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal27
+  // 3244
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 0;
+  // src2 = 3;
+
+  src1.bits[0] = 0b00000000000000000000000000000000;
+  src1.bits[1] = 0b00000000000000000000000000000000;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000000000000000000000000000;
+  src2.bits[0] = 0b00000000000000000000000000000011;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 1;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal28
+  // 3262
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 2;
+  // src2 = 0;
+
+  src1.bits[0] = 0b00000000000000000000000000000010;
+  src1.bits[1] = 0b00000000000000000000000000000000;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000000000000000000000000000;
+  src2.bits[0] = 0b00000000000000000000000000000000;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 0;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal29
+  // 3280
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 6521;
+  // src2 = 74121;
+
+  src1.bits[0] = 0b00000000000000000001100101111001;
+  src1.bits[1] = 0b00000000000000000000000000000000;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000000000000000000000000000;
+  src2.bits[0] = 0b00000000000000010010000110001001;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 1;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal30
+  // 3298
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 4;
+  // src2 = 97623323;
+
+  src1.bits[0] = 0b00000000000000000000000000000100;
+  src1.bits[1] = 0b00000000000000000000000000000000;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000000000000000000000000000;
+
+  src2.bits[0] = 0b00000101110100011001110100011011;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 1;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal31
+  // 3316
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 65658654;
+  // src2 = 5;
+
+  src1.bits[0] = 0b00000011111010011101111100011110;
+  src1.bits[1] = 0b00000000000000000000000000000000;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000000000000000000000000000;
+  src2.bits[0] = 0b00000000000000000000000000000101;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 0;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal32
+  // 3334
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = -364748;
+  // src2 = 1;
+
+  src1.bits[0] = 0b00000000000001011001000011001100;
+  src1.bits[1] = 0b00000000000000000000000000000000;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b10000000000000000000000000000000;
+  src2.bits[0] = 0b00000000000000000000000000000001;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 1;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal33
+  // 3352
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 1;
+  // src2 = 98745654321;
+
+  src1.bits[0] = 0b00000000000000000000000000000001;
+  src1.bits[1] = 0b00000000000000000000000000000000;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000000000000000000000000000;
+  src2.bits[0] = 0b11111101101100110001110000110001;
+  src2.bits[1] = 0b00000000000000000000000000010110;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 1;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal34
+  // 3370
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = -9878798789;
+  // src2 = -3;
+
+  src1.bits[0] = 0b01001100110100101000000111000101;
+  src1.bits[1] = 0b00000000000000000000000000000010;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b10000000000000000000000000000000;
+
+  src2.bits[0] = 0b00000000000000000000000000000011;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b10000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 1;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal35
+  // 3388
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 9999999999999999999;
+  // src2 = 1;
+
+  src1.bits[0] = 0b10001001111001111111111111111111;
+  src1.bits[1] = 0b10001010110001110010001100000100;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000000000000000000000000000;
+  src2.bits[0] = 0b00000000000000000000000000000001;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 0;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal36
+  // 3406
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 18446744073709551615;
+  // src2 = 1;
+
+  src1.bits[0] = 0b11111111111111111111111111111111;
+  src1.bits[1] = 0b11111111111111111111111111111111;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000000000000000000000000000;
+  src2.bits[0] = 0b00000000000000000000000000000001;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 0;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal37
+  // 3424
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 18446744073709551615.0;
+  // src2 = 965453154;
+
+  src1.bits[0] = 0b11111111111111111111111111110110;
+  src1.bits[1] = 0b11111111111111111111111111111111;
+  src1.bits[2] = 0b00000000000000000000000000001001;
+  src1.bits[3] = 0b00000000000000010000000000000000;
+  src2.bits[0] = 0b00111001100010111010010101100010;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 0;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal38
+  // 3442
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = -545454512454545.35265454545645;
+  // src2 = 54564654;
+
+  src1.bits[0] = 0b10000010111000100101101011101101;
+  src1.bits[1] = 0b11111001111010000010010110101101;
+  src1.bits[2] = 0b10110000001111101111000010010100;
+  src1.bits[3] = 0b10000000000011100000000000000000;
+  src2.bits[0] = 0b00000011010000001001011100101110;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 1;
+  ck_assert_int_eq(result, origin);
+
+#test test_is_less_or_equal39
+  // 3478
+  s21_decimal src1 = {{0}};
+  s21_decimal src2 = {{0}};
+  // src1 = 7961327845421.879754123131254;
+  // src2 = 0;
+
+  src1.bits[0] = 0b01001110111001000011100101110110;
+  src1.bits[1] = 0b01001011001101011010000111011001;
+  src1.bits[2] = 0b00011001101110010111010010111111;
+  src1.bits[3] = 0b00000000000011110000000000000000;
+  src2.bits[0] = 0b00000000000000000000000000000000;
+  src2.bits[1] = 0b00000000000000000000000000000000;
+  src2.bits[2] = 0b00000000000000000000000000000000;
+  src2.bits[3] = 0b00000000000000000000000000000000;
+  int result = s21_is_less_or_equal(src1, src2);
+  int origin = 0;
+  ck_assert_int_eq(result, origin);

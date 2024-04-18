@@ -1,0 +1,228 @@
+
+
+#suite test_add
+
+#test test_add1
+    s21_decimal val1 = {{15, 0, 0, 1u << 17}};
+    s21_decimal val2 = {{2, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    int r = s21_add(val1, val2, &res);
+    ck_assert_int_eq(1502, res.bits[0]);
+    ck_assert_int_eq(0, res.bits[1]);
+    ck_assert_int_eq(0, res.bits[2]);
+    ck_assert_int_eq(0, res.bits[3]);
+    ck_assert_int_eq(0, r);
+
+#test test_add2
+    s21_decimal val1 = {{15, 0, 0, 1u << 31}};
+    s21_decimal val2 = {{15, 0, 0, 1u << 31 | 1u << 16}};
+    s21_decimal res = {{0}};
+    int r = s21_add(val1, val2, &res);
+    ck_assert_int_eq(165, res.bits[0]);
+    ck_assert_int_eq(0, res.bits[1]);
+    ck_assert_int_eq(0, res.bits[2]);
+    ck_assert_int_eq(1u << 31, res.bits[3]);
+    ck_assert_int_eq(0, r);
+
+
+#test test_add3
+    s21_decimal val1 = {{UINT_MAX, UINT_MAX, UINT_MAX, 0}};
+    s21_decimal val2 = {{1, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    int r = s21_add(val1, val2, &res);
+    ck_assert_int_eq(429496729, res.bits[0]);
+    ck_assert_int_eq(642949672, res.bits[1]);
+    ck_assert_int_eq(964294967, res.bits[2]);
+    ck_assert_int_eq(1u << 16, res.bits[3]);
+    ck_assert_int_eq(0, r);
+
+#test test_add4
+    s21_decimal val1 = {{UINT_MAX, UINT_MAX, UINT_MAX, 1u << 16}};
+    s21_decimal val2 = {{2, 0, 0, 1u << 16}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_add(val1, val2, &res));
+
+#test test_add5
+    s21_decimal val1 = {{8, 0, 0, 0}};
+    s21_decimal val2 = {{2, 0, 0, 0}};
+    s21_decimal res;
+    ck_assert_int_eq(0, s21_add(val1, val2, &res));
+
+#test test_add6
+    s21_decimal val1 = {{2, 0, 0, 0}};
+    s21_decimal val2 = {{8, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_add(val1, val2, &res));
+
+#test test_add7
+    s21_decimal val1 = {{8, 0, 0, 1u << 16}};
+    s21_decimal val2 = {{2, 0, 0, 1u << 18}};
+    s21_decimal res = {{0}};
+    int r = s21_add(val1, val2, &res);
+    ck_assert_int_eq(2008, res.bits[0]);
+    ck_assert_int_eq(0, res.bits[1]);
+    ck_assert_int_eq(0, res.bits[2]);
+    ck_assert_int_eq(1u << 16, res.bits[3]);
+    ck_assert_int_eq(0, r);
+
+#test test_add8
+    s21_decimal val1 = {{2, 0, 0, 1u << 31}};
+    s21_decimal val2 = {{6, 0, 0, 1u << 31}};
+    s21_decimal res = {{0}};
+    int r = s21_add(val1, val2, &res);
+    ck_assert_int_eq(0, r);
+
+#test test_add9
+    s21_decimal val1 = {{0}};
+    s21_decimal val2 = {{0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_add(val1, val2, &res));
+
+#test test_add10
+    s21_decimal val1 = {{4, 0, 0, 0}};
+    s21_decimal val2 = {{8, 0, 0, 1u << 16}};
+    s21_decimal res = {0};
+    int r = s21_add(val1, val2, &res);
+    ck_assert_int_eq(0, r);
+
+#test test_add11
+    s21_decimal val1 = {{8, 0, 0, 1u << 16}};
+    s21_decimal val2 = {{0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_add(val1, val2, &res));
+
+#test test_add12
+    s21_decimal val1 = {{UINT_MAX, UINT_MAX, UINT_MAX, 1u << 31 | 28u << 16}};
+    s21_decimal val2 = {{4, 0, 0, 1u << 31 | 28u << 16}};
+    s21_decimal res = {{0}};
+    int r = s21_add(val1, val2, &res);
+    ck_assert_int_eq(2, r);
+
+#test test_add13
+    s21_decimal val1 = {{UINT_MAX, UINT_MAX, UINT_MAX, 1u << 31 | 28u << 16}};
+    s21_decimal val2 = {{4, 0, 0, 1u << 31 | 28u << 16}};
+    s21_decimal res = {{0}};
+    int r = s21_add(val1, val2, &res);
+    ck_assert_int_eq(0, res.bits[0]);
+    ck_assert_int_eq(0, res.bits[1]);
+    ck_assert_int_eq(0, res.bits[2]);
+    ck_assert_int_eq(0, res.bits[3]);
+    ck_assert_int_eq(2, r);
+
+#test test_add14
+    s21_decimal val1 = {{UINT_MAX, UINT_MAX, UINT_MAX, 28u << 16}};
+    s21_decimal val2 = {{4, 0, 0, 28u << 16}};
+    s21_decimal res = {{0}};
+    int r = s21_add(val1, val2, &res);
+    ck_assert_int_eq(0, res.bits[0]);
+    ck_assert_int_eq(0, res.bits[1]);
+    ck_assert_int_eq(0, res.bits[2]);
+    ck_assert_int_eq(0, res.bits[3]);
+    ck_assert_int_eq(1, r);
+
+#test test_add15
+    s21_decimal val1 = {{4, 0, 0, 1u << 31}};
+    s21_decimal val2 = {{UINT_MAX, UINT_MAX, UINT_MAX, 1u << 31}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_add(val1, val2, &res));
+
+#test test_add16
+    s21_decimal val1 = {{4, 0, 0, 1u << 20}};
+    s21_decimal val2 = {{UINT_MAX, UINT_MAX, UINT_MAX, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_add(val1, val2, &res));
+
+#test test_add17
+    s21_decimal val1 = {{4, 0, 0, 1u << 20}};
+    s21_decimal val2 = {{UINT_MAX, UINT_MAX, UINT_MAX, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_add(val1, val2, &res));
+
+#test test_add18
+    s21_decimal dec1 = {{0}};
+    s21_decimal dec2 = {{0}};
+    dec1.bits[3] = 0x300000;
+    dec1.bits[2] = 0;
+    dec1.bits[1] = 0xF;
+    dec1.bits[0] = 0x67E4FEEF;
+    dec2.bits[3] = 0x300000;
+    dec2.bits[2] = 0;
+    dec2.bits[1] = 0xFF;
+    dec2.bits[0] = 0x67E4FFFF;
+    s21_decimal res = {{0}};
+    res.bits[3] = 0x300000;
+    res.bits[2] = 0;
+    res.bits[1] = 0x10E;
+    res.bits[0] = 0xCFC9FEEE;
+    s21_decimal res1 = {{0}};
+    s21_add(dec1, dec2, &res1);
+    ck_assert_int_eq(res.bits[3], res1.bits[3]);
+    ck_assert_int_eq(res.bits[2], res1.bits[2]);
+    ck_assert_int_eq(res.bits[1], res1.bits[1]);
+    ck_assert_int_eq(res.bits[0], res1.bits[0]);
+
+#test test_add19
+    s21_decimal src1 = {0};
+    src1.bits[0] = 0b11111111111111111111111111111111;
+    src1.bits[1] = 0b11111111111111111111111111111111;
+    src1.bits[2] = 0b11111111111111111111111111111111;
+    src1.bits[3] = 0b00000000000000000000000000000000;
+    s21_decimal src2 = {0};
+    src2.bits[0] = 0b00000000000000000000000000000010;
+    src2.bits[1] = 0b00000000000000000000000000000000;
+    src2.bits[2] = 0b00000000000000000000000000000000;
+    src2.bits[3] = 0b00000000000000110000000000000000;
+    s21_decimal s21_res = {0};
+    ck_assert_int_eq(s21_add(src1, src2, &s21_res), 0);
+
+#test test_add20
+    s21_decimal src1 = {0};
+    src1.bits[0] = 0b11111111111111111111111111111111;
+    src1.bits[1] = 0b11111111111111111111111111111111;
+    src1.bits[2] = 0b11111111111111111111111111111111;
+    src1.bits[3] = 0b00000000000000000000000000000000;
+    s21_decimal src2 = {0};
+    src2.bits[0] = 0b00000000000000000000000000000101;
+    src2.bits[1] = 0b00000000000000000000000000000000;
+    src2.bits[2] = 0b00000000000000000000000000000000;
+    src2.bits[3] = 0b00000000000000000000000000000000;
+    s21_decimal s21_res = {0};
+    ck_assert_int_eq(s21_add(src1, src2, &s21_res), 0);
+
+#test test_add21
+    s21_decimal src1 = {0};
+    src1.bits[0] = 0b11111111111111111111111111111111;
+    src1.bits[1] = 0b11111111111111111111111111111111;
+    src1.bits[2] = 0b11111111111111111111111111111111;
+    src1.bits[3] = 0b00000000000000000000000000000000;
+    s21_decimal src2 = {0};
+    src2.bits[0] = 0b00000000000000000000000000000001;
+    src2.bits[1] = 0b00000000000000000000000000000000;
+    src2.bits[2] = 0b00000000000000000000000000000000;
+    src2.bits[3] = 0b00000000000000000000000000000000;
+    s21_decimal s21_res = {0};
+    ck_assert_int_eq(s21_add(src1, src2, &s21_res), 0);
+
+#test test_add22
+    s21_decimal src1 = {0};
+    src1.bits[0] = 0b00000000000000000000001111111111;
+    src1.bits[1] = 0b00000000000000000000000000000000;
+    src1.bits[2] = 0b00000000000000000000000000000000;
+    src1.bits[3] = 0b00000000000000010000000000000000;
+    s21_decimal src2 = {0};
+    src2.bits[0] = 0b00000000000000000000001111111111;
+    src2.bits[1] = 0b00000000000000000000000000000000;
+    src2.bits[2] = 0b00000000000000000000000000000000;
+    src2.bits[3] = 0b00000000000000100000000000000000;
+    s21_decimal original_res = {0};
+    original_res.bits[0] = 0b00000000000000000010101111110101;
+    original_res.bits[1] = 0b00000000000000000000000000000000;
+    original_res.bits[2] = 0b00000000000000000000000000000000;
+    original_res.bits[3] = 0b00000000000000010000000000000000;
+    s21_decimal s21_res = {0};
+    s21_add(src1, src2, &s21_res);
+    ck_assert_int_eq(s21_add(src1, src2, &s21_res), 0);
+    ck_assert_int_eq(original_res.bits[0], s21_res.bits[0]);
+    ck_assert_int_eq(original_res.bits[1], s21_res.bits[1]);
+    ck_assert_int_eq(original_res.bits[2], s21_res.bits[2]);
+    ck_assert_int_eq(original_res.bits[3], s21_res.bits[3]);

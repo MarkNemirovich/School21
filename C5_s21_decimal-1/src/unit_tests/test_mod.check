@@ -1,0 +1,49 @@
+#suite test_mod
+
+#test test_mod1
+    s21_decimal val1 = {{2, 0, 0, 0}};
+    s21_decimal val2 = {{16, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mod(val1, val2, &res));
+
+#test test_mod2
+    s21_decimal val1 = {{2456, 0, 0, 0}};
+    s21_decimal val2 = {{16, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mod(val1, val2, &res));
+
+#test test_mod3
+    s21_decimal val1 = {{2456, 0, 0, 0}};
+    s21_decimal val2 = {{16, 0, 0, 1u << 31}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mod(val1, val2, &res));
+
+#test test_mod4
+    s21_decimal val1 = {{2, 0, 0, 1u << 31 | 1u << 16}};
+    s21_decimal val2 = {{2, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mod(val1, val2, &res));
+
+#test test_mod5
+    s21_decimal val1 = {{2, 0, 0, 0}};
+    s21_decimal val2 = {{2, 0, 0, 1u << 31 | 1u << 16}};
+    s21_decimal res;
+    ck_assert_int_eq(0, s21_mod(val1, val2, &res));
+
+#test test_mod6
+    s21_decimal val1 = {{2, 0, 0, 1u << 31 | 1u << 16}};
+    s21_decimal val2 = {{2, 0, 0, 1u << 31 | 1u << 16}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(0, s21_mod(val1, val2, &res));
+
+#test test_mod7
+    s21_decimal val1 = {{2, 0, 0, 1u << 31 | 1u << 16}};
+    s21_decimal val2 = {{0, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(3, s21_mod(val1, val2, &res));
+
+#test test_mod8
+    s21_decimal val1 = {{2, 0, 0, 0}};
+    s21_decimal val2 = {{0, 0, 0, 0}};
+    s21_decimal res = {{0}};
+    ck_assert_int_eq(3, s21_mod(val1, val2, &res));

@@ -1,0 +1,60 @@
+#suite test_set_sign
+#test test_set_sign1
+  s21_decimal decimal = {{0}};
+  // decimal = 0.68985125146545154;
+
+  decimal.bits[0] = 0b00010111001001010100110000000010;
+  decimal.bits[1] = 0b00000000111101010001010110011011;
+  decimal.bits[2] = 0b00000000000000000000000000000000;
+  decimal.bits[3] = 0b00000000000100010000000000000000;
+
+    s21_set_sign(&decimal, 1);
+    ck_assert_int_eq(decimal.bits[0], 0b00010111001001010100110000000010);
+    ck_assert_int_eq(decimal.bits[1], 0b00000000111101010001010110011011);
+    ck_assert_int_eq(decimal.bits[2], 0b00000000000000000000000000000000);
+    ck_assert_int_eq(decimal.bits[3], 0b10000000000100010000000000000000);
+
+#test test_set_sign2
+  s21_decimal decimal = {{0}};
+  // decimal = 0.68985125146545154;
+
+  decimal.bits[0] = 0b00010111001001010100110000000010;
+  decimal.bits[1] = 0b00000000111101010001010110011011;
+  decimal.bits[2] = 0b00000000000000000000000000000000;
+  decimal.bits[3] = 0b00000000000100010000000000000000;
+
+    s21_set_sign(&decimal, 0);
+    ck_assert_int_eq(decimal.bits[0], 0b00010111001001010100110000000010);
+    ck_assert_int_eq(decimal.bits[1], 0b00000000111101010001010110011011);
+    ck_assert_int_eq(decimal.bits[2], 0b00000000000000000000000000000000);
+    ck_assert_int_eq(decimal.bits[3], 0b00000000000100010000000000000000);
+
+#test test_set_sign3
+  s21_decimal decimal = {{0}};
+  // decimal = -0.5456465465486476846545465485;
+
+  decimal.bits[0] = 0b00001011000011110111000010001101;
+  decimal.bits[1] = 0b10010110101100000101100101010001;
+  decimal.bits[2] = 0b00010001101000010111101110000001;
+  decimal.bits[3] = 0b10000000000111000000000000000000;
+
+    s21_set_sign(&decimal, 1);
+    ck_assert_int_eq(decimal.bits[0], 0b00001011000011110111000010001101);
+    ck_assert_int_eq(decimal.bits[1], 0b10010110101100000101100101010001);
+    ck_assert_int_eq(decimal.bits[2], 0b00010001101000010111101110000001);
+    ck_assert_int_eq(decimal.bits[3], 0b10000000000111000000000000000000);
+
+#test test_set_sign4
+  s21_decimal decimal = {{0}};
+  // decimal = -0.5456465465486476846545465485;
+
+  decimal.bits[0] = 0b00001011000011110111000010001101;
+  decimal.bits[1] = 0b10010110101100000101100101010001;
+  decimal.bits[2] = 0b00010001101000010111101110000001;
+  decimal.bits[3] = 0b10000000000111000000000000000000;
+
+    s21_set_sign(&decimal, 0);
+    ck_assert_int_eq(decimal.bits[0], 0b00001011000011110111000010001101);
+    ck_assert_int_eq(decimal.bits[1], 0b10010110101100000101100101010001);
+    ck_assert_int_eq(decimal.bits[2], 0b00010001101000010111101110000001);
+    ck_assert_int_eq(decimal.bits[3], 0b00000000000111000000000000000000);

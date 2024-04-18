@@ -1,0 +1,76 @@
+#suite test_get_sign
+#test test_get_sign1
+    // 792281625.14264337593543950335
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x140000}};
+    int code = s21_get_sign(decimal);
+    ck_assert_int_eq(code, 0);
+
+#test test_get_sign2
+    s21_decimal decimal = {{2, 0, 0, 0}};
+    int code = s21_get_sign(decimal);
+    ck_assert_int_eq(code, 0);
+
+#test test_get_sign3
+    s21_decimal decimal = {{2, 0, 0, ~(UINT_MAX / 2)}};
+    int code = s21_get_sign(decimal);
+    ck_assert_int_eq(code, 1);
+
+#test test_get_sign4
+    s21_decimal decimal = {{0, 0, 0, ~(UINT_MAX / 2)}};
+    int code = s21_get_sign(decimal);
+    ck_assert_int_eq(code, 1);
+
+#test test_get_sign5
+    s21_decimal decimal = {{0, 0, 0, 0}};
+    int code = s21_get_sign(decimal);
+    ck_assert_int_eq(code, 0);
+
+#test test_get_sign6
+    s21_decimal decimal = {{0, 1, 0, 0}};
+    int code = s21_get_sign(decimal);
+    ck_assert_int_eq(code, 0);
+
+#test test_get_sign7
+    s21_decimal decimal = {{0, 0, 1, 0}};
+    int code = s21_get_sign(decimal);
+    ck_assert_int_eq(code, 0);
+
+#test test_get_sign8
+    // 79228162514264337593543.950335
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x60000}};
+
+    int code = s21_get_sign(decimal);
+    ck_assert_int_eq(code, 0);
+
+#test test_get_sign9
+    // -79228162514264337593543.950335
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80060000}};
+
+    int code = s21_get_sign(decimal);
+    ck_assert_int_eq(code, 1);
+
+
+#test test_get_sign10
+  s21_decimal decimal = {{0}};
+  // decimal = 0.68985125146545154;
+
+  decimal.bits[0] = 0b00010111001001010100110000000010;
+  decimal.bits[1] = 0b00000000111101010001010110011011;
+  decimal.bits[2] = 0b00000000000000000000000000000000;
+  decimal.bits[3] = 0b00000000000100010000000000000000;
+
+    int code = s21_get_sign(decimal);
+    ck_assert_int_eq(code, 0);
+
+
+#test test_get_sign11
+  s21_decimal decimal = {{0}};
+  // decimal = -0.5456465465486476846545465485;
+
+  decimal.bits[0] = 0b00001011000011110111000010001101;
+  decimal.bits[1] = 0b10010110101100000101100101010001;
+  decimal.bits[2] = 0b00010001101000010111101110000001;
+  decimal.bits[3] = 0b10000000000111000000000000000000;
+
+    int code = s21_get_sign(decimal);
+    ck_assert_int_eq(code, 1);

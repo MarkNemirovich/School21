@@ -1,0 +1,36 @@
+#suite test_is_empty_decimal
+#test test_is_empty_decimal1
+    // 792281625.14264337593543950335
+    s21_decimal decimal = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x140000}};
+    int code = s21_is_empty_decimal(decimal);
+    ck_assert_int_eq(code, 0);
+
+#test test_is_empty_decimal2
+    s21_decimal decimal = {{2, 0, 0, 0}};
+    int code = s21_is_empty_decimal(decimal);
+    ck_assert_int_eq(code, 0);
+
+#test test_is_empty_decimal3
+    s21_decimal decimal = {{2, 0, 0, ~(UINT_MAX / 2)}};
+    int code = s21_is_empty_decimal(decimal);
+    ck_assert_int_eq(code, 0);
+
+#test test_is_empty_decimal4
+    s21_decimal decimal = {{0, 0, 0, ~(UINT_MAX / 2)}};
+    int code = s21_is_empty_decimal(decimal);
+    ck_assert_int_eq(code, 1);
+
+#test test_is_empty_decimal5
+    s21_decimal decimal = {{0, 0, 0, 0}};
+    int code = s21_is_empty_decimal(decimal);
+    ck_assert_int_eq(code, 1);
+
+#test test_is_empty_decimal6
+    s21_decimal decimal = {{0, 1, 0, 0}};
+    int code = s21_is_empty_decimal(decimal);
+    ck_assert_int_eq(code, 0);
+
+#test test_is_empty_decimal7
+    s21_decimal decimal = {{0, 0, 1, 0}};
+    int code = s21_is_empty_decimal(decimal);
+    ck_assert_int_eq(code, 0);
