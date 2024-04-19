@@ -1,0 +1,448 @@
+#suite s21_is_greater_test
+
+#test s21_is_greater_test1
+  int true_res = 0;
+  s21_decimal val1 = {{0x46998C10, 0x15C15D84, 0xEE897508, 0x00160000}};
+  s21_decimal val2 = {{0xB8556F82, 0x107C331B, 0x2BEAF36A, 0x00070000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+#test s21_is_greater_test2
+  int true_res = 1;
+  s21_decimal val1 = {{0x8CE906B2, 0x48CF3F22, 0x1F57DDD4, 0x00100000}};
+  s21_decimal val2 = {{0xA0693AF0, 0x355EDBE0, 0x18DADEDD, 0x80140000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test3
+  int true_res = 0;
+  s21_decimal val1 = {{0x6FD7A486, 0xFF583DEA, 0xCF2C087A, 0x00180000}};
+  s21_decimal val2 = {{0x82CBF153, 0x0E3B84D8, 0xA07754D5, 0x00050000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test4
+  int true_res = 0;
+  s21_decimal val1 = {{0xEC43DC74, 0xD435AB69, 0x838FEACF, 0x000F0000}};
+  s21_decimal val2 = {{0xB2D1557B, 0xBE44E968, 0xAED738BE, 0x00030000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test5
+  int true_res = 1;
+  s21_decimal val1 = {{0xAC3FC6B5, 0xA25058EF, 0xC9FFBBA1, 0x00050000}};
+  s21_decimal val2 = {{0x9CEA5734, 0x0EA71720, 0xED2C0A94, 0x80120000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test6
+  int true_res = 0;
+  s21_decimal val1 = {{0x716AC54D, 0x653E56B3, 0xA94E631C, 0x80070000}};
+  s21_decimal val2 = {{0xDAF6BD6E, 0x49688B4C, 0x34F88163, 0x00170000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test7
+  int true_res = 0;
+  s21_decimal val1 = {{0xFEA6F8C6, 0x3EA83D4B, 0x663A53E6, 0x80170000}};
+  s21_decimal val2 = {{0x24BA309D, 0xABB0EB78, 0x333B13A3, 0x000B0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test8
+  int true_res = 0;
+  s21_decimal val1 = {{0xE1F17D66, 0x692DB94E, 0x8DB3FF94, 0x800B0000}};
+  s21_decimal val2 = {{0xF79A3438, 0x414B38CE, 0x50A0E294, 0x000D0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test9
+  int true_res = 0;
+  s21_decimal val1 = {{0xF6708EE5, 0xEFB72ECA, 0x959315C1, 0x000A0000}};
+  s21_decimal val2 = {{0xB16DD47F, 0x36213E9A, 0xE1151338, 0x00060000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test10
+  int true_res = 0;
+  s21_decimal val1 = {{0x46204F38, 0xA19CC809, 0xE3D7667C, 0x801B0000}};
+  s21_decimal val2 = {{0x71E725FA, 0xFE99E25A, 0x14F90213, 0x00020000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test11
+  int true_res = 1;
+  s21_decimal val1 = {{0xF5D6F4FF, 0xBCEB1145, 0x469CE964, 0x001B0000}};
+  s21_decimal val2 = {{0xE4C22118, 0xE702E9E0, 0xA1560FAA, 0x80070000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test12
+  int true_res = 0;
+  s21_decimal val1 = {{0x89A0790E, 0xCFB92B21, 0x541A3190, 0x80040000}};
+  s21_decimal val2 = {{0x5CA7E09E, 0x87DAC0BE, 0x64DE4CB7, 0x800B0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test13
+  int true_res = 1;
+  s21_decimal val1 = {{0x216A5C22, 0x78ED5E99, 0x52625899, 0x001C0000}};
+  s21_decimal val2 = {{0x11CF9C31, 0x39D004FC, 0x5A50137E, 0x800B0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test14
+  int true_res = 1;
+  s21_decimal val1 = {{0xF0C9C078, 0x683EFBAA, 0x8F660063, 0x000D0000}};
+  s21_decimal val2 = {{0xFFBDE323, 0x77C5B6F0, 0xEC694A95, 0x80150000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test15
+  int true_res = 0;
+  s21_decimal val1 = {{0x47D9A68D, 0x4945BB52, 0xA9D14BAD, 0x80040000}};
+  s21_decimal val2 = {{0x3EA2D7B3, 0xD3FEBD85, 0x0C50EF71, 0x00100000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test16
+  int true_res = 0;
+  s21_decimal val1 = {{0x52ADE972, 0x859AE002, 0xE785C9D0, 0x800B0000}};
+  s21_decimal val2 = {{0x5C350222, 0x958B7C04, 0xAE87179E, 0x00190000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test17
+  int true_res = 0;
+  s21_decimal val1 = {{0xF9887816, 0x4DF6910A, 0x5E2FC8AF, 0x001C0000}};
+  s21_decimal val2 = {{0x7062A640, 0x49AD96D1, 0x17CC74C2, 0x00150000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test18
+  int true_res = 1;
+  s21_decimal val1 = {{0x9D0001B8, 0x2B677BA8, 0x3D036C2F, 0x00120000}};
+  s21_decimal val2 = {{0x91CB9850, 0x3E0305F2, 0x038FD99F, 0x80140000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test19
+  int true_res = 0;
+  s21_decimal val1 = {{0xE869EDEE, 0x476E3FC5, 0x78470848, 0x00140000}};
+  s21_decimal val2 = {{0x735B1505, 0xDE2E8E76, 0x242F8301, 0x00090000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test20
+  int true_res = 0;
+  s21_decimal val1 = {{0x25D24CE7, 0xCD94D720, 0xB488DB17, 0x80020000}};
+  s21_decimal val2 = {{0xE75B1792, 0x33D03A46, 0xAD9E8CCF, 0x00030000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test21
+  int true_res = 1;
+  s21_decimal val1 = {{0x501EBE4A, 0xA91F2B37, 0x22840DD2, 0x00080000}};
+  s21_decimal val2 = {{0x7B90C667, 0x405BF084, 0xFCDB3E6F, 0x00150000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test22
+  int true_res = 1;
+  s21_decimal val1 = {{0x05D3DC60, 0xBAC7A0BD, 0x7DC0C1C6, 0x00130000}};
+  s21_decimal val2 = {{0x629F89B6, 0x80232E7E, 0x41617129, 0x80100000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test23
+  int true_res = 1;
+  s21_decimal val1 = {{0xE9CDE3FA, 0x927BBA5C, 0x98406439, 0x80160000}};
+  s21_decimal val2 = {{0x9AD1F0AD, 0x5062F6E2, 0x0160033F, 0x80130000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test24
+  int true_res = 1;
+  s21_decimal val1 = {{0xCE2CFA95, 0x34B55AD7, 0x19F5A1A3, 0x00050000}};
+  s21_decimal val2 = {{0x70D17003, 0x205F7D86, 0x9BC39C8F, 0x00160000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test25
+  int true_res = 1;
+  s21_decimal val1 = {{0xFAED5B17, 0x15491306, 0x38615ECA, 0x00170000}};
+  s21_decimal val2 = {{0xBC01AAB0, 0x0CB2B6BD, 0x7875DEB3, 0x80160000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test26
+  int true_res = 0;
+  s21_decimal val1 = {{0xF74C27D2, 0x36200963, 0xD7C401DD, 0x00120000}};
+  s21_decimal val2 = {{0xD1D5358A, 0xB862FD1F, 0x5A743054, 0x000D0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test27
+  int true_res = 0;
+  s21_decimal val1 = {{0xDF599BB8, 0x15405B08, 0xFDCDD9C7, 0x800B0000}};
+  s21_decimal val2 = {{0x1B388CC0, 0x95DC90B7, 0x9FE7330B, 0x00190000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test28
+  int true_res = 0;
+  s21_decimal val1 = {{0x6D233A22, 0x0248516C, 0x86CC342A, 0x801B0000}};
+  s21_decimal val2 = {{0x3D15ECDD, 0x81E487C7, 0xD4359F78, 0x000F0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test29
+  int true_res = 1;
+  s21_decimal val1 = {{0x52B4399A, 0xE8A0A535, 0x74BB94B3, 0x00040000}};
+  s21_decimal val2 = {{0x9F88906F, 0x42C4B302, 0xE1B2FDC1, 0x000A0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test30
+  int true_res = 0;
+  s21_decimal val1 = {{0x2C65C7A7, 0x18ABF909, 0x93E1DC0C, 0x80140000}};
+  s21_decimal val2 = {{0x69F8255A, 0x128BF882, 0x5C0527A8, 0x000A0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test31
+  int true_res = 0;
+  s21_decimal val1 = {{0x89292E20, 0x06654924, 0x16B1656F, 0x800C0000}};
+  s21_decimal val2 = {{0x7F1C1D7D, 0x8895DC0E, 0x25AAF25B, 0x000D0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test32
+  int true_res = 0;
+  s21_decimal val1 = {{0x1AC851AF, 0xF0C5C579, 0x29B07870, 0x00100000}};
+  s21_decimal val2 = {{0xC7B384A8, 0x1D322C29, 0x23201907, 0x000C0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test33
+  int true_res = 0;
+  s21_decimal val1 = {{0x872CECDE, 0x94E5A76B, 0x1529651E, 0x80150000}};
+  s21_decimal val2 = {{0x4F739141, 0x1A813239, 0xAD739CBD, 0x80160000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test34
+  int true_res = 1;
+  s21_decimal val1 = {{0x0037BF8B, 0x1AF06F42, 0xC62B4D06, 0x00080000}};
+  s21_decimal val2 = {{0x2E0F7255, 0x9966AAC6, 0x4A738C53, 0x80130000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test35
+  int true_res = 1;
+  s21_decimal val1 = {{0x3B88884F, 0xFB139BE8, 0xB45EEADD, 0x001B0000}};
+  s21_decimal val2 = {{0xE38F976A, 0xC3349160, 0x8C6D7C40, 0x801C0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test36
+  int true_res = 0;
+  s21_decimal val1 = {{0x2077AADB, 0xC2A146BE, 0x211192EB, 0x800C0000}};
+  s21_decimal val2 = {{0xCABCF4E8, 0x239E77EC, 0xB2CBECF0, 0x00010000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test37
+  int true_res = 1;
+  s21_decimal val1 = {{0x0CDDC0E0, 0x7F737AB3, 0xD9C55A46, 0x800C0000}};
+  s21_decimal val2 = {{0x04A6E06B, 0xC914335C, 0xA7820A84, 0x80090000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test38
+  int true_res = 0;
+  s21_decimal val1 = {{0x7A836442, 0x64830BB8, 0xDC9F9E8D, 0x000C0000}};
+  s21_decimal val2 = {{0xAD922D36, 0xE10565B6, 0x1C5E6CB0, 0x00040000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test39
+  int true_res = 0;
+  s21_decimal val1 = {{0xC1B93376, 0x3B9DE71E, 0x57862374, 0x80010000}};
+  s21_decimal val2 = {{0xA029F0E2, 0x2D747EB3, 0x47A55295, 0x80030000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test40
+  int true_res = 1;
+  s21_decimal val1 = {{0x4CDE245E, 0xC0EB7887, 0xC254032A, 0x000E0000}};
+  s21_decimal val2 = {{0xA55E8E85, 0x4FE31168, 0xB47743A9, 0x00160000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test41
+  int true_res = 1;
+  s21_decimal val1 = {{0x3090E840, 0xC86C6341, 0x4B1213B6, 0x00130000}};
+  s21_decimal val2 = {{0x8D76E817, 0x9DCB0259, 0xA4C731BC, 0x80010000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test42
+  int true_res = 1;
+  s21_decimal val1 = {{0x59A9047A, 0xC4D59EB9, 0xF003842A, 0x00180000}};
+  s21_decimal val2 = {{0x5F6ED801, 0x0FA7D6D1, 0x21DED40B, 0x801C0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test43
+  int true_res = 1;
+  s21_decimal val1 = {{0x5E89FD8F, 0x9425F561, 0xBFDA36EF, 0x00190000}};
+  s21_decimal val2 = {{0xCCF8F306, 0x8EC8E88C, 0x8E8C8D41, 0x80000000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test44
+  int true_res = 0;
+  s21_decimal val1 = {{0x817AC88E, 0xA17F0ADB, 0x75CB4662, 0x00100000}};
+  s21_decimal val2 = {{0x11F72576, 0x35114D19, 0xA11EC73D, 0x00070000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test45
+  int true_res = 0;
+  s21_decimal val1 = {{0xF3044C6A, 0x8BAF352F, 0xB92BB560, 0x00160000}};
+  s21_decimal val2 = {{0x93FD8547, 0x82DCD5EB, 0x70C113D7, 0x000E0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test46
+  int true_res = 1;
+  s21_decimal val1 = {{0x6B20F7FA, 0x7166E290, 0x7C6E1A01, 0x00020000}};
+  s21_decimal val2 = {{0xA6083B6B, 0x3952824B, 0xCB62D440, 0x801B0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test47
+  int true_res = 1;
+  s21_decimal val1 = {{0x01474EF5, 0xF5C7AC82, 0x6DAAA57A, 0x801A0000}};
+  s21_decimal val2 = {{0x9526224B, 0x838152BE, 0xD129CF63, 0x80130000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test48
+  int true_res = 1;
+  s21_decimal val1 = {{0x0C35A8CC, 0xEEF5450D, 0x9B472309, 0x00150000}};
+  s21_decimal val2 = {{0x3884312F, 0x15025B57, 0x6E8D85B9, 0x001C0000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test49
+  int true_res = 1;
+  s21_decimal val1 = {{0x5DC55956, 0x26923B7D, 0x1BD0DFED, 0x800F0000}};
+  s21_decimal val2 = {{0x08B9C4AA, 0x7221335D, 0x4B83930E, 0x80000000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_is_greater_test50
+  int true_res = 0;
+  s21_decimal val1 = {{0xA2D9317F, 0x8099CEBD, 0xCFEF6446, 0x80040000}};
+  s21_decimal val2 = {{0x1C237C18, 0x1DC6657F, 0xC5CDEC99, 0x00020000}};
+  int s21_res = s21_is_greater(val1, val2);
+  ck_assert_int_eq(s21_res, true_res);
+

@@ -1,0 +1,83 @@
+#suite s21_div_test
+
+#test s21_div_test1
+  int true_res = 3;
+  s21_decimal val1 = {{0x78D7B7B9, 0xF444012B, 0xD96CD8B4, 0x80060000}};
+  s21_decimal val2 = {{0, 0, 0, 0x80060000}};
+  s21_decimal output;
+  int s21_res = s21_div(val1, val2, &output);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+#test s21_div_test2
+  int true_res = 3;
+  s21_decimal val1 = {{0x78D7B7B9, 0xF444012B, 0xD96CD8B4, 0x80060000}};
+  s21_decimal val2 = {{0, 0, 0, 0x80000000}};
+  s21_decimal output;
+  int s21_res = s21_div(val1, val2, &output);
+  ck_assert_int_eq(s21_res, true_res);
+ 
+
+#test s21_div_test3
+  int true_res = 3;
+  s21_decimal val1 = {{0x78D7B7B9, 0xF444012B, 0xD96CD8B4, 0x80060000}};
+  s21_decimal val2 = {{0, 0, 0, 0}};
+  s21_decimal output;
+  int s21_res = s21_div(val1, val2, &output);
+  ck_assert_int_eq(s21_res, true_res);
+ 
+ 
+#test s21_div_test4
+  int true_res = 0;
+  s21_decimal val1 = {{0x00000002, 0, 0, 0}};
+  s21_decimal val2 = {{0x00000002, 0, 0, 0}};
+  s21_decimal output = {{0x00000002, 123, 44, 1231234}};
+  s21_decimal result = {{0x00000001, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_div(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+ 
+
+
+#test s21_div_test5
+  int true_res = 0;
+  s21_decimal val1 = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0}};
+  s21_decimal val2 = {{0, 0, 1, 0x000C0000}};
+  s21_decimal output;
+  int s21_res = s21_div(val1, val2, &output);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+#test s21_div_test6
+  s21_decimal val1 = {{2, 0, 0, ~(UINT_MAX / 2)}};
+  s21_decimal val2 = {{2, 0, 0, 0}};
+  s21_decimal res = {{0}};
+  ck_assert_int_eq(0, s21_div(val1, val2, &res));
+
+
+#test s21_div_test7
+  s21_decimal val1 = {{2, 0, 0, 0}};
+  s21_decimal val2 = {{2, 0, 0, ~(UINT_MAX / 2)}};
+  s21_decimal res;
+  ck_assert_int_eq(0, s21_div(val1, val2, &res));
+
+
+#test s21_div_test8
+  s21_decimal val1 = {{2, 0, 0, ~(UINT_MAX / 2)}};
+  s21_decimal val2 = {{2, 0, 0, ~(UINT_MAX / 2)}};
+  s21_decimal res = {{0}};
+  ck_assert_int_eq(0, s21_div(val1, val2, &res));
+
+
+#test s21_div_test9
+  s21_decimal val1 = {{2, 0, 0, ~(UINT_MAX / 2)}};
+  s21_decimal val2 = {{0, 0, 0, 0}};
+  s21_decimal res = {{0}};
+  ck_assert_int_eq(3, s21_div(val1, val2, &res));
+
+
+#test s21_div_test10
+  s21_decimal val1 = {{2, 0, 0, 0}};
+  s21_decimal val2 = {{0, 0, 0, 0}};
+  s21_decimal res = {{0}};
+  ck_assert_int_eq(3, s21_div(val1, val2, &res));

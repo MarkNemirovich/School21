@@ -1,0 +1,592 @@
+#suite s21_mul_test
+
+
+#test s21_mul_test1
+  int true_res = 2;
+  s21_decimal val1 = {{0x89BF788F, 0x9C8AC330, 0xD871D122, 0x80050000}};
+  s21_decimal val2 = {{0x519046D2, 0x44360B66, 0xC183B229, 0x00010000}};
+  s21_decimal output = {{0x003200000, 0x000042000, 0x002300000, 0x7FFFFFFF}};
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test2
+  int true_res = 1;
+  s21_decimal val1 = {{0x50FF5F69, 0xDA07C88D, 0x66211725, 0x800B0000}};
+  s21_decimal val2 = {{0xBD45DF4F, 0x39752B0D, 0x860636A5, 0x800E0000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test3
+  int true_res = 2;
+  s21_decimal val1 = {{0x58029FC8, 0xF6F17607, 0x3C057E8C, 0x00030000}};
+  s21_decimal val2 = {{0x76C27CDA, 0x27B29AF3, 0x54C1DA90, 0x80050000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test4
+  int true_res = 2;
+  s21_decimal val1 = {{0xDD0D1E7C, 0xB3A266AB, 0x056915A3, 0x00050000}};
+  s21_decimal val2 = {{0xD19B1143, 0x0B406C17, 0xD3A634D5, 0x80070000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test5
+  int true_res = 1;
+  s21_decimal val1 = {{0xDA40EC11, 0xD3832CA5, 0x5876AEC3, 0x00100000}};
+  s21_decimal val2 = {{0x2C124DC6, 0x0AFC4E64, 0xA05587D8, 0x00040000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test6
+  int true_res = 1;
+  s21_decimal val1 = {{0x875EB514, 0x70E0EC44, 0x9E5A087A, 0x000F0000}};
+  s21_decimal val2 = {{0x31593F3B, 0x91C6FBDB, 0xB8064512, 0x000B0000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test7
+  int true_res = 1;
+  s21_decimal val1 = {{0xDF966AEB, 0xAB3B498D, 0x7FCB2245, 0x00150000}};
+  s21_decimal val2 = {{0xA9E13D3A, 0x143C3D01, 0x492E5D83, 0x00030000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test8
+  int true_res = 1;
+  s21_decimal val1 = {{0x8ACD965F, 0x262C4EEE, 0xB84029DF, 0x80060000}};
+  s21_decimal val2 = {{0x4D02B88E, 0xF3B834F7, 0xF0F8C16F, 0x80110000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test9
+  int true_res = 1;
+  s21_decimal val1 = {{0x37A55635, 0x48470CD6, 0xB8CB2E72, 0x800A0000}};
+  s21_decimal val2 = {{0xCA39017A, 0x090D50A6, 0x1A367A28, 0x800E0000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test10
+  int true_res = 2;
+  s21_decimal val1 = {{0x1501A26A, 0x53FEEE41, 0x8527D006, 0x00030000}};
+  s21_decimal val2 = {{0x47F9AAD8, 0x49A29787, 0x63C70612, 0x80080000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test11
+  int true_res = 1;
+  s21_decimal val1 = {{0xA4BD746D, 0x8B1E4716, 0x81F7FE4A, 0x80060000}};
+  s21_decimal val2 = {{0x2A3A60C3, 0x33D9CAFC, 0x4E4BC02C, 0x80020000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test12
+  int true_res = 1;
+  s21_decimal val1 = {{0x18E3DB3B, 0xC46DB37E, 0xECDCCE99, 0x80080000}};
+  s21_decimal val2 = {{0x61060EC2, 0x0A745795, 0x09D62853, 0x80080000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test13
+  int true_res = 2;
+  s21_decimal val1 = {{0x8B5A78A4, 0x9C82DCEC, 0x2F46EA8A, 0x00010000}};
+  s21_decimal val2 = {{0x0A68C505, 0x4701EAC5, 0x16D42D35, 0x80170000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test14
+  int true_res = 1;
+  s21_decimal val1 = {{0xF937FECF, 0xD0E25D62, 0xB5E23A14, 0x00100000}};
+  s21_decimal val2 = {{0xD4E083E8, 0x30F5152B, 0x6B52584C, 0x000B0000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test15
+  int true_res = 1;
+  s21_decimal val1 = {{0xB9C398D8, 0x6636ED53, 0x582FE855, 0x80040000}};
+  s21_decimal val2 = {{0xBA969BE7, 0xFC64C1C9, 0x1D56F065, 0x800F0000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test16
+  int true_res = 1;
+  s21_decimal val1 = {{0xF31B1767, 0x5EA99589, 0x12F72AC5, 0x00190000}};
+  s21_decimal val2 = {{0x004C764F, 0x50D0FB75, 0x6A158435, 0x00000000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test17
+  int true_res = 2;
+  s21_decimal val1 = {{0x828BB65F, 0x837A89E7, 0x812B0A4B, 0x00070000}};
+  s21_decimal val2 = {{0x9CB7A5E4, 0x18EE1A48, 0x0CADC925, 0x80130000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test18
+  int true_res = 1;
+  s21_decimal val1 = {{0x8803093A, 0x225A1D2E, 0x9AB3FACC, 0x80060000}};
+  s21_decimal val2 = {{0x87F3575F, 0x44F64244, 0x171BBEED, 0x800E0000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test19
+  int true_res = 2;
+  s21_decimal val1 = {{0x7AD6F9FE, 0x47EF95F7, 0xD5CEF9AD, 0x000C0000}};
+  s21_decimal val2 = {{0x32C5D0EE, 0x0CE17382, 0x07AA5E71, 0x800E0000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test20
+  int true_res = 2;
+  s21_decimal val1 = {{0x96B705A1, 0x080F3DCB, 0x9636EC2C, 0x80070000}};
+  s21_decimal val2 = {{0x6E0990D3, 0x60334944, 0x8A0A9F1D, 0x00010000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test21
+  int true_res = 1;
+  s21_decimal val1 = {{0xE3FFD3EC, 0x74192795, 0xC5D9ADD6, 0x80050000}};
+  s21_decimal val2 = {{0x9EADF1E1, 0x82CDBC7B, 0x7A65CE48, 0x80000000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test22
+  int true_res = 2;
+  s21_decimal val1 = {{0x05C2EC24, 0xCEEE5646, 0xE93D2B91, 0x800D0000}};
+  s21_decimal val2 = {{0x2A133483, 0x47D8ED6C, 0xADD70279, 0x000A0000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test23
+  int true_res = 1;
+  s21_decimal val1 = {{0x454F1252, 0x7684D76D, 0x29EDE26E, 0x80040000}};
+  s21_decimal val2 = {{0x9E3AA37D, 0x178743CD, 0x676E07D1, 0x80070000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test24
+  int true_res = 2;
+  s21_decimal val1 = {{0xCFB1C866, 0xE21891A8, 0x20AA99A0, 0x80050000}};
+  s21_decimal val2 = {{0x1E65F496, 0x50059E41, 0x7E730209, 0x00100000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test25
+  int true_res = 1;
+  s21_decimal val1 = {{0x48ECBD4B, 0xE101E3C0, 0x0FC4084E, 0x80020000}};
+  s21_decimal val2 = {{0x8834BD27, 0x49A977F3, 0xFCAF0A30, 0x80070000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test26
+  int true_res = 2;
+  s21_decimal val1 = {{0xB9724990, 0xB93FDE96, 0x6B7930ED, 0x00040000}};
+  s21_decimal val2 = {{0x4A17105A, 0x4AD25791, 0x4813615B, 0x80160000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test27
+  int true_res = 1;
+  s21_decimal val1 = {{0xDFC2FCA2, 0x41471981, 0xD823E3A9, 0x800D0000}};
+  s21_decimal val2 = {{0x36BA03B0, 0x6EEB1F0D, 0x05E77405, 0x80040000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test28
+  int true_res = 1;
+  s21_decimal val1 = {{0xA869C18B, 0x811E7E86, 0x45F4FE6C, 0x000A0000}};
+  s21_decimal val2 = {{0x6C41D150, 0xE5AD7180, 0xBB18BD7E, 0x00120000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test29
+  int true_res = 1;
+  s21_decimal val1 = {{0x2CFED970, 0x4C89272F, 0x72B587C3, 0x000A0000}};
+  s21_decimal val2 = {{0xBEAC2972, 0x8F86AD2D, 0xCE18A4AC, 0x00090000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test30
+  int true_res = 2;
+  s21_decimal val1 = {{0xDD195AD6, 0x6C77F850, 0xA318EE34, 0x00050000}};
+  s21_decimal val2 = {{0x07A4376D, 0xDEC8DF25, 0xAD045F5F, 0x80120000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test31
+  int true_res = 2;
+  s21_decimal val1 = {{0x71B94BC2, 0x3F2EF2CD, 0x90284FA6, 0x00150000}};
+  s21_decimal val2 = {{0xDD43B268, 0x5BBA2328, 0xDE092C9A, 0x80050000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test32
+  int true_res = 1;
+  s21_decimal val1 = {{0xEA416813, 0x731D9621, 0x379AF8BD, 0x000D0000}};
+  s21_decimal val2 = {{0xB17633B9, 0x43B6011F, 0x44078A4C, 0x00090000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+
+#test s21_mul_test33
+  int true_res = 2;
+  s21_decimal val1 = {{0x85FDB4D9, 0xD6D441CA, 0x9AC837E0, 0x80160000}};
+  s21_decimal val2 = {{0xBDB4C136, 0xC1ACDCFA, 0x4B3934A2, 0x00030000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+
+#test s21_mul_test34
+  int true_res = 1;
+  s21_decimal val1 = {{0x5B1FCC54, 0x12947299, 0x3794A179, 0x80000000}};
+  s21_decimal val2 = {{0x2AFB4535, 0x78B127A9, 0xE33EA30A, 0x801C0000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test35
+  int true_res = 2;
+  s21_decimal val1 = {{0xBA144B34, 0xEE8A91CF, 0x9BD72324, 0x80000000}};
+  s21_decimal val2 = {{0xA32A5A30, 0x621EBC20, 0x4C90B5AF, 0x00020000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test36
+  int true_res = 2;
+  s21_decimal val1 = {{0xF9C34375, 0xB12C49F8, 0x76BA41DA, 0x000B0000}};
+  s21_decimal val2 = {{0x22E44B2F, 0x370A2FB4, 0xD603360B, 0x80030000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test37
+  int true_res = 2;
+  s21_decimal val1 = {{0x6F7F80AB, 0x8728B8FA, 0x2B809BB5, 0x00150000}};
+  s21_decimal val2 = {{0xBF5A1CAF, 0x947C2C80, 0x66275F7F, 0x80040000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test38
+  int true_res = 1;
+  s21_decimal val1 = {{0x852BA556, 0xA58338F8, 0x94875986, 0x80150000}};
+  s21_decimal val2 = {{0x3ABE12BD, 0x299C41E6, 0x4261DA72, 0x80010000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test39
+  int true_res = 2;
+  s21_decimal val1 = {{0x1F09A5DF, 0x51CBF807, 0x3E80E89C, 0x800E0000}};
+  s21_decimal val2 = {{0x4EFFFBB2, 0xFA2D022A, 0x6CD1CD3E, 0x00020000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test40
+  int true_res = 2;
+  s21_decimal val1 = {{0xF0C6B1E5, 0x68D9ADD9, 0xD5EDB2B1, 0x00080000}};
+  s21_decimal val2 = {{0x9D863C86, 0x8C9B0550, 0x0655825F, 0x80120000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test41
+  int true_res = 2;
+  s21_decimal val1 = {{0xA96DF6C5, 0x82CFC050, 0x173A2988, 0x800B0000}};
+  s21_decimal val2 = {{0x1378DBE5, 0xA883DCA4, 0x5AD54F74, 0x00040000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test42
+  int true_res = 1;
+  s21_decimal val1 = {{0x6086F430, 0x94771453, 0x5F62E816, 0x80050000}};
+  s21_decimal val2 = {{0xF5E16114, 0x100E194A, 0x7F3AC400, 0x80130000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+
+#test s21_mul_test43
+  int true_res = 2;
+  s21_decimal val1 = {{0xD48AF0B7, 0x344731B1, 0xC13FA2D3, 0x00110000}};
+  s21_decimal val2 = {{0xF5E5D550, 0x317C7D7F, 0x4DCCFD6E, 0x80070000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test44
+  int true_res = 2;
+  s21_decimal val1 = {{0x7052AF49, 0x6F37AC25, 0x8B28115E, 0x00170000}};
+  s21_decimal val2 = {{0xE1096289, 0x050D91BE, 0x5CE3CD8A, 0x80040000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test45
+  int true_res = 1;
+  s21_decimal val1 = {{0xCA3B7FF0, 0x23699AF7, 0xB9B23A42, 0x80060000}};
+  s21_decimal val2 = {{0xA02FDED5, 0x709026F0, 0x60CF823F, 0x80020000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test46
+  int true_res = 2;
+  s21_decimal val1 = {{0x277493F9, 0x59F1A70C, 0xB95DF516, 0x00100000}};
+  s21_decimal val2 = {{0xFDBA6A58, 0x4855F78F, 0x31EFAC02, 0x80090000}};
+  s21_decimal output;
+  s21_decimal result = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test47
+  int true_res = 0;
+  s21_decimal val1 = {{1, 0, 0, 0}};
+  s21_decimal val2 = {{1, 0, 0, 0x80000000}};
+  s21_decimal output;
+  s21_decimal result = {{1, 0, 0, 0x80000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test48
+  int true_res = 0;
+  s21_decimal val1 = {{1, 0, 0, 0}};
+  s21_decimal val2 = {{0, 1, 0, 0x80000000}};
+  s21_decimal output;
+  s21_decimal result = {{0, 1, 0, 0x80000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
+
+
+#test s21_mul_test49
+  int true_res = 0;
+  s21_decimal val1 = {{1, 0, 0, 0}};
+  s21_decimal val2 = {{0, 0, 1, 0x80000000}};
+  s21_decimal output;
+  s21_decimal result = {{0, 0, 1, 0x80000000}};
+  int s21_res = s21_mul(val1, val2, &output);
+  for (int i = 0; i < 4; i++) ck_assert_int_eq(result.bits[i], output.bits[i]);
+  ck_assert_int_eq(s21_res, true_res);
+
