@@ -54,24 +54,25 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
 /// @param result Стрктура для записи результата
 /// @return успешность выполнения
 int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
-  int error = 1 + !s21_is_Empty(A);
-  if (error == 2 && A->rows == 1) {
-    error = s21_create_matrix(A->rows, A->rows, result);
-    if (!error) result->matrix[0][0] = 1.0 / A->matrix[0][0];
-  } else if (error == 2 && A->rows > 1) {
-    double det = 0.0;
-    s21_determinant(A, &det);
-    if (det != 0) {
-      matrix_t tmp_calc = {0};
-      error = s21_calc_complements(A, &tmp_calc);
-      if (!error) {
-        matrix_t tmp_trans = {0};
-        error = s21_transpose(&tmp_calc, &tmp_trans);
-        if (!error) s21_mult_number(&tmp_trans, 1 / det, result);
-        s21_remove_matrix(&tmp_trans);
-      }
-      s21_remove_matrix(&tmp_calc);
+  int error = s21_is_Empty(A);
+  if (!error) error = 2 * (A->columns != A->rows);
+    if (!error) {
+        double det;
+        error = s21_determinant(A, &det);
+        if (!error && det != 0) {
+            matrix_t tmp_calc, tmp_trans;
+            error = s21_calc_complements(A, &tmp_calc);
+            if (!error) {
+                error = s21_transpose(&tmp_calc, &tmp_trans);
+                if (!error) {
+                    error = s21_mult_number(&tmp_trans, 1 / det, result);
+                }
+                s21_remove_matrix(&tmp_trans);
+            }
+            s21_remove_matrix(&tmp_calc);
+        } else {
+            error = CALC_ERROR;
+        }
     }
-  }
-  return error;
+    return error;
 }
